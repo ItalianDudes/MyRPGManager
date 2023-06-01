@@ -31,13 +31,13 @@ shadowJar {
 task buildJar(type: org.gradle.jvm.tasks.Jar) {
     dependsOn shadowJar
     group = "Build"
-    description = "Build and assemble the DnD Visualizer"
+    description = "Build and assemble the RPG Manager"
 }
 
 task buildAndRun(type: Exec) {
     dependsOn shadowJar
     group = "Execution"
-    description = "Buind, assemble and run the DnD Visualizer"
+    description = "Buind, assemble and run the RPG Manager"
     standardInput = System.in
     commandLine "java", "-jar", jar.archiveFile.get()
 }
