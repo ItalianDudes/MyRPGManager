@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<BorderPane id="sceneStartupMainPanel" fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.edu.fermimn.alacorte.fermivolleyball.client.javafx.controller.ControllerSceneStartup">
+   <bottom>
+      <VBox spacing="10.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets top="5.0" />
+         </BorderPane.margin>
+         <children>
+            <Button fx:id="startButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleStartButton" text="Connettiti al Server" />
+            <Button fx:id="newLocalDBButton" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createNewLocalDB" text="Crea Nuovo File Locale" />
+         </children>
+      </VBox>
+   </bottom>
+   <center>
+      <BorderPane prefHeight="75.0" prefWidth="350.0" BorderPane.alignment="CENTER">
+         <right>
+            <Button fx:id="fileChooserButton" disable="true" mnemonicParsing="false" onAction="#dbFileChooser" prefHeight="20.0" prefWidth="20.0" BorderPane.alignment="CENTER" />
+         </right>
+         <center>
+            <TextField fx:id="dbURLTextField" onDragDropped="#handleOnDragDropped" onDragOver="#handleOnDragOver" prefHeight="20.0" promptText="Inserisci indirizzo e porta del server" BorderPane.alignment="CENTER" />
+         </center>
+         <top>
+            <Label text="Fermi Volley Ball" wrapText="true" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font></Label>
+         </top>
+         <bottom>
+            <CheckBox fx:id="localDBCheckBox" mnemonicParsing="false" onAction="#switchDBFilePosition" text="File Locale" BorderPane.alignment="CENTER_RIGHT" />
+         </bottom>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin></BorderPane>
+   </center>
+   <padding>
+      <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+   </padding>
+</BorderPane>

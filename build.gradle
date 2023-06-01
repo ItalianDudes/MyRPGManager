@@ -1,0 +1,43 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'java'
+}
+
+group = 'it.italiandudes'
+version = '0.0.0A'
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+dependencies {
+    compileOnly 'org.jetbrains:annotations:23.0.0'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+    implementation 'it.italiandudes:idl:1.0.5'
+}
+
+shadowJar {
+    manifest {
+        attributes "Main-Class" : "it.italiandudes.myrpgmanager.MyRPGManager"
+    }
+    archiveFileName = getRootDir().getName()+"-"+archiveVersion.get()+".jar"
+}
+
+task buildJar(type: org.gradle.jvm.tasks.Jar) {
+    dependsOn shadowJar
+    group = "Build"
+    description = "Build and assemble the DnD Visualizer"
+}
+
+task buildAndRun(type: Exec) {
+    dependsOn shadowJar
+    group = "Execution"
+    description = "Buind, assemble and run the DnD Visualizer"
+    standardInput = System.in
+    commandLine "java", "-jar", jar.archiveFile.get()
+}
