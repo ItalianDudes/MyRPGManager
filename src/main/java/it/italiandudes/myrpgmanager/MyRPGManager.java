@@ -1,8 +1,11 @@
 package it.italiandudes.myrpgmanager;
 
 import it.italiandudes.idl.common.Logger;
+import it.italiandudes.myrpgmanager.javafx.Client;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @SuppressWarnings("unused")
 public final class MyRPGManager {
@@ -18,8 +21,17 @@ public final class MyRPGManager {
             System.exit(0);
         }
 
-        // Add Logger Close Shutdown Hook
+        // Shutdown Hooks Configurator
+        configureShutdownHooks();
+
+        // Start UI
+        Client.start(args);
+    }
+
+    // Shutdown Hooks Configurator
+    private static void configureShutdownHooks() {
         Runtime.getRuntime().addShutdownHook(new Thread(Logger::close));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> Client.getStage().close()));
     }
 
     // Defs
@@ -27,6 +39,17 @@ public final class MyRPGManager {
 
         // Jar App Position
         public static final String JAR_POSITION = new File(MyRPGManager.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
+
+        // Supported Games
+        public static final class SupportedRPGs {
+            public static final String DND5E = "dnd5e";
+            public static final ArrayList<String> SUPPOERTED_RPGS = (ArrayList<String>) Arrays.asList(
+                new String[]{
+                        DND5E
+                }
+            );
+        }
+
     }
 
 }
