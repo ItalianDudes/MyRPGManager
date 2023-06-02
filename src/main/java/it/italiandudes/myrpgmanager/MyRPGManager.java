@@ -64,10 +64,11 @@ public final class MyRPGManager {
         // Supported Games
         public static final class SupportedRPGs {
             public static final String DND5E = "dnd5e";
-            public static final ArrayList<String> SUPPOERTED_RPGS = (ArrayList<String>) Arrays.asList(
-                new String[]{
+            @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+            public static final ArrayList<String> SUPPOERTED_RPGS = new ArrayList<>(
+                Arrays.asList(
                         DND5E
-                }
+                )
             );
         }
 

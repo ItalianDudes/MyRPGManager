@@ -38,7 +38,7 @@ public final class JFXDefs {
             private static final String FXML_DIR = "/fxml/";
             public static final String FXML_STARTUP = FXML_DIR + "SceneStartup.fxml";
             public static final String FXML_LOADING = FXML_DIR + "SceneLoading.fxml";
-            public static final String FXML_CREATE_OR_CHOOSE_DB = FXML_DIR + "SceneCreateOrChooseDB.fxml";
+            public static final String FXML_CREATE_OR_CHOOSE_DB = FXML_DIR + "SceneDBChooser.fxml";
         }
 
         //GIF Location
