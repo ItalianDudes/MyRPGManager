@@ -1,5 +1,6 @@
 package it.italiandudes.myrpgmanager.javafx.controller;
 
+import it.italiandudes.myrpgmanager.MyRPGManager;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.JFXDefs;
 import javafx.fxml.FXML;
@@ -12,7 +13,7 @@ public final class ControllerSceneLoading {
 
     //Attributes
     @NotNull
-    private static final Image GIF_LOADING = new Image(JFXDefs.Resource.get(JFXDefs.Resource.GIF.GIF_LOADING).toString());
+    private static final Image GIF_LOADING = new Image(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.GIF.GIF_LOADING).toString());
 
     //FXML Elements
     @FXML private ImageView loadingView;
