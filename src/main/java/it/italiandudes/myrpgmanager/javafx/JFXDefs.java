@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ public final class JFXDefs {
     public static final class AppInfo {
         public static final String NAME = "MyRPGManager";
         public static final String DB_FILE_EXTENSION = "myrpgdb";
-        public static final Image LOGO = new Image(Resource.get(Resource.Image.IMAGE_LOGO).toString());
+        public static final Image LOGO = new Image(MyRPGManager.Defs.Resources.get(Resource.Image.IMAGE_LOGO).toString());
     }
 
     // System Info
@@ -31,11 +32,6 @@ public final class JFXDefs {
 
     //Resource Locations
     public static final class Resource {
-
-        //Resource Getter
-        public static URL get(@NotNull final String resourceConst){
-            return Objects.requireNonNull(MyRPGManager.class.getResource(resourceConst));
-        }
 
         //FXML Location
         public static final class FXML {
