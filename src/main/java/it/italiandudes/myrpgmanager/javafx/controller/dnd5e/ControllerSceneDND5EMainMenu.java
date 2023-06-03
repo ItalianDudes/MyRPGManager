@@ -14,23 +14,23 @@ public final class ControllerSceneDND5EMainMenu {
     // EDT
     @FXML
     private void openRaces() {
-
+        // TODO: openRaces()
     }
     @FXML
     private void openClasses() {
-
+        // TODO: openClasses()
     }
     @FXML
     private void openItems() {
-
+        // TODO: openItems()
     }
     @FXML
     private void openTalents() {
-
+        // TODO: openTalents
     }
     @FXML
     private void openBackgrounds() {
-
+        // TODO: openBackgrounds()
     }
 
 }
