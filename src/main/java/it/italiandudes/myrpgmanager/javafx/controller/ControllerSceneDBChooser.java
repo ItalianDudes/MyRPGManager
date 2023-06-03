@@ -96,7 +96,7 @@ public final class ControllerSceneDBChooser {
                         if (result == null) {
                             Platform.runLater(() -> {
                                 Client.getStage().setScene(thisScene);
-                                new ErrorAlert("ERRORE", "Errore di Connessione al DB", "Si e' verificato un errore nella connesione al database.");
+                                new ErrorAlert("ERRORE", "Errore di Connessione al DB", "Si e' verificato un errore nella connessione al database.");
                             });
                             return null;
                         }
