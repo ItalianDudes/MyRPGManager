@@ -11,6 +11,7 @@ import java.io.IOException;
 public final class SceneCreateOrChooseDB {
 
     //Scene Generator
+    // NB: This is the Application Entry Point
     public static Scene getScene(){
         try {
             return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.FXML_CREATE_OR_CHOOSE_DB)));
