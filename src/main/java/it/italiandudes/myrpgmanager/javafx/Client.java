@@ -23,9 +23,8 @@ public final class Client extends Application {
     }
 
     //Start Methods
-    public static int start(String[] args){
+    public static void start(String[] args){
         launch(args);
-        return 0;
     }
 
     //Methods
