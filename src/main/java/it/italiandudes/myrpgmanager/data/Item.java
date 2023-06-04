@@ -33,9 +33,11 @@ public class Item {
         this.base64image = item.base64image;
         this.name = item.name;
         this.costCopper = item.costCopper;
+        if (this.costCopper < 0) this.costCopper = 0;
         this.description = item.description;
         this.rarity = item.rarity;
         this.weight = item.weight;
+        if (this.weight < 0) this.weight = 0;
     }
     public Item(@Nullable final Integer itemID, @Nullable final String base64image, @NotNull final String name,
                 final int costCopper, @Nullable final String description, @NotNull final Rarity rarity,
@@ -44,9 +46,11 @@ public class Item {
         this.base64image = base64image;
         this.name = name;
         this.costCopper = costCopper;
+        if (this.costCopper < 0) this.costCopper = 0;
         this.description = description;
         this.rarity = rarity;
         this.weight = weight;
+        if (this.weight < 0) this.weight = 0;
     }
     public Item(@NotNull final String name) throws SQLException {
         String query = "SELECT * FROM items WHERE name = ?;";
@@ -59,9 +63,11 @@ public class Item {
         this.base64image = retrievedItem.base64image;
         this.name = retrievedItem.name;
         this.costCopper = retrievedItem.costCopper;
+        if (this.costCopper < 0) this.costCopper = 0;
         this.description = retrievedItem.description;
         this.rarity = retrievedItem.rarity;
         this.weight = retrievedItem.weight;
+        if (this.weight < 0) this.weight = 0;
     }
     public Item(int itemID) throws SQLException {
         String query = "SELECT * FROM items WHERE id = ?;";
@@ -74,9 +80,11 @@ public class Item {
         this.base64image = retrievedItem.base64image;
         this.name = retrievedItem.name;
         this.costCopper = retrievedItem.costCopper;
+        if (this.costCopper < 0) this.costCopper = 0;
         this.description = retrievedItem.description;
         this.rarity = retrievedItem.rarity;
         this.weight = retrievedItem.weight;
+        if (this.weight < 0) this.weight = 0;
     }
     public Item(@NotNull final ResultSet resultSet) throws SQLException {
         this.itemID = resultSet.getInt("id");
@@ -88,6 +96,7 @@ public class Item {
         this.name = resultSet.getString("name");
         try {
             this.costCopper = resultSet.getInt("cost_copper");
+            if (this.costCopper < 0) this.costCopper = 0;
         } catch (SQLException e) {
             this.costCopper = 0;
         }
@@ -98,6 +107,7 @@ public class Item {
         }
         this.rarity = Rarity.values()[resultSet.getInt("rarity")];
         this.weight = resultSet.getDouble("weight");
+        if (this.weight < 0) this.weight = 0;
     }
 
     // Methods
