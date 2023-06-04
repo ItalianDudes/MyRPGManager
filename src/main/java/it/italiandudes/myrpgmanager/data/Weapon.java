@@ -19,7 +19,7 @@ public final class Weapon extends Item {
     public Weapon() {
         super();
     }
-    public Weapon(@NotNull final Item baseItem, @Nullable final Integer weaponID,@Nullable final String category,
+    public Weapon(@NotNull final Item baseItem, @Nullable final Integer weaponID, @Nullable final String category,
                   @Nullable final String damage, @Nullable final String properties) {
         super(baseItem);
         this.weaponID = weaponID;
