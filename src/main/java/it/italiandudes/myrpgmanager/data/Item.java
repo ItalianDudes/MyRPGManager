@@ -22,6 +22,15 @@ public class Item {
     private double weight;
 
     // Constructors
+    public Item(@NotNull final Item item) {
+        this.itemID = item.itemID;
+        this.base64image = item.base64image;
+        this.name = item.name;
+        this.costCopper = item.costCopper;
+        this.description = item.description;
+        this.rarity = item.rarity;
+        this.weight = item.weight;
+    }
     public Item(@Nullable final Integer itemID, @Nullable final String base64image, @NotNull final String name,
                 final int costCopper, @Nullable final String description, @NotNull final Rarity rarity,
                 final double weight) {
