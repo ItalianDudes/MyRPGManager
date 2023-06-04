@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS items (
 CREATE TABLE IF NOT EXISTS equipment_packs (
     id INTEGER NOT NULL PRIMARY KEY,
     item_id INTEGER NOT NULL UNIQUE REFERENCES items(id),
-    content TEXT NOT NULL
+    content TEXT
 );
 
 CREATE TABLE IF NOT EXISTS spells (
