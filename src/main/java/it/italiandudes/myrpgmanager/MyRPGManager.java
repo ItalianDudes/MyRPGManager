@@ -1,7 +1,10 @@
 package it.italiandudes.myrpgmanager;
 
 import it.italiandudes.idl.common.Logger;
+import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.javafx.Client;
+import javafx.application.Application;
+import javafx.application.Platform;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -34,8 +37,8 @@ public final class MyRPGManager {
 
     // Shutdown Hooks Configurator
     private static void configureShutdownHooks() {
+        Runtime.getRuntime().addShutdownHook(new Thread(DBManager::closeConnection));
         Runtime.getRuntime().addShutdownHook(new Thread(Logger::close));
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> Client.getStage().close()));
     }
 
     // Defs
