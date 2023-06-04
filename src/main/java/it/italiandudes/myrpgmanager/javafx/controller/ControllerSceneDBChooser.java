@@ -56,12 +56,30 @@ public final class ControllerSceneDBChooser {
         }
     }
     @FXML
+    private void openFileCreator() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Crea il Database");
+        String selectedOption = listViewOptions.getSelectionModel().getSelectedItem();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(selectedOption, "*." + selectedOption));
+        fileChooser.setInitialDirectory(new File(MyRPGManager.Defs.JAR_POSITION).getParentFile());
+        // File fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
+        File fileDB = fileChooser.showSaveDialog(Client.getStage().getScene().getWindow());
+        if(fileDB!=null) {
+            if (fileDB.exists() && fileDB.isFile()) {
+                //noinspection ResultOfMethodCallIgnored
+                fileDB.delete();
+            }
+            textFieldPath.setText(fileDB.getAbsolutePath());
+        }
+    }
+    @FXML
     private void openFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleziona il Database");
         String selectedOption = listViewOptions.getSelectionModel().getSelectedItem();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(selectedOption, "*." + selectedOption));
         fileChooser.setInitialDirectory(new File(MyRPGManager.Defs.JAR_POSITION).getParentFile());
+        // File fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
         File fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
         if(fileDB!=null) {
             textFieldPath.setText(fileDB.getAbsolutePath());
@@ -82,7 +100,11 @@ public final class ControllerSceneDBChooser {
                         String result = null;
 
                         try {
-                            if (dbPath.exists() && dbPath.isFile() && dbPath.getAbsolutePath().endsWith(listViewOptions.getSelectionModel().getSelectedItem())) {
+                            if (!dbPath.getAbsolutePath().endsWith(listViewOptions.getSelectionModel().getSelectedItem())) {
+                                Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Tipo di database sconosciuto"));
+                                return null;
+                            }
+                            if (dbPath.exists() && dbPath.isFile()) {
                                 result = DBManager.connectToDB(dbPath);
                             } else {
                                 DBManager.createDB(dbPath, listViewOptions.getSelectionModel().getSelectedItem());

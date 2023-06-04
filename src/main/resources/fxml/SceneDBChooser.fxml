@@ -11,6 +11,15 @@
          <children>
             <HBox spacing="12.0">
                <children>
+                  <Button mnemonicParsing="false" onAction="#openFileCreator">
+                     <graphic>
+                        <ImageView fitHeight="22.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../image/new.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                   <Button mnemonicParsing="false" onAction="#openFileChooser" prefHeight="22.0">
                      <graphic>
                         <ImageView fitHeight="22.0" pickOnBounds="true" preserveRatio="true">
