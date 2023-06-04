@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS spells (
     level INTEGER DEFAULT 0,
     type TEXT,
     cast_time TEXT,
-    spell_range REAL,
+    spell_range TEXT,
     components TEXT,
     duration TEXT,
     damage TEXT
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS weapons (
     item_id INTEGER NOT NULL UNIQUE REFERENCES items(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    category TEXT NOT NULL,
+    category TEXT,
     damage TEXT,
     properties TEXT
 );
