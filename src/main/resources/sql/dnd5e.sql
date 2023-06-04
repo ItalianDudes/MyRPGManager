@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS armors (
     category TEXT,
     ac INTEGER,
     strength_required INTEGER,
-    stealth TEXT
+    stealth INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS talents (
