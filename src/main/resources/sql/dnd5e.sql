@@ -104,10 +104,24 @@ CREATE TABLE IF NOT EXISTS backgrounds (
     description TEXT
 );
 
+CREATE TABLE IF NOT EXISTS talents (
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    requirements TEXT,
+    description TEXT,
+    privileges TEXT
+);
+
 CREATE TABLE IF NOT EXISTS spell_components (
     id INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
     short_form TEXT NOT NULL UNIQUE,
+    description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS properties (
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
     description TEXT
 );
 
@@ -151,12 +165,6 @@ CREATE TABLE IF NOT EXISTS weapons (
     properties TEXT
 );
 
-CREATE TABLE IF NOT EXISTS properties (
-    id INTEGER NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    description TEXT
-);
-
 CREATE TABLE IF NOT EXISTS armors (
     id INTEGER NOT NULL PRIMARY KEY,
     item_id INTEGER NOT NULL UNIQUE REFERENCES items(id)
@@ -166,14 +174,6 @@ CREATE TABLE IF NOT EXISTS armors (
     ac INTEGER,
     strength_required INTEGER,
     stealth INTEGER
-);
-
-CREATE TABLE IF NOT EXISTS talents (
-    id INTEGER NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    requirements TEXT,
-    description TEXT,
-    privileges TEXT
 );
 
 -- VIEWS DECLARATION
