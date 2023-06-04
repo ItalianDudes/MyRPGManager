@@ -115,7 +115,7 @@ public class Item {
     public Integer getItemID() {
         return itemID;
     }
-    public void setItemID(@NotNull final Integer itemID) {
+    public void setItemID(final int itemID) {
         if (this.itemID == null) this.itemID = itemID;
     }
     @Nullable
@@ -135,7 +135,7 @@ public class Item {
     public int getCostCopper() {
         return costCopper;
     }
-    public void setCostCopper(int costCopper) {
+    public void setCostCopper(final int costCopper) {
         if (costCopper >= 0) this.costCopper = costCopper;
     }
     @Nullable
@@ -155,7 +155,7 @@ public class Item {
     public double getWeight() {
         return weight;
     }
-    public void setWeight(double weight) {
+    public void setWeight(final double weight) {
         if (weight >= 0) this.weight = weight;
     }
     @Override
