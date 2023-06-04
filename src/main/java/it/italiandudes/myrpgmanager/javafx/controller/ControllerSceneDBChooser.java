@@ -13,7 +13,6 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.DragEvent;
@@ -28,9 +27,7 @@ import java.sql.SQLException;
 public final class ControllerSceneDBChooser {
 
     //Graphic Elements
-    @FXML private Button buttonDBChooser;
     @FXML private TextField textFieldPath;
-    @FXML private Button buttonCreateOrOpenDB;
     @FXML private ListView<String> listViewOptions;
 
     //Initialize
@@ -65,7 +62,7 @@ public final class ControllerSceneDBChooser {
         String selectedOption = listViewOptions.getSelectionModel().getSelectedItem();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(selectedOption, "*." + selectedOption));
         fileChooser.setInitialDirectory(new File(MyRPGManager.Defs.JAR_POSITION).getParentFile());
-        File fileDB = fileChooser.showOpenDialog(buttonDBChooser.getScene().getWindow());
+        File fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
         if(fileDB!=null) {
             textFieldPath.setText(fileDB.getAbsolutePath());
         }

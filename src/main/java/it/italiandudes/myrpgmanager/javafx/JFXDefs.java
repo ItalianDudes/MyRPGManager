@@ -34,7 +34,7 @@ public final class JFXDefs {
             public static final String FXML_CREATE_OR_CHOOSE_DB = FXML_DIR + "SceneDBChooser.fxml";
             public static final class DND5E {
                 private static final String DND5E_DIR = FXML_DIR + "dnd5e/";
-                public static final String FXML_MAIN_MENU = DND5E_DIR + "SceneDND5EMainMenu.fxml";
+                public static final String FXML_ITEM_LIST = DND5E_DIR + "SceneDND5EList.fxml";
             }
         }
 

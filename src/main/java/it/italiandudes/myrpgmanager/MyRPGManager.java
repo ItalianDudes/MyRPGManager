@@ -63,12 +63,34 @@ public final class MyRPGManager {
 
         // Supported Games
         public static final class SupportedRPGs {
-            public static final String DND5E = "dnd5e";
+
+            // DND5E
+            public static final class DND5E {
+                public static final String RPG_NAME = "dnd5e";
+                public static final String[] ITEMS = {"Oggetti","items"};
+                public static final String[] CLASSES = {"Classi","classes"};
+                public static final String[] RACES = {"Razze","races"};
+                public static final String[] TALENTS = {"Talenti","talents"};
+                public static final String[] BACKGROUNDS = {"Background","backgrounds"};
+                public static final String[] LANGUAGES = {"Lingue", "languages"};
+                public static final ArrayList<String> ELEMENTS = new ArrayList<>(
+                    Arrays.asList(
+                            ITEMS[0],
+                            CLASSES[0],
+                            RACES[0],
+                            TALENTS[0],
+                            BACKGROUNDS[0],
+                            LANGUAGES[0]
+                    )
+                );
+            }
+
+            // Supported RPGs List
             @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
             public static final ArrayList<String> SUPPOERTED_RPGS = new ArrayList<>(
-                Arrays.asList(
-                        DND5E
-                )
+                    Arrays.asList(
+                            DND5E.RPG_NAME
+                    )
             );
         }
 

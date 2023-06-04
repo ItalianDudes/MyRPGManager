@@ -8,17 +8,15 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 
-@SuppressWarnings("unused")
-public final class SceneDND5EMainMenu {
+public final class SceneDND5EList {
 
     //Scene Generator
     public static Scene getScene(){
         try {
-            return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.DND5E.FXML_MAIN_MENU)));
+            return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.DND5E.FXML_ITEM_LIST)));
         }catch (IOException e){
             Logger.log(e);
             return null;
         }
     }
-
 }

@@ -129,7 +129,9 @@ CREATE TABLE IF NOT EXISTS equipment_packs (
 
 CREATE TABLE IF NOT EXISTS spells (
     id INTEGER NOT NULL PRIMARY KEY,
-    item_id INTEGER NOT NULL UNIQUE REFERENCES items(id),
+    item_id INTEGER NOT NULL UNIQUE REFERENCES items(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
     level INTEGER DEFAULT 0,
     type TEXT,
     cast_time TEXT,
@@ -141,7 +143,9 @@ CREATE TABLE IF NOT EXISTS spells (
 
 CREATE TABLE IF NOT EXISTS weapons (
     id INTEGER NOT NULL PRIMARY KEY,
-    item_id INTEGER NOT NULL UNIQUE REFERENCES items(id),
+    item_id INTEGER NOT NULL UNIQUE REFERENCES items(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
     category TEXT NOT NULL,
     damage TEXT,
     properties TEXT
@@ -155,7 +159,9 @@ CREATE TABLE IF NOT EXISTS properties (
 
 CREATE TABLE IF NOT EXISTS armors (
     id INTEGER NOT NULL PRIMARY KEY,
-    item_id INTEGER NOT NULL UNIQUE REFERENCES items(id),
+    item_id INTEGER NOT NULL UNIQUE REFERENCES items(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
     category TEXT,
     ac INTEGER,
     strength_required INTEGER,

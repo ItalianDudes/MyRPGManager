@@ -59,7 +59,7 @@ public final class DBManager {
 
         //noinspection SwitchStatementWithTooFewBranches
         switch (RPG_TYPE) {
-            case MyRPGManager.Defs.SupportedRPGs.DND5E:
+            case MyRPGManager.Defs.SupportedRPGs.DND5E.RPG_NAME:
                 createDND5EDatabase(DB_ABS_PATH);
                 break;
 

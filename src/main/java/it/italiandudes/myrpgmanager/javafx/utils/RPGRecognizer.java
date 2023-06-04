@@ -3,7 +3,8 @@ package it.italiandudes.myrpgmanager.javafx.utils;
 import it.italiandudes.myrpgmanager.MyRPGManager;
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.javafx.Client;
-import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.SceneDND5EMainMenu;
+import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.SceneDND5EList;
+import javafx.application.Platform;
 import org.jetbrains.annotations.NotNull;
 
 public final class RPGRecognizer {
@@ -14,8 +15,8 @@ public final class RPGRecognizer {
         //noinspection SwitchStatementWithTooFewBranches
         switch (RPG_NAME) {
 
-            case MyRPGManager.Defs.SupportedRPGs.DND5E: // GOTO: DND5E
-                Client.getStage().setScene(SceneDND5EMainMenu.getScene());
+            case MyRPGManager.Defs.SupportedRPGs.DND5E.RPG_NAME: // GOTO: DND5E
+                Platform.runLater(() -> Client.getStage().setScene(SceneDND5EList.getScene()));
                 break;
 
             default:
