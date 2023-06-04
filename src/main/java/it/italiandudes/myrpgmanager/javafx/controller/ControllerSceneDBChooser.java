@@ -96,40 +96,45 @@ public final class ControllerSceneDBChooser {
                 return new Task<Void>() {
                     @Override
                     protected Void call() {
-                        File dbPath = new File(textFieldPath.getText());
-                        String result = null;
-
                         try {
-                            if (!dbPath.getAbsolutePath().endsWith(listViewOptions.getSelectionModel().getSelectedItem())) {
-                                Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Tipo di database sconosciuto"));
+                            File dbPath = new File(textFieldPath.getText());
+                            String result = null;
+
+                            try {
+                                if (!dbPath.getAbsolutePath().endsWith(listViewOptions.getSelectionModel().getSelectedItem())) {
+                                    Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Tipo di database sconosciuto"));
+                                    return null;
+                                }
+                                if (dbPath.exists() && dbPath.isFile()) {
+                                    result = DBManager.connectToDB(dbPath);
+                                } else {
+                                    DBManager.createDB(dbPath, listViewOptions.getSelectionModel().getSelectedItem());
+                                    result = listViewOptions.getSelectionModel().getSelectedItem();
+                                }
+                            } catch (IOException | SQLException e) {
+                                Logger.log(e);
+                            }
+
+                            if (result == null) {
+                                Platform.runLater(() -> {
+                                    Client.getStage().setScene(thisScene);
+                                    new ErrorAlert("ERRORE", "Errore di Connessione al DB", "Si e' verificato un errore nella connessione al database.");
+                                });
                                 return null;
                             }
-                            if (dbPath.exists() && dbPath.isFile()) {
-                                result = DBManager.connectToDB(dbPath);
-                            } else {
-                                DBManager.createDB(dbPath, listViewOptions.getSelectionModel().getSelectedItem());
-                                result = listViewOptions.getSelectionModel().getSelectedItem();
+
+                            if (!RPGRecognizer.openRPGTask(result)) {
+                                Platform.runLater(() -> {
+                                    Client.getStage().setScene(thisScene);
+                                    new ErrorAlert("ERRORE", "Errore di rilevamento dell'estensione", "Si è verificato un errore nell'identificare il tipo di RPG da usare.");
+                                });
                             }
-                        } catch (IOException | SQLException e) {
-                            Logger.log(e);
-                        }
 
-                        if (result == null) {
-                            Platform.runLater(() -> {
-                                Client.getStage().setScene(thisScene);
-                                new ErrorAlert("ERRORE", "Errore di Connessione al DB", "Si e' verificato un errore nella connessione al database.");
-                            });
                             return null;
+                        } catch (Exception e) {
+                            Logger.log(e);
+                            throw e;
                         }
-
-                        if (!RPGRecognizer.openRPGTask(result)) {
-                            Platform.runLater(() -> {
-                                Client.getStage().setScene(thisScene);
-                                new ErrorAlert("ERRORE", "Errore di rilevamento dell'estensione", "Si è verificato un errore nell'identificare il tipo di RPG da usare.");
-                            });
-                        }
-
-                        return null;
                     }
                 };
             }

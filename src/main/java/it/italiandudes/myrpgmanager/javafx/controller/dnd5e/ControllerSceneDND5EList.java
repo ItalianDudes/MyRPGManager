@@ -1,5 +1,6 @@
 package it.italiandudes.myrpgmanager.javafx.controller.dnd5e;
 
+import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager.Defs.SupportedRPGs.DND5E;
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.javafx.Client;
@@ -53,30 +54,35 @@ public final class ControllerSceneDND5EList {
                 return new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        String table = getTableNameByFilter(choice);
-                        String query = "SELECT name FROM "+table+";";
-                        PreparedStatement ps = DBManager.preparedStatement(query);
-                        if (ps == null) {
-                            Platform.runLater(() -> {
-                                new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non è stato possibile consultare il database");
-                                Client.getStage().setScene(SceneCreateOrChooseDB.getScene());
-                            });
+                        try {
+                            String table = getTableNameByFilter(choice);
+                            String query = "SELECT name FROM " + table + ";";
+                            PreparedStatement ps = DBManager.preparedStatement(query);
+                            if (ps == null) {
+                                Platform.runLater(() -> {
+                                    new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non è stato possibile consultare il database");
+                                    Client.getStage().setScene(SceneCreateOrChooseDB.getScene());
+                                });
+                                return null;
+                            }
+
+                            ResultSet result = ps.executeQuery();
+
+                            ArrayList<String> resultList = new ArrayList<>();
+
+                            while (result.next()) {
+                                resultList.add(result.getString("name"));
+                            }
+
+                            ps.close();
+
+                            Platform.runLater(() -> listViewOptions.setItems(FXCollections.observableList(resultList)));
+
                             return null;
+                        } catch (Exception e) {
+                            Logger.log(e);
+                            throw e;
                         }
-
-                        ResultSet result = ps.executeQuery();
-
-                        ArrayList<String> resultList = new ArrayList<>();
-
-                        while (result.next()) {
-                            resultList.add(result.getString("name"));
-                        }
-
-                        ps.close();
-
-                        Platform.runLater(() -> listViewOptions.setItems(FXCollections.observableList(resultList)));
-
-                        return null;
                     }
                 };
             }
@@ -98,31 +104,36 @@ public final class ControllerSceneDND5EList {
                 return new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        String table = getTableNameByFilter(choice);
-                        String query = "SELECT name FROM "+table+" WHERE name LIKE '%?%';";
-                        PreparedStatement ps = DBManager.preparedStatement(query);
-                        if (ps == null) {
-                            Platform.runLater(() -> {
-                                new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non è stato possibile consultare il database");
-                                Client.getStage().setScene(SceneCreateOrChooseDB.getScene());
-                            });
+                        try {
+                            String table = getTableNameByFilter(choice);
+                            String query = "SELECT name FROM " + table + " WHERE name LIKE ? ORDER BY name;";
+                            // fixme: Understand how to implement the search that contains the world
+                            PreparedStatement ps = DBManager.preparedStatement(query);
+                            if (ps == null) {
+                                Platform.runLater(() -> {
+                                    new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non è stato possibile consultare il database");
+                                    Client.getStage().setScene(SceneCreateOrChooseDB.getScene());
+                                });
+                                return null;
+                            }
+
+                            ps.setString(1, userInput);
+                            ResultSet result = ps.executeQuery();
+
+                            ArrayList<String> resultList = new ArrayList<>();
+
+                            while (result.next()) {
+                                resultList.add(result.getString("name"));
+                            }
+
+                            ps.close();
+
+                            Platform.runLater(() -> listViewOptions.setItems(FXCollections.observableList(resultList)));
                             return null;
+                        } catch (Exception e) {
+                            Logger.log(e);
+                            throw e;
                         }
-
-                        ps.setString(1, userInput);
-                        ResultSet result = ps.executeQuery();
-
-                        ArrayList<String> resultList = new ArrayList<>();
-
-                        while (result.next()) {
-                            resultList.add(result.getString("name"));
-                        }
-
-                        ps.close();
-
-                        Platform.runLater(() -> listViewOptions.setItems(FXCollections.observableList(resultList)));
-
-                        return null;
                     }
                 };
             }
@@ -165,20 +176,25 @@ public final class ControllerSceneDND5EList {
                 return new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        String query = "DELETE FROM "+table+" WHERE name = ?;";
-                        PreparedStatement ps = DBManager.preparedStatement(query);
-                        if (ps == null) {
-                            Platform.runLater(() -> {
-                                new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non è stato possibile consultare il database");
-                                Client.getStage().setScene(SceneCreateOrChooseDB.getScene());
-                            });
+                        try {
+                            String query = "DELETE FROM " + table + " WHERE name = ?;";
+                            PreparedStatement ps = DBManager.preparedStatement(query);
+                            if (ps == null) {
+                                Platform.runLater(() -> {
+                                    new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non è stato possibile consultare il database");
+                                    Client.getStage().setScene(SceneCreateOrChooseDB.getScene());
+                                });
+                                return null;
+                            }
+                            ps.setString(1, elementName);
+                            ps.executeUpdate();
+                            ps.close();
+                            Platform.runLater(ControllerSceneDND5EList.this::search);
                             return null;
+                        } catch (Exception e) {
+                            Logger.log(e);
+                            throw e;
                         }
-                        ps.setString(1, elementName);
-                        ps.executeUpdate();
-                        ps.close();
-                        Platform.runLater(ControllerSceneDND5EList.this::search);
-                        return null;
                     }
                 };
             }
