@@ -4,12 +4,12 @@ import it.italiandudes.myrpgmanager.MyRPGManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.Scanner;
 
 @SuppressWarnings("unused")
@@ -18,18 +18,11 @@ public final class DBManager {
     // Attributes
     private static Connection dbConnection = null;
     private static final String DB_PREFIX = "jdbc:sqlite:";
-    private static final Properties CONNECTION_PROPERTIES = initProperties();
-
-    // Connection Property Initializers
-    private static Properties initProperties() {
-        Properties properties = new Properties();
-        properties.put("allowMultiQueries",true);
-        return properties;
-    }
 
     // Generic SQLite Connection Initializer
     private static void setConnection(@NotNull final String DB_ABSOLUTE_PATH) throws SQLException {
-        dbConnection = DriverManager.getConnection(DB_PREFIX + DB_ABSOLUTE_PATH, CONNECTION_PROPERTIES);
+        String url = DB_PREFIX+DB_ABSOLUTE_PATH+"?allowMultiQueries=true";
+        dbConnection = DriverManager.getConnection(DB_PREFIX + DB_ABSOLUTE_PATH);
         setConnectionProperties();
     }
     private static void setConnectionProperties() throws SQLException {
@@ -80,22 +73,32 @@ public final class DBManager {
         }
         return null;
     }
+    public static void commit() throws SQLException {
+        if (dbConnection != null) dbConnection.commit();
+    }
 
     // DB Creator
     public static void createDND5EDatabase(@NotNull final String DB_PATH) throws SQLException {
         setConnection(DB_PATH);
         Scanner reader = new Scanner(MyRPGManager.Defs.Resources.getAsStream(MyRPGManager.Defs.Resources.SQL.SQL_DND5E), "UTF-8");
         StringBuilder queryReader = new StringBuilder();
+        String query;
+        String buffer;
 
         while (reader.hasNext()) {
-            queryReader.append(reader.nextLine());
+            buffer = reader.nextLine();
+            queryReader.append(buffer);
+            if (buffer.endsWith(";")) {
+                query = queryReader.toString();
+                PreparedStatement ps = dbConnection.prepareStatement(query);
+                ps.execute();
+                ps.close();
+                queryReader = new StringBuilder();
+            } else {
+                queryReader.append('\n');
+            }
         }
         reader.close();
-
-        String query = queryReader.toString();
-        PreparedStatement ps = dbConnection.prepareStatement(query);
-        ps.execute();
-        ps.close();
     }
 
 }
