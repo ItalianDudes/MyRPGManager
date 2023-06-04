@@ -12,31 +12,54 @@ public final class Armor extends Item {
     // Attributes
     @Nullable private Integer armorID;
     @Nullable private String category;
-    @Nullable private Integer AC;
-    @Nullable private Integer strengthRequired;
-    @Nullable private Integer stealth;
+    private int AC;
+    private int strengthRequired;
+    private int stealth;
 
     // Constructors
     public Armor() {
         super();
+        AC = 0;
+        strengthRequired = 0;
+        stealth = 0;
     }
-    public Armor(@NotNull final Item item, @Nullable final Integer armorID,
-                 @Nullable final String category, @Nullable final Integer AC,
-                 @Nullable final Integer strengthRequired, @Nullable final Integer stealth) {
-        super(item);
+    public Armor(@NotNull final Item baseItem, @Nullable final Integer armorID,
+                 @Nullable final String category, final int AC,
+                 final int strengthRequired, final int stealth) {
+        super(baseItem);
         this.armorID = armorID;
         this.category = category;
-        this.AC = AC;
-        this.strengthRequired = strengthRequired;
-        this.stealth = stealth;
+        this.AC = Math.max(AC, 0);
+        this.strengthRequired = Math.max(strengthRequired, 0);
+        if (stealth >= -1 && stealth <= 1) this.stealth = stealth;
+        else this.stealth = 0;
     }
     public Armor(@NotNull final ResultSet resultSet) throws SQLException {
         super(resultSet.getInt("item_id"));
         this.armorID = resultSet.getInt("id");
-        this.category = resultSet.getString("category");
-        this.AC = resultSet.getInt("ac");
-        this.strengthRequired = resultSet.getInt("strength_required");
-        this.stealth = resultSet.getInt("stealth");
+        try {
+            this.category = resultSet.getString("category");
+        } catch (SQLException e) {
+            this.category = null;
+        }
+        try {
+            this.AC = resultSet.getInt("ac");
+            if (this.AC < 0) this.AC = 0;
+        } catch (SQLException e) {
+            this.AC = 0;
+        }
+        try {
+            this.strengthRequired = resultSet.getInt("strength_required");
+            if (this.strengthRequired < 0) this.strengthRequired = 0;
+        } catch (SQLException e) {
+            this.strengthRequired = 0;
+        }
+        try {
+            this.stealth = resultSet.getInt("stealth");
+            if (this.stealth < -1 || this.stealth > 1) this.stealth = 0;
+        } catch (SQLException e) {
+            this.stealth = 0;
+        }
     }
 
     // Methods
@@ -44,7 +67,7 @@ public final class Armor extends Item {
     public Integer getArmorID() {
         return armorID;
     }
-    public void setArmorID(@NotNull Integer armorID) {
+    public void setArmorID(final int armorID) {
         if (this.armorID == null) this.armorID = armorID;
     }
     @Nullable
@@ -54,26 +77,23 @@ public final class Armor extends Item {
     public void setCategory(@Nullable final String category) {
         this.category = category;
     }
-    @Nullable
-    public Integer getAC() {
+    public int getAC() {
         return AC;
     }
-    public void setAC(@Nullable final Integer AC) {
-        this.AC = AC;
+    public void setAC(int AC) {
+        if (AC >= 0) this.AC = AC;
     }
-    @Nullable
-    public Integer getStrengthRequired() {
+    public int getStrengthRequired() {
         return strengthRequired;
     }
-    public void setStrengthRequired(@Nullable final Integer strengthRequired) {
-        this.strengthRequired = strengthRequired;
+    public void setStrengthRequired(int strengthRequired) {
+        if (strengthRequired >= 0) this.strengthRequired = strengthRequired;
     }
-    @Nullable
-    public Integer getStealth() {
+    public int getStealth() {
         return stealth;
     }
-    public void setStealth(@Nullable final Integer stealth) {
-        this.stealth = stealth;
+    public void setStealth(int stealth) {
+        if (stealth >= -1 && stealth <= 1) this.stealth = stealth;
     }
     @Override
     public boolean equals(Object o) {
@@ -83,22 +103,20 @@ public final class Armor extends Item {
 
         Armor armor = (Armor) o;
 
+        if (getAC() != armor.getAC()) return false;
+        if (getStrengthRequired() != armor.getStrengthRequired()) return false;
+        if (getStealth() != armor.getStealth()) return false;
         if (getArmorID() != null ? !getArmorID().equals(armor.getArmorID()) : armor.getArmorID() != null) return false;
-        if (getCategory() != null ? !getCategory().equals(armor.getCategory()) : armor.getCategory() != null)
-            return false;
-        if (getAC() != null ? !getAC().equals(armor.getAC()) : armor.getAC() != null) return false;
-        if (getStrengthRequired() != null ? !getStrengthRequired().equals(armor.getStrengthRequired()) : armor.getStrengthRequired() != null)
-            return false;
-        return getStealth() != null ? getStealth().equals(armor.getStealth()) : armor.getStealth() == null;
+        return getCategory() != null ? getCategory().equals(armor.getCategory()) : armor.getCategory() == null;
     }
     @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (getArmorID() != null ? getArmorID().hashCode() : 0);
         result = 31 * result + (getCategory() != null ? getCategory().hashCode() : 0);
-        result = 31 * result + (getAC() != null ? getAC().hashCode() : 0);
-        result = 31 * result + (getStrengthRequired() != null ? getStrengthRequired().hashCode() : 0);
-        result = 31 * result + (getStealth() != null ? getStealth().hashCode() : 0);
+        result = 31 * result + getAC();
+        result = 31 * result + getStrengthRequired();
+        result = 31 * result + getStealth();
         return result;
     }
     @Override
