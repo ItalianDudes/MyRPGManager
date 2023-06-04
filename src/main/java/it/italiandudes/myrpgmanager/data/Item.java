@@ -42,6 +42,21 @@ public class Item {
         this.rarity = rarity;
         this.weight = weight;
     }
+    public Item(@NotNull final String name) throws SQLException {
+        String query = "SELECT * FROM items WHERE name = ?;";
+        PreparedStatement ps = DBManager.preparedStatement(query);
+        if (ps == null) throw new SQLException("The database connection is not initialized");
+        ps.setString(1, name);
+        Item retrievedItem = new Item(ps.executeQuery());
+        ps.close();
+        this.itemID = retrievedItem.itemID;
+        this.base64image = retrievedItem.base64image;
+        this.name = retrievedItem.name;
+        this.costCopper = retrievedItem.costCopper;
+        this.description = retrievedItem.description;
+        this.rarity = retrievedItem.rarity;
+        this.weight = retrievedItem.weight;
+    }
     public Item(int itemID) throws SQLException {
         String query = "SELECT * FROM items WHERE id = ?;";
         PreparedStatement ps = DBManager.preparedStatement(query);
