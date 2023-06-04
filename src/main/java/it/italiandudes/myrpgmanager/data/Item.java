@@ -22,6 +22,12 @@ public class Item {
     private double weight;
 
     // Constructors
+    public Item() {
+        name = "";
+        rarity = Rarity.COMMON;
+        costCopper = 0;
+        weight = 0;
+    }
     public Item(@NotNull final Item item) {
         this.itemID = item.itemID;
         this.base64image = item.base64image;
@@ -99,8 +105,8 @@ public class Item {
     public Integer getItemID() {
         return itemID;
     }
-    public void setItemID(@Nullable final Integer itemID) {
-        this.itemID = itemID;
+    public void setItemID(@NotNull final Integer itemID) {
+        if (this.itemID == null) this.itemID = itemID;
     }
     @Nullable
     public String getBase64image() {
