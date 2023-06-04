@@ -35,6 +35,7 @@ public final class JFXDefs {
             public static final class DND5E {
                 private static final String DND5E_DIR = FXML_DIR + "dnd5e/";
                 public static final String FXML_ITEM_LIST = DND5E_DIR + "SceneDND5EList.fxml";
+                public static final String FXML_ITEM = DND5E_DIR + "SceneDND5EItem.fxml";
             }
         }
 
