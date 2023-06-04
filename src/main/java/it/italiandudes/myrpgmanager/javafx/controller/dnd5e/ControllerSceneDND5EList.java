@@ -5,17 +5,21 @@ import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.scene.SceneCreateOrChooseDB;
+import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.SceneDND5EItem;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -24,7 +28,8 @@ import java.util.ArrayList;
 public final class ControllerSceneDND5EList {
 
     // Attributes
-    private String filter = null;
+    public static Scene thisScene = null;
+    public static String elementName = null;
 
     //Graphic Elements
     @FXML private ComboBox<String> comboBoxFilter;
@@ -39,12 +44,6 @@ public final class ControllerSceneDND5EList {
     }
 
     // EDT
-    private void refresh() {
-        Platform.runLater(() -> {
-            comboBoxFilter.getSelectionModel().select(filter);
-            displaySelected();
-        });
-    }
     @FXML
     private void displaySelected() {
         String choice = comboBoxFilter.getSelectionModel().getSelectedItem();
@@ -88,7 +87,6 @@ public final class ControllerSceneDND5EList {
     @FXML
     private void search() {
         String choice = comboBoxFilter.getSelectionModel().getSelectedItem();
-        // String userInput = '%' + textFieldSearchBar.getText().replace("%", "[%]") + '%';
         String userInput = textFieldSearchBar.getText();
         if (userInput == null || userInput.equals("")) {
             displaySelected();
@@ -134,20 +132,30 @@ public final class ControllerSceneDND5EList {
     }
     @FXML
     private void searchOnEnter(@NotNull final KeyEvent event) {
-        if (event.getKeyChar() == '\n') {
+        if (event.getCharacter().equals("\n")) {
             search();
         }
     }
     @FXML
     private void newElement() {
-
+        elementName = null;
+        thisScene = Client.getStage().getScene();
+        Client.getStage().setScene(SceneDND5EItem.getScene());
+    }
+    @FXML
+    private void editOnDoubleClick(@NotNull final MouseEvent event) {
+        if (event.getClickCount() >= 2) editElement();
     }
     @FXML
     private void editElement() {
-
+        if (listViewOptions.getSelectionModel().getSelectedItems().size() == 0) return;
+        elementName = listViewOptions.getSelectionModel().getSelectedItem();
+        thisScene = Client.getStage().getScene();
+        Client.getStage().setScene(SceneDND5EItem.getScene());
     }
     @FXML
     private void deleteElement() {
+        if (listViewOptions.getSelectionModel().getSelectedItems().size() == 0) return;
         String choice = comboBoxFilter.getSelectionModel().getSelectedItem();
         String elementName = listViewOptions.getSelectionModel().getSelectedItem();
         String table = getTableNameByFilter(choice);
@@ -197,9 +205,12 @@ public final class ControllerSceneDND5EList {
             throw new RuntimeException("Choice not supported!");
         }
     }
-    public void setFilter(@NotNull final String filter) {
-        this.filter = filter;
-        refresh();
+    @Nullable
+    public static String getElementName() {
+        return elementName;
     }
-
+    @Nullable
+    public static Scene getListScene() {
+        return thisScene;
+    }
 }
