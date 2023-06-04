@@ -53,7 +53,7 @@ public final class DBManager {
         //noinspection SwitchStatementWithTooFewBranches
         switch (RPG_TYPE) {
             case MyRPGManager.Defs.SupportedRPGs.DND5E.RPG_NAME:
-                createDND5EDatabase(DB_ABS_PATH);
+                createDatabase(DB_ABS_PATH, MyRPGManager.Defs.Resources.SQL.SQL_DND5E);
                 break;
 
             default:
@@ -78,9 +78,9 @@ public final class DBManager {
     }
 
     // DB Creator
-    public static void createDND5EDatabase(@NotNull final String DB_PATH) throws SQLException {
+    public static void createDatabase(@NotNull final String DB_PATH, @NotNull final String CREATION_QUERY_FILE_PATH) throws SQLException {
         setConnection(DB_PATH);
-        Scanner reader = new Scanner(MyRPGManager.Defs.Resources.getAsStream(MyRPGManager.Defs.Resources.SQL.SQL_DND5E), "UTF-8");
+        Scanner reader = new Scanner(MyRPGManager.Defs.Resources.getAsStream(CREATION_QUERY_FILE_PATH), "UTF-8");
         StringBuilder queryReader = new StringBuilder();
         String query;
         String buffer;
