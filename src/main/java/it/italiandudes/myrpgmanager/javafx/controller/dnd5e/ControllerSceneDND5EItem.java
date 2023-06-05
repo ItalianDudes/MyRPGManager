@@ -224,7 +224,7 @@ public final class ControllerSceneDND5EItem {
                                 if (!imageViewItem.getImage().equals(defaultImage)) {
                                     BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageViewItem.getImage(), null);
                                     ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
-                                    ImageIO.write(bufferedImage, "png", imageByteStream);
+                                    ImageIO.write(bufferedImage, imageExtension, imageByteStream);
                                     ps.setString(2, Base64.getEncoder().encodeToString(imageByteStream.toByteArray()));
                                     ps.setString(3, imageExtension);
                                 } else {
@@ -295,22 +295,25 @@ public final class ControllerSceneDND5EItem {
                             int CS = CC / 10;
                             CC -= CS * 10;
 
-                            byte[] imageBytes = null;
-                            ByteArrayInputStream imageByteStream;
+                            BufferedImage bufferedImage = null;
                             try {
-                                if (item.getBase64image() != null)
-                                    imageBytes = Base64.getDecoder().decode(item.getBase64image());
+                                if (item.getBase64image() != null && imageExtension != null) {
+                                    byte[] imageBytes = Base64.getDecoder().decode(item.getBase64image());
+                                    ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
+                                    bufferedImage = ImageIO.read(imageStream);
+                                } else if (item.getBase64image() != null && imageExtension == null) {
+                                    throw new IllegalArgumentException("Image without declared extension");
+                                }
                             } catch (IllegalArgumentException e) {
-                                Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di lettura", "L'immagine ricevuta dal database non è leggibile"));
-                            }
-
-                            if (imageBytes != null) {
-                                imageByteStream = new ByteArrayInputStream(imageBytes);
-                            } else {
-                                imageByteStream = null;
+                                Platform.runLater(() -> {
+                                    new ErrorAlert("ERRORE", "Errore di lettura", "L'immagine ricevuta dal database non è leggibile");
+                                    Client.getStage().setScene(ControllerSceneDND5EList.getListScene());
+                                });
+                                return null;
                             }
 
                             int finalCC = CC;
+                            BufferedImage finalBufferedImage = bufferedImage;
                             Platform.runLater(() -> {
 
                                 textFieldName.setText(item.getName());
@@ -321,8 +324,8 @@ public final class ControllerSceneDND5EItem {
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
-                                if (imageByteStream != null)
-                                    imageViewItem.setImage(new Image(imageByteStream));
+                                if (finalBufferedImage != null)
+                                    imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                 else
                                     imageViewItem.setImage(new Image(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)));
 
