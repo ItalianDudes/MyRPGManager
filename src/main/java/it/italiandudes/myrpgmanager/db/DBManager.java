@@ -37,7 +37,7 @@ public final class DBManager {
         String[] pointParts = DB_PATH.getAbsolutePath().split("\\.");
         String RPG_TYPE = pointParts[pointParts.length-1];
 
-        if (!MyRPGManager.Defs.SupportedRPGs.SUPPOERTED_RPGS.contains(RPG_TYPE.toLowerCase())) {
+        if (!MyRPGManager.Defs.SupportedRPGs.SUPPORTED_RPGS.contains(RPG_TYPE.toLowerCase())) {
             throw new IOException("This RPG is not supported!");
         }
 

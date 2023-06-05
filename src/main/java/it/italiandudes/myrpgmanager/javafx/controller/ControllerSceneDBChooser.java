@@ -34,7 +34,7 @@ public final class ControllerSceneDBChooser {
     @FXML
     private void initialize() {
         Client.getStage().setResizable(false);
-        listViewOptions.setItems(FXCollections.observableList(MyRPGManager.Defs.SupportedRPGs.SUPPOERTED_RPGS));
+        listViewOptions.setItems(FXCollections.observableList(MyRPGManager.Defs.SupportedRPGs.SUPPORTED_RPGS));
         listViewOptions.getSelectionModel().selectFirst();
     }
 

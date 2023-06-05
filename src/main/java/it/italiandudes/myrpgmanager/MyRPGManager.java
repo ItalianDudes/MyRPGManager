@@ -80,6 +80,18 @@ public final class MyRPGManager {
                 public static final String[] TALENTS = {"Talenti","talents"};
                 public static final String[] BACKGROUNDS = {"Background","backgrounds"};
                 public static final String[] LANGUAGES = {"Lingue", "languages"};
+                public static final String[] FILTER_NAME = {"Nome", "name"};
+                public static final String[] FILTER_RARITY = {"Rarita'", "rarity"};
+                public static final String[] FILTER_COST = {"Costo", "cost_copper"};
+                public static final String[] FILTER_WEIGHT = {"Peso", "weight"};
+                public static final ArrayList<String> FILTERS = new ArrayList<>(
+                    Arrays.asList(
+                            FILTER_NAME[0],
+                            FILTER_RARITY[0],
+                            FILTER_COST[0],
+                            FILTER_WEIGHT[0]
+                    )
+                );
                 public static final ArrayList<String> ELEMENTS = new ArrayList<>(
                     Arrays.asList(
                             ITEMS[0],
@@ -94,7 +106,7 @@ public final class MyRPGManager {
 
             // Supported RPGs List
             @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
-            public static final ArrayList<String> SUPPOERTED_RPGS = new ArrayList<>(
+            public static final ArrayList<String> SUPPORTED_RPGS = new ArrayList<>(
                     Arrays.asList(
                             DND5E.RPG_NAME
                     )
