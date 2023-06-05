@@ -324,6 +324,7 @@ public final class ControllerSceneDND5EItem {
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
+                                textAreaDescription.setText(item.getDescription());
                                 if (finalBufferedImage != null)
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                 else
