@@ -59,6 +59,12 @@ public final class MyRPGManager {
             public static final class SQL {
                 private static final String SQL_DIR = "/sql/";
                 public static final String SQL_DND5E = SQL_DIR + "dnd5e.sql";
+                public static final String[] SUPPORTED_IMAGE_EXTENSIONS = {
+                        "png",
+                        "jpg",
+                        "jpeg",
+                        "gif"
+                };
             }
         }
 
