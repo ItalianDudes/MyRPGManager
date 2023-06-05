@@ -48,6 +48,7 @@ public final class ControllerSceneDND5EItem {
     // Attributes
     private Item item = null;
     private String imageExtension = null;
+    private boolean isImageSet = false;
     private static final Image defaultImage;
     static {
         try {
@@ -119,6 +120,7 @@ public final class ControllerSceneDND5EItem {
     private void removeImage() {
         imageViewItem.setImage(defaultImage);
         imageExtension = null;
+        isImageSet = false;
     }
     @FXML
     private void openFileChooser() {
@@ -140,6 +142,7 @@ public final class ControllerSceneDND5EItem {
                                 BufferedImage img = ImageIO.read(imagePath);
                                 Platform.runLater(() -> imageViewItem.setImage(SwingFXUtils.toFXImage(img, null)));
                                 imageExtension = ImageHandler.getImageExtension(imagePath.getAbsolutePath());
+                                isImageSet = true;
                             }catch (IOException e) {
                                 Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Lettura", "Impossibile leggere il contenuto selezionato."));
                             }
@@ -177,7 +180,7 @@ public final class ControllerSceneDND5EItem {
                                 }
 
                                 ps.setString(1, textFieldName.getText());
-                                if (!imageViewItem.getImage().equals(defaultImage)) {
+                                if (isImageSet) {
                                     BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageViewItem.getImage(), null);
                                     ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
                                     ImageIO.write(bufferedImage, imageExtension, imageByteStream);
@@ -221,7 +224,7 @@ public final class ControllerSceneDND5EItem {
                                 }
 
                                 ps.setString(1, textFieldName.getText());
-                                if (!imageViewItem.getImage().equals(defaultImage)) {
+                                if (isImageSet) {
                                     BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageViewItem.getImage(), null);
                                     ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
                                     ImageIO.write(bufferedImage, imageExtension, imageByteStream);
@@ -325,11 +328,12 @@ public final class ControllerSceneDND5EItem {
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
                                 textAreaDescription.setText(item.getDescription());
-                                if (finalBufferedImage != null)
+                                if (finalBufferedImage != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
-                                else
+                                    isImageSet = true;
+                                } else {
                                     imageViewItem.setImage(new Image(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)));
-
+                                }
                             });
 
                         } catch (Exception e) {
