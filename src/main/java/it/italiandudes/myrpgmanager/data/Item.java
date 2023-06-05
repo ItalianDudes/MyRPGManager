@@ -14,6 +14,7 @@ public class Item {
     // Attributes
     @Nullable private Integer itemID;
     @Nullable private String base64image;
+    @Nullable private String imageExtension;
     @NotNull private String name;
     private int costCopper;
     @Nullable private String description;
@@ -31,6 +32,7 @@ public class Item {
     public Item(@NotNull final Item item) {
         this.itemID = item.itemID;
         this.base64image = item.base64image;
+        this.imageExtension = item.imageExtension;
         this.name = item.name;
         this.costCopper = item.costCopper;
         if (this.costCopper < 0) this.costCopper = 0;
@@ -39,11 +41,12 @@ public class Item {
         this.weight = item.weight;
         if (this.weight < 0) this.weight = 0;
     }
-    public Item(@Nullable final Integer itemID, @Nullable final String base64image, @NotNull final String name,
+    public Item(@Nullable final Integer itemID, @Nullable final String base64image, @Nullable final String imageExtension, @NotNull final String name,
                 final int costCopper, @Nullable final String description, @NotNull final Rarity rarity,
                 final double weight) {
         this.itemID = itemID;
         this.base64image = base64image;
+        this.imageExtension = imageExtension;
         this.name = name;
         this.costCopper = costCopper;
         if (this.costCopper < 0) this.costCopper = 0;
@@ -61,6 +64,7 @@ public class Item {
         ps.close();
         this.itemID = retrievedItem.itemID;
         this.base64image = retrievedItem.base64image;
+        this.imageExtension = retrievedItem.imageExtension;
         this.name = retrievedItem.name;
         this.costCopper = retrievedItem.costCopper;
         if (this.costCopper < 0) this.costCopper = 0;
@@ -78,6 +82,7 @@ public class Item {
         ps.close();
         this.itemID = retrievedItem.itemID;
         this.base64image = retrievedItem.base64image;
+        this.imageExtension = retrievedItem.imageExtension;
         this.name = retrievedItem.name;
         this.costCopper = retrievedItem.costCopper;
         if (this.costCopper < 0) this.costCopper = 0;
@@ -90,8 +95,10 @@ public class Item {
         this.itemID = resultSet.getInt("id");
         try {
             this.base64image = resultSet.getString("base64image");
+            this.imageExtension = resultSet.getString("image_extension");
         } catch (SQLException e) {
             this.base64image = null;
+            this.imageExtension = null;
         }
         this.name = resultSet.getString("name");
         try {
@@ -124,6 +131,13 @@ public class Item {
     }
     public void setBase64image(@Nullable final String base64image) {
         this.base64image = base64image;
+    }
+    @Nullable
+    public String getImageExtension() {
+        return imageExtension;
+    }
+    public void setImageExtension(@Nullable final String imageExtension) {
+        this.imageExtension = imageExtension;
     }
     @NotNull
     public String getName() {
@@ -170,6 +184,8 @@ public class Item {
         if (getItemID() != null ? !getItemID().equals(item.getItemID()) : item.getItemID() != null) return false;
         if (getBase64image() != null ? !getBase64image().equals(item.getBase64image()) : item.getBase64image() != null)
             return false;
+        if (getImageExtension() != null ? !getImageExtension().equals(item.getImageExtension()) : item.getImageExtension() != null)
+            return false;
         if (!getName().equals(item.getName())) return false;
         if (getDescription() != null ? !getDescription().equals(item.getDescription()) : item.getDescription() != null)
             return false;
@@ -181,6 +197,7 @@ public class Item {
         long temp;
         result = getItemID() != null ? getItemID().hashCode() : 0;
         result = 31 * result + (getBase64image() != null ? getBase64image().hashCode() : 0);
+        result = 31 * result + (getImageExtension() != null ? getImageExtension().hashCode() : 0);
         result = 31 * result + getName().hashCode();
         result = 31 * result + getCostCopper();
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
@@ -194,6 +211,7 @@ public class Item {
         return "Item{" +
                 "itemID=" + itemID +
                 ", base64image='" + base64image + '\'' +
+                ", imageExtension='" + imageExtension + '\'' +
                 ", name='" + name + '\'' +
                 ", costCopper=" + costCopper +
                 ", description='" + description + '\'' +
