@@ -25,10 +25,10 @@ public final class ElementPreview {
         }
         this.rarity = finalRarity;
         if (this.rarity != null) {
-            String red = Integer.toString((int)(this.rarity.getColor().getRed()*255),16);
-            String green = Integer.toString((int)(this.rarity.getColor().getGreen()*255),16);
-            String blue = Integer.toString((int)(this.rarity.getColor().getBlue()*255),16);
-            rarityColor = "#"+red+green+blue;
+            int red = (int)(this.rarity.getColor().getRed()*255);
+            int green = (int)(this.rarity.getColor().getGreen()*255);
+            int blue = (int)(this.rarity.getColor().getBlue()*255);
+            rarityColor = String.format("#%02X%02X%02X", red, green, blue);
         } else {
             this.rarityColor = null;
         }
