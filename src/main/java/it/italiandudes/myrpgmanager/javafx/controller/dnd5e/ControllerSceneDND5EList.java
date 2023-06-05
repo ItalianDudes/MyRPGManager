@@ -106,8 +106,7 @@ public final class ControllerSceneDND5EList {
                     protected Void call() throws Exception {
                         try {
                             String table = getTableNameByFilter(choice);
-                            String query = "SELECT name FROM " + table + " WHERE name LIKE '%"+userInput+"%' ORDER BY name;";
-                            // fixme: Understand how to implement the search that contains the world
+                            String query = "SELECT name, rarity, weight FROM " + table + " WHERE name LIKE '%"+userInput+"%' ORDER BY name;";
                             PreparedStatement ps = DBManager.preparedStatement(query);
                             if (ps == null) {
                                 Platform.runLater(() -> {
