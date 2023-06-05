@@ -126,7 +126,7 @@ public final class ControllerSceneDBChooser {
                             if (!RPGRecognizer.openRPGTask(result)) {
                                 Platform.runLater(() -> {
                                     Client.getStage().setScene(thisScene);
-                                    new ErrorAlert("ERRORE", "Errore di rilevamento dell'estensione", "Si è verificato un errore nell'identificare il tipo di RPG da usare.");
+                                    new ErrorAlert("ERRORE", "Errore di rilevamento dell'estensione", "Si e' verificato un errore nell'identificare il tipo di RPG da usare.");
                                 });
                             }
 

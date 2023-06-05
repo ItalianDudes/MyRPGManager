@@ -60,7 +60,7 @@ public final class ControllerSceneDND5EList {
                             PreparedStatement ps = DBManager.preparedStatement(query);
                             if (ps == null) {
                                 Platform.runLater(() -> {
-                                    new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non è stato possibile consultare il database");
+                                    new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non e' stato possibile consultare il database");
                                     Client.getStage().setScene(SceneCreateOrChooseDB.getScene());
                                 });
                                 return null;
@@ -111,7 +111,7 @@ public final class ControllerSceneDND5EList {
                             PreparedStatement ps = DBManager.preparedStatement(query);
                             if (ps == null) {
                                 Platform.runLater(() -> {
-                                    new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non è stato possibile consultare il database");
+                                    new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non e' stato possibile consultare il database");
                                     Client.getStage().setScene(SceneCreateOrChooseDB.getScene());
                                 });
                                 return null;
@@ -181,7 +181,7 @@ public final class ControllerSceneDND5EList {
                             PreparedStatement ps = DBManager.preparedStatement(query);
                             if (ps == null) {
                                 Platform.runLater(() -> {
-                                    new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non è stato possibile consultare il database");
+                                    new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non e' stato possibile consultare il database");
                                     Client.getStage().setScene(SceneCreateOrChooseDB.getScene());
                                 });
                                 return null;
