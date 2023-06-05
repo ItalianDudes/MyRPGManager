@@ -39,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
 
@@ -172,9 +173,27 @@ public final class ControllerSceneDND5EItem {
                     protected Void call() {
                         try {
                             if (item == null) {
+
+                                String countCheckerQuery = "SELECT COUNT(*) AS count FROM items WHERE name=?;";
+
+                                PreparedStatement ps = DBManager.preparedStatement(countCheckerQuery);
+                                if (ps == null) {
+                                    throw new SQLException("Database connection doesn't exist");
+                                }
+
+                                ps.setString(1, textFieldName.getText());
+
+                                ResultSet count = ps.executeQuery();
+                                if (count.next() && count.getInt("count") == 1) {
+                                    Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Esiste gia' un oggetto con questo nome!"));
+                                    return null;
+                                }
+
+                                ps.close();
+
                                 String query = "INSERT INTO items (name, base64image, image_extension, cost_copper, description, rarity, weight) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-                                PreparedStatement ps = DBManager.preparedStatement(query);
+                                ps = DBManager.preparedStatement(query);
                                 if (ps == null) {
                                     throw new SQLException("Database connection doesn't exist");
                                 }
@@ -212,6 +231,8 @@ public final class ControllerSceneDND5EItem {
                                 ps.executeUpdate();
 
                                 ps.close();
+
+                                item = new Item(textFieldName.getText());
 
                                 Platform.runLater(() -> new InformationAlert("SUCCESSO", "Inserimento Dati", "Inserimento dei dati effettuato con successo!"));
 

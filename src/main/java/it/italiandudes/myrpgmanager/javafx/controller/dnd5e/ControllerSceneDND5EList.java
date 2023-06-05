@@ -35,7 +35,7 @@ public final class ControllerSceneDND5EList {
 
     //Graphic Elements
     @FXML private ComboBox<String> comboBoxCategory;
-    @FXML private ComboBox<String> comboBoxFilter;
+    @FXML private ComboBox<String> comboBoxSorter;
     @FXML private TextField textFieldSearchBar;
     @FXML private CheckBox checkBoxSortDesc;
     @FXML private ListView<ElementPreview> listViewOptions;
@@ -45,8 +45,8 @@ public final class ControllerSceneDND5EList {
     private void initialize() {
         Client.getStage().setResizable(true);
         comboBoxCategory.setItems(FXCollections.observableList(DND5E.ELEMENTS));
-        comboBoxFilter.setItems(FXCollections.observableList(DND5E.FILTERS));
-        comboBoxFilter.setVisible(false);
+        comboBoxSorter.setItems(FXCollections.observableList(DND5E.SORTERS));
+        comboBoxSorter.setVisible(false);
         listViewOptions.setCellFactory(lv -> new ListCell<ElementPreview>() {
             @Override
             protected void updateItem(ElementPreview elementPreview, boolean empty) {
@@ -85,17 +85,17 @@ public final class ControllerSceneDND5EList {
                     protected Void call() throws Exception {
                         try {
                             String filterField;
-                            String filter = comboBoxFilter.getSelectionModel().getSelectedItem();
-                            if (filter == null || filter.equals(DND5E.FILTER_NAME[0])) {
-                                filterField = DND5E.FILTER_NAME[1];
-                            } else if (filter.equals(DND5E.FILTER_RARITY[0])) {
-                                filterField = DND5E.FILTER_RARITY[1];
-                            } else if (filter.equals(DND5E.FILTER_COST[0])) {
-                                filterField = DND5E.FILTER_COST[1];
-                            } else if (filter.equals(DND5E.FILTER_WEIGHT[0])) {
-                                filterField = DND5E.FILTER_WEIGHT[1];
+                            String filter = comboBoxSorter.getSelectionModel().getSelectedItem();
+                            if (filter == null || filter.equals(DND5E.SORTER_NAME[0])) {
+                                filterField = DND5E.SORTER_NAME[1];
+                            } else if (filter.equals(DND5E.SORTER_RARITY[0])) {
+                                filterField = DND5E.SORTER_RARITY[1];
+                            } else if (filter.equals(DND5E.SORTER_COST[0])) {
+                                filterField = DND5E.SORTER_COST[1];
+                            } else if (filter.equals(DND5E.SORTERS_WEIGHT[0])) {
+                                filterField = DND5E.SORTERS_WEIGHT[1];
                             } else {
-                                filterField = DND5E.FILTER_NAME[1];
+                                filterField = DND5E.SORTER_NAME[1];
                             }
 
                             String query = "SELECT name, rarity, weight, cost_copper FROM items ORDER BY "+filterField+" "+(sortDesc?"DESC":"ASC")+";";
@@ -141,7 +141,7 @@ public final class ControllerSceneDND5EList {
     @FXML
     private void displaySelected() {
         String choice = comboBoxCategory.getSelectionModel().getSelectedItem();
-        comboBoxFilter.setVisible(choice.equals(DND5E.ITEMS[0]));
+        comboBoxSorter.setVisible(choice.equals(DND5E.ITEMS[0]));
         Service<Void> displaySelectedService = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
@@ -153,17 +153,17 @@ public final class ControllerSceneDND5EList {
                             String query;
                             if (choice.equals(DND5E.ITEMS[0])) {
                                 String filterField;
-                                String filter = comboBoxFilter.getSelectionModel().getSelectedItem();
-                                if (filter == null || filter.equals(DND5E.FILTER_NAME[0])) {
-                                    filterField = DND5E.FILTER_NAME[1];
-                                } else if (filter.equals(DND5E.FILTER_RARITY[0])) {
-                                    filterField = DND5E.FILTER_RARITY[1];
-                                } else if (filter.equals(DND5E.FILTER_COST[0])) {
-                                    filterField = DND5E.FILTER_COST[1];
-                                } else if (filter.equals(DND5E.FILTER_WEIGHT[0])) {
-                                    filterField = DND5E.FILTER_WEIGHT[1];
+                                String filter = comboBoxSorter.getSelectionModel().getSelectedItem();
+                                if (filter == null || filter.equals(DND5E.SORTER_NAME[0])) {
+                                    filterField = DND5E.SORTER_NAME[1];
+                                } else if (filter.equals(DND5E.SORTER_RARITY[0])) {
+                                    filterField = DND5E.SORTER_RARITY[1];
+                                } else if (filter.equals(DND5E.SORTER_COST[0])) {
+                                    filterField = DND5E.SORTER_COST[1];
+                                } else if (filter.equals(DND5E.SORTERS_WEIGHT[0])) {
+                                    filterField = DND5E.SORTERS_WEIGHT[1];
                                 } else {
-                                    filterField = DND5E.FILTER_NAME[1];
+                                    filterField = DND5E.SORTER_NAME[1];
                                 }
 
                                 query = "SELECT name, rarity, weight, cost_copper FROM " + table + " ORDER BY "+filterField+" "+(sortDesc?"DESC":"ASC")+";";
@@ -242,17 +242,17 @@ public final class ControllerSceneDND5EList {
                             String query;
                             if (choice.equals(DND5E.ITEMS[0])) {
                                 String filterField;
-                                String filter = comboBoxFilter.getSelectionModel().getSelectedItem();
-                                if (filter == null || filter.equals(DND5E.FILTER_NAME[0])) {
-                                    filterField = DND5E.FILTER_NAME[1];
-                                } else if (filter.equals(DND5E.FILTER_RARITY[0])) {
-                                    filterField = DND5E.FILTER_RARITY[1];
-                                } else if (filter.equals(DND5E.FILTER_COST[0])) {
-                                    filterField = DND5E.FILTER_COST[1];
-                                } else if (filter.equals(DND5E.FILTER_WEIGHT[0])) {
-                                    filterField = DND5E.FILTER_WEIGHT[1];
+                                String filter = comboBoxSorter.getSelectionModel().getSelectedItem();
+                                if (filter == null || filter.equals(DND5E.SORTER_NAME[0])) {
+                                    filterField = DND5E.SORTER_NAME[1];
+                                } else if (filter.equals(DND5E.SORTER_RARITY[0])) {
+                                    filterField = DND5E.SORTER_RARITY[1];
+                                } else if (filter.equals(DND5E.SORTER_COST[0])) {
+                                    filterField = DND5E.SORTER_COST[1];
+                                } else if (filter.equals(DND5E.SORTERS_WEIGHT[0])) {
+                                    filterField = DND5E.SORTERS_WEIGHT[1];
                                 } else {
-                                    filterField = DND5E.FILTER_NAME[1];
+                                    filterField = DND5E.SORTER_NAME[1];
                                 }
                                 query = "SELECT name, rarity, weight, cost_copper FROM " + table + " WHERE "+filterField+" LIKE '%"+userInput+"%' ORDER BY name "+(sortDesc?"DESC":"ASC")+";";
                             } else {
