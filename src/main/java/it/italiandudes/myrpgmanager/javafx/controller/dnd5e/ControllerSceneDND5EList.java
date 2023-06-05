@@ -29,8 +29,8 @@ import java.util.ArrayList;
 public final class ControllerSceneDND5EList {
 
     // Attributes
-    public static Scene thisScene = null;
-    public static String elementName = null;
+    private static Scene thisScene = null;
+    private static String elementName = null;
 
     //Graphic Elements
     @FXML private ComboBox<String> comboBoxFilter;
@@ -106,7 +106,7 @@ public final class ControllerSceneDND5EList {
                     protected Void call() throws Exception {
                         try {
                             String table = getTableNameByFilter(choice);
-                            String query = "SELECT name FROM " + table + " WHERE name LIKE ? ORDER BY name;";
+                            String query = "SELECT name FROM " + table + " WHERE name LIKE '%"+userInput+"%' ORDER BY name;";
                             // fixme: Understand how to implement the search that contains the world
                             PreparedStatement ps = DBManager.preparedStatement(query);
                             if (ps == null) {
@@ -117,7 +117,7 @@ public final class ControllerSceneDND5EList {
                                 return null;
                             }
 
-                            ps.setString(1, userInput);
+                            //ps.setString(1, userInput);
                             ResultSet result = ps.executeQuery();
 
                             ArrayList<String> resultList = new ArrayList<>();
