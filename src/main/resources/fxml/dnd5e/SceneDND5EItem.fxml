@@ -17,13 +17,24 @@
             </TextField>
             <HBox alignment="CENTER" spacing="10.0">
                <children>
-                  <ImageView fx:id="imageViewItem" fitHeight="256.0" fitWidth="256.0" onMouseClicked="#openFileChooser" pickOnBounds="true">
-                     <viewport>
-                        <Rectangle2D />
-                     </viewport>
-                     <image>
-                        <Image url="@../../gif/loading.gif" />
-                     </image></ImageView>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#removeImage">
+                           <graphic>
+                              <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../image/delete.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <ImageView fx:id="imageViewItem" fitHeight="256.0" fitWidth="256.0" onMouseClicked="#openFileChooser" pickOnBounds="true">
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                        </ImageView>
+                     </children>
+                  </VBox>
                   <VBox prefWidth="512.0" spacing="10.0">
                      <children>
                         <TextField fx:id="textFieldWeight" maxWidth="1.7976931348623157E308" prefWidth="512.0" promptText="Peso" />

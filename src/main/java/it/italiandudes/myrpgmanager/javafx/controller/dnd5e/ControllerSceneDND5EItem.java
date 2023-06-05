@@ -48,6 +48,14 @@ public final class ControllerSceneDND5EItem {
     // Attributes
     private Item item = null;
     private String imageExtension = null;
+    private static final Image defaultImage;
+    static {
+        try {
+            defaultImage = SwingFXUtils.toFXImage(ImageIO.read(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)), null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // Graphic Elements
     @FXML private TextField textFieldName;
@@ -65,7 +73,9 @@ public final class ControllerSceneDND5EItem {
     @FXML
     private void initialize() {
         Client.getStage().setResizable(true);
+        imageViewItem.setImage(defaultImage);
         comboBoxRarity.setItems(FXCollections.observableList(Rarity.colorNames));
+        comboBoxRarity.getSelectionModel().selectFirst();
         comboBoxRarity.buttonCellProperty().bind(Bindings.createObjectBinding(() -> {
 
             Rarity identifiedRarity = null;
@@ -105,6 +115,11 @@ public final class ControllerSceneDND5EItem {
     }
 
     // EDT
+    @FXML
+    private void removeImage() {
+        imageViewItem.setImage(defaultImage);
+        imageExtension = null;
+    }
     @FXML
     private void openFileChooser() {
         FileChooser fileChooser = new FileChooser();
@@ -162,19 +177,34 @@ public final class ControllerSceneDND5EItem {
                                 }
 
                                 ps.setString(1, textFieldName.getText());
-                                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageViewItem.getImage(), null);
-                                ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
-                                ImageIO.write(bufferedImage, imageExtension, imageByteStream);
-                                ps.setString(2, Base64.getEncoder().encodeToString(imageByteStream.toByteArray()));
+                                if (!imageViewItem.getImage().equals(defaultImage)) {
+                                    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageViewItem.getImage(), null);
+                                    ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
+                                    ImageIO.write(bufferedImage, imageExtension, imageByteStream);
+                                    ps.setString(2, Base64.getEncoder().encodeToString(imageByteStream.toByteArray()));
 
-                                ps.setString(3, imageExtension);
+                                    ps.setString(3, imageExtension);
+                                } else {
+                                    ps.setString(2, null);
+                                    ps.setString(3, null);
+                                }
 
-                                int copperCoins = Integer.parseInt(textFieldMR.getText()) + (Integer.parseInt(textFieldMA.getText())*10) + (Integer.parseInt(textFieldME.getText())*50) + (Integer.parseInt(textFieldMO.getText())*100) + (Integer.parseInt(textFieldMP.getText())*1000);
+                                int copperCoins;
+
+                                try {
+                                    copperCoins = Integer.parseInt(textFieldMR.getText()) + (Integer.parseInt(textFieldMA.getText()) * 10) + (Integer.parseInt(textFieldME.getText()) * 50) + (Integer.parseInt(textFieldMO.getText()) * 100) + (Integer.parseInt(textFieldMP.getText()) * 1000);
+                                } catch (NumberFormatException e) {
+                                    copperCoins = 0;
+                                }
 
                                 ps.setInt(4, copperCoins);
                                 ps.setString(5, textAreaDescription.getText());
                                 ps.setInt(6, Rarity.colorNames.indexOf(comboBoxRarity.getSelectionModel().getSelectedItem()));
-                                ps.setDouble(7, Double.parseDouble(textFieldWeight.getText()));
+                                try {
+                                    ps.setDouble(7, Double.parseDouble(textFieldWeight.getText()));
+                                } catch (NumberFormatException e) {
+                                    ps.setDouble(7, 0);
+                                }
 
                                 ps.executeUpdate();
 
@@ -191,19 +221,33 @@ public final class ControllerSceneDND5EItem {
                                 }
 
                                 ps.setString(1, textFieldName.getText());
-                                BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageViewItem.getImage(), null);
-                                ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
-                                ImageIO.write(bufferedImage, "png", imageByteStream);
-                                ps.setString(2, Base64.getEncoder().encodeToString(imageByteStream.toByteArray()));
+                                if (!imageViewItem.getImage().equals(defaultImage)) {
+                                    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageViewItem.getImage(), null);
+                                    ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
+                                    ImageIO.write(bufferedImage, "png", imageByteStream);
+                                    ps.setString(2, Base64.getEncoder().encodeToString(imageByteStream.toByteArray()));
+                                    ps.setString(3, imageExtension);
+                                } else {
+                                    ps.setString(2, null);
+                                    ps.setString(3, null);
+                                }
 
-                                int copperCoins = Integer.parseInt(textFieldMR.getText()) + (Integer.parseInt(textFieldMA.getText())*10) + (Integer.parseInt(textFieldME.getText())*50) + (Integer.parseInt(textFieldMO.getText())*100) + (Integer.parseInt(textFieldMP.getText())*1000);
+                                int copperCoins;
 
-                                ps.setString(3, imageExtension);
+                                try {
+                                    copperCoins = Integer.parseInt(textFieldMR.getText()) + (Integer.parseInt(textFieldMA.getText()) * 10) + (Integer.parseInt(textFieldME.getText()) * 50) + (Integer.parseInt(textFieldMO.getText()) * 100) + (Integer.parseInt(textFieldMP.getText()) * 1000);
+                                } catch (NumberFormatException e) {
+                                    copperCoins = 0;
+                                }
 
                                 ps.setInt(4, copperCoins);
                                 ps.setString(5, textAreaDescription.getText());
                                 ps.setInt(6, Rarity.colorNames.indexOf(comboBoxRarity.getSelectionModel().getSelectedItem()));
-                                ps.setDouble(7, Double.parseDouble(textFieldWeight.getText()));
+                                try {
+                                    ps.setDouble(7, Double.parseDouble(textFieldWeight.getText()));
+                                } catch (NumberFormatException e) {
+                                    ps.setDouble(7, 0);
+                                }
                                 ps.setString(8, item.getName());
 
                                 ps.executeUpdate();
@@ -215,7 +259,7 @@ public final class ControllerSceneDND5EItem {
                         } catch (Exception e) {
                             Logger.log(e);
                             Platform.runLater(() -> {
-                                new ErrorAlert("ERRORE", "Errore di Salvataggio", "Si è verificato un errore durante il salvataggio dei dati");
+                                new ErrorAlert("ERRORE", "Errore di Salvataggio", "Si e' verificato un errore durante il salvataggio dei dati");
                                 Client.getStage().setScene(ControllerSceneDND5EList.getListScene());
                             });
                         }

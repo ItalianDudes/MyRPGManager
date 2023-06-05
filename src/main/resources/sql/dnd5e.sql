@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS properties (
 CREATE TABLE IF NOT EXISTS items (
     id INTEGER NOT NULL PRIMARY KEY,
     base64image TEXT,
-    image_extension TEXT CHECK ((image_extension = 'png' OR image_extension = 'jpg' OR image_extension = 'jpeg' OR image_extension = 'gif') AND base64image IS NOT NULL),
+    image_extension TEXT CHECK (image_extension = 'png' OR image_extension = 'jpg' OR image_extension = 'jpeg' OR image_extension = 'gif'),
     name TEXT NOT NULL UNIQUE,
     cost_copper INTEGER NOT NULL DEFAULT 0,
     description TEXT,
