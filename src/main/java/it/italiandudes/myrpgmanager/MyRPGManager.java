@@ -62,7 +62,8 @@ public final class MyRPGManager {
                 public static final String[] SUPPORTED_IMAGE_EXTENSIONS = {
                         "png",
                         "jpg",
-                        "jpeg"
+                        "jpeg",
+                        "gif"
                 };
             }
         }
