@@ -12,9 +12,10 @@ public final class ElementPreview {
     @Nullable private final Rarity rarity;
     @Nullable private final String rarityColor;
     private final double weight;
+    private final int type;
 
     // Constructors
-    public ElementPreview(@NotNull final String name, final double costCopper, final int rarity, final double weight) {
+    public ElementPreview(@NotNull final String name, final double costCopper, final int rarity, final double weight, final int type) {
         @Nullable Rarity finalRarity;
         this.name = name;
         this.costCopper = costCopper;
@@ -33,6 +34,7 @@ public final class ElementPreview {
             this.rarityColor = null;
         }
         this.weight = weight;
+        this.type = type;
     }
 
     // Methods
@@ -54,6 +56,9 @@ public final class ElementPreview {
     public String getRarityColor() {
         return rarityColor;
     }
+    public int getType() {
+        return type;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,6 +68,7 @@ public final class ElementPreview {
 
         if (Double.compare(that.getCostCopper(), getCostCopper()) != 0) return false;
         if (Double.compare(that.getWeight(), getWeight()) != 0) return false;
+        if (getType() != that.getType()) return false;
         if (!getName().equals(that.getName())) return false;
         if (getRarity() != that.getRarity()) return false;
         return getRarityColor() != null ? getRarityColor().equals(that.getRarityColor()) : that.getRarityColor() == null;
@@ -78,6 +84,7 @@ public final class ElementPreview {
         result = 31 * result + (getRarityColor() != null ? getRarityColor().hashCode() : 0);
         temp = Double.doubleToLongBits(getWeight());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + getType();
         return result;
     }
 

@@ -21,6 +21,7 @@ public final class Armor extends Item {
     // Constructors
     public Armor() {
         super();
+        setItemType(ItemTypes.TYPE_ARMOR.getDatabaseValue());
         AC = 0;
         strengthRequired = 0;
         stealth = 0;

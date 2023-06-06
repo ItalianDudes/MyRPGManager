@@ -5,8 +5,8 @@ import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
 import it.italiandudes.myrpgmanager.data.Armor;
 import it.italiandudes.myrpgmanager.data.Item;
+import it.italiandudes.myrpgmanager.data.ItemTypes;
 import it.italiandudes.myrpgmanager.data.Rarity;
-import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.JFXDefs;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
@@ -36,17 +36,12 @@ import org.jetbrains.annotations.NotNull;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Base64;
 
 @SuppressWarnings("unused")
 public final class ControllerSceneDND5EArmor {
-/*
     // Attributes
     private Armor armor = null;
     private String imageExtension = null;
@@ -177,114 +172,68 @@ public final class ControllerSceneDND5EArmor {
                     @Override
                     protected Void call() {
                         try {
-                            if (armor == null) {
 
-                                String countCheckerQuery = "SELECT COUNT(*) AS count FROM items WHERE name=? AND (SELECT COUNT(*) FROM armors WHERE armors.item_id = items.id) = 1;";
-
-                                PreparedStatement ps = DBManager.preparedStatement(countCheckerQuery);
-                                if (ps == null) {
-                                    throw new SQLException("Database connection doesn't exist");
-                                }
-
-                                ps.setString(1, textFieldName.getText());
-
-                                ResultSet count = ps.executeQuery();
-                                if (count.next() && count.getInt("count") == 1) {
-                                    Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Esiste gia' un oggetto o un'armatura con questo nome!"));
-                                    return null;
-                                }
-
-                                ps.close();
-
-                                String query = "INSERT INTO items (name, base64image, image_extension, cost_copper, description, rarity, weight) VALUES (?, ?, ?, ?, ?, ?, ?);";
-
-                                ps = DBManager.preparedStatement(query);
-                                if (ps == null) {
-                                    throw new SQLException("Database connection doesn't exist");
-                                }
-
-                                ps.setString(1, textFieldName.getText());
-                                if (isImageSet) {
-                                    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageViewItem.getImage(), null);
-                                    ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
-                                    ImageIO.write(bufferedImage, imageExtension, imageByteStream);
-                                    ps.setString(2, Base64.getEncoder().encodeToString(imageByteStream.toByteArray()));
-
-                                    ps.setString(3, imageExtension);
-                                } else {
-                                    ps.setString(2, null);
-                                    ps.setString(3, null);
-                                }
-
-                                int copperCoins;
-
-                                try {
-                                    copperCoins = Integer.parseInt(textFieldMR.getText()) + (Integer.parseInt(textFieldMA.getText()) * 10) + (Integer.parseInt(textFieldME.getText()) * 50) + (Integer.parseInt(textFieldMO.getText()) * 100) + (Integer.parseInt(textFieldMP.getText()) * 1000);
-                                } catch (NumberFormatException e) {
-                                    copperCoins = 0;
-                                }
-
-                                ps.setInt(4, copperCoins);
-                                ps.setString(5, textAreaDescription.getText());
-                                ps.setInt(6, Rarity.colorNames.indexOf(comboBoxRarity.getSelectionModel().getSelectedItem()));
-                                try {
-                                    ps.setDouble(7, Double.parseDouble(textFieldWeight.getText()));
-                                } catch (NumberFormatException e) {
-                                    ps.setDouble(7, 0);
-                                }
-
-                                ps.executeUpdate();
-
-                                ps.close();
-
-                                Item itemArmor = new Item(textFieldName.getText());
-
-                                Platform.runLater(() -> new InformationAlert("SUCCESSO", "Inserimento Dati", "Inserimento dei dati effettuato con successo!"));
-
+                            String stealthChoice = comboBoxStealth.getSelectionModel().getSelectedItem();
+                            int stealth;
+                            if (stealthChoice.equals(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_NEUTRAL[0])) {
+                                stealth = Integer.parseInt(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_NEUTRAL[1]);
+                            } else if (stealthChoice.equals(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_ADVANTAGE[0])) {
+                                stealth = Integer.parseInt(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_ADVANTAGE[1]);
+                            } else if (stealthChoice.equals(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_DISADVANGE[0])) {
+                                stealth = Integer.parseInt(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_DISADVANGE[1]);
                             } else {
-                                String query = "UPDATE items SET name=?, base64image=?, image_extension=?, cost_copper=?, description=?, rarity=?, weight=? WHERE name=?;";
-
-                                PreparedStatement ps = DBManager.preparedStatement(query);
-                                if (ps == null) {
-                                    throw new SQLException("Database connection doesn't exist");
-                                }
-
-                                ps.setString(1, textFieldName.getText());
-                                if (isImageSet) {
-                                    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(imageViewItem.getImage(), null);
-                                    ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
-                                    ImageIO.write(bufferedImage, imageExtension, imageByteStream);
-                                    ps.setString(2, Base64.getEncoder().encodeToString(imageByteStream.toByteArray()));
-                                    ps.setString(3, imageExtension);
-                                } else {
-                                    ps.setString(2, null);
-                                    ps.setString(3, null);
-                                }
-
-                                int copperCoins;
-
-                                try {
-                                    copperCoins = Integer.parseInt(textFieldMR.getText()) + (Integer.parseInt(textFieldMA.getText()) * 10) + (Integer.parseInt(textFieldME.getText()) * 50) + (Integer.parseInt(textFieldMO.getText()) * 100) + (Integer.parseInt(textFieldMP.getText()) * 1000);
-                                } catch (NumberFormatException e) {
-                                    copperCoins = 0;
-                                }
-
-                                ps.setInt(4, copperCoins);
-                                ps.setString(5, textAreaDescription.getText());
-                                ps.setInt(6, Rarity.colorNames.indexOf(comboBoxRarity.getSelectionModel().getSelectedItem()));
-                                try {
-                                    ps.setDouble(7, Double.parseDouble(textFieldWeight.getText()));
-                                } catch (NumberFormatException e) {
-                                    ps.setDouble(7, 0);
-                                }
-                                ps.setString(8, item.getName());
-
-                                ps.executeUpdate();
-
-                                ps.close();
-
-                                Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
+                                throw new RuntimeException("How this is even possible?");
                             }
+                            if (armor == null) {
+                                Item item = new Item(
+                                        null,
+                                        imageViewItem.getImage(),
+                                        imageExtension,
+                                        textFieldName.getText(),
+                                        Integer.parseInt(textFieldMR.getText()),
+                                        Integer.parseInt(textFieldMA.getText()),
+                                        Integer.parseInt(textFieldME.getText()),
+                                        Integer.parseInt(textFieldMO.getText()),
+                                        Integer.parseInt(textFieldMP.getText()),
+                                        textAreaDescription.getText(),
+                                        comboBoxRarity.getSelectionModel().getSelectedItem(),
+                                        ItemTypes.TYPE_ARMOR.getDatabaseValue()
+                                );
+                                armor = new Armor(
+                                        item,
+                                        null,
+                                        textFieldCategory.getText(),
+                                        Integer.parseInt(textFieldAC.getText()),
+                                        Integer.parseInt(textFieldStrengthRequired.getText()),
+                                        stealth
+                                );
+                            } else {
+                                Item item = new Item(
+                                        armor.getItemID(),
+                                        imageViewItem.getImage(),
+                                        imageExtension,
+                                        textFieldName.getText(),
+                                        Integer.parseInt(textFieldMR.getText()),
+                                        Integer.parseInt(textFieldMA.getText()),
+                                        Integer.parseInt(textFieldME.getText()),
+                                        Integer.parseInt(textFieldMO.getText()),
+                                        Integer.parseInt(textFieldMP.getText()),
+                                        textAreaDescription.getText(),
+                                        comboBoxRarity.getSelectionModel().getSelectedItem(),
+                                        ItemTypes.TYPE_ARMOR.getDatabaseValue()
+                                );
+                                armor = new Armor(
+                                        item,
+                                        armor.getArmorID(),
+                                        textFieldCategory.getText(),
+                                        Integer.parseInt(textFieldAC.getText()),
+                                        Integer.parseInt(textFieldStrengthRequired.getText()),
+                                        stealth
+                                );
+                            }
+
+                            armor.saveIntoDatabase();
+                            Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
                             Platform.runLater(() -> {
@@ -361,7 +310,20 @@ public final class ControllerSceneDND5EArmor {
                                     imageViewItem.setImage(new Image(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)));
                                 }
 
-                                // TODO: Add armor part
+                                String stealthStr;
+                                if (armor.getStealth() == -1) {
+                                    stealthStr = MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_DISADVANGE[0];
+                                } else if (armor.getStealth() == 0) {
+                                    stealthStr = MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_NEUTRAL[0];
+                                } else if (armor.getStealth() == 1) {
+                                    stealthStr = MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_ADVANTAGE[0];
+                                } else {
+                                    throw new RuntimeException("How this is even possible?");
+                                }
+                                textFieldCategory.setText(armor.getCategory());
+                                comboBoxStealth.getSelectionModel().select(stealthStr);
+                                textFieldAC.setText(String.valueOf(armor.getAC()));
+                                textFieldStrengthRequired.setText(String.valueOf(armor.getStrengthRequired()));
                             });
 
                         } catch (Exception e) {
@@ -380,6 +342,4 @@ public final class ControllerSceneDND5EArmor {
 
         itemInitializerService.start();
     }
-
-*/
 }

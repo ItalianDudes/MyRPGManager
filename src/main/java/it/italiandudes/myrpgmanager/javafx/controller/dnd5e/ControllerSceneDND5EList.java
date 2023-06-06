@@ -7,6 +7,7 @@ import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.scene.SceneCreateOrChooseDB;
+import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.SceneDND5EArmor;
 import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.SceneDND5EItem;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -36,6 +37,7 @@ public final class ControllerSceneDND5EList {
     //Graphic Elements
     @FXML private ComboBox<String> comboBoxCategory;
     @FXML private ComboBox<String> comboBoxSorter;
+    @FXML private ComboBox<String> comboBoxFilter;
     @FXML private TextField textFieldSearchBar;
     @FXML private CheckBox checkBoxSortDesc;
     @FXML private ListView<ElementPreview> listViewOptions;
@@ -47,6 +49,10 @@ public final class ControllerSceneDND5EList {
         comboBoxCategory.setItems(FXCollections.observableList(DND5E.ELEMENTS));
         comboBoxSorter.setItems(FXCollections.observableList(DND5E.SORTERS));
         comboBoxSorter.setVisible(false);
+        comboBoxSorter.getSelectionModel().selectFirst();
+        comboBoxFilter.setItems(FXCollections.observableList(DND5E.ITEM_FILTERS));
+        comboBoxFilter.getSelectionModel().selectFirst();
+        comboBoxFilter.setVisible(false);
         listViewOptions.setCellFactory(lv -> new ListCell<ElementPreview>() {
             @Override
             protected void updateItem(ElementPreview elementPreview, boolean empty) {
@@ -81,10 +87,18 @@ public final class ControllerSceneDND5EList {
         search();
     }
     @FXML
+    private void applySorter() {
+        String category = comboBoxCategory.getSelectionModel().getSelectedItem();
+        if (category == null) return;
+        if (!category.equals(DND5E.ITEMS[0])) return;
+        search();
+    }
+    @FXML
     private void displaySelected() {
         String category = comboBoxCategory.getSelectionModel().getSelectedItem();
         if (category == null) return;
         comboBoxSorter.setVisible(category.equals(DND5E.ITEMS[0]));
+        comboBoxFilter.setVisible(category.equals(DND5E.ITEMS[0]));
         Service<Void> displaySelectedService = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
@@ -95,6 +109,7 @@ public final class ControllerSceneDND5EList {
                             String table = getTableNameByFilter(category);
                             String query;
                             if (category.equals(DND5E.ITEMS[0])) {
+                                int filterIndex = comboBoxFilter.getSelectionModel().getSelectedIndex()-1;
                                 String filterField;
                                 String filter = comboBoxSorter.getSelectionModel().getSelectedItem();
                                 if (filter == null || filter.equals(DND5E.SORTER_NAME[0])) {
@@ -109,7 +124,12 @@ public final class ControllerSceneDND5EList {
                                     filterField = DND5E.SORTER_NAME[1];
                                 }
 
-                                query = "SELECT name, rarity, weight, cost_copper FROM " + table + " ORDER BY "+filterField+" "+(sortDesc?"DESC":"ASC")+";";
+                                if (comboBoxFilter.getSelectionModel().getSelectedItem().equals(DND5E.FILTER_ANY)) {
+                                    query = "SELECT name, rarity, weight, cost_copper, item_type FROM " + table + " ORDER BY " + filterField + " " + (sortDesc ? "DESC" : "ASC") + ";";
+                                } else {
+                                    query = "SELECT name, rarity, weight, cost_copper, item_type FROM " + table + " WHERE item_type = " + filterIndex + " ORDER BY " + filterField + " " + (sortDesc ? "DESC" : "ASC") + ";";
+                                }
+
                             } else {
                                 query = "SELECT name FROM " + table + " ORDER BY name "+(sortDesc?"DESC":"ASC")+";";
                             }
@@ -133,7 +153,8 @@ public final class ControllerSceneDND5EList {
                                                     result.getString("name"),
                                                     result.getDouble("cost_copper"),
                                                     result.getInt("rarity"),
-                                                    result.getDouble("weight")
+                                                    result.getDouble("weight"),
+                                                    result.getInt("item_type")
                                             )
                                     );
                                 }
@@ -142,6 +163,7 @@ public final class ControllerSceneDND5EList {
                                     resultList.add(
                                         new ElementPreview(
                                                 result.getString("name"),
+                                                0,
                                                 0,
                                                 0,
                                                 0
@@ -185,6 +207,7 @@ public final class ControllerSceneDND5EList {
                             String table = getTableNameByFilter(category);
                             String query;
                             if (category.equals(DND5E.ITEMS[0])) {
+                                int filterIndex = comboBoxFilter.getSelectionModel().getSelectedIndex()-1;
                                 String filterField;
                                 String filter = comboBoxSorter.getSelectionModel().getSelectedItem();
                                 if (filter == null || filter.equals(DND5E.SORTER_NAME[0])) {
@@ -198,7 +221,11 @@ public final class ControllerSceneDND5EList {
                                 } else {
                                     filterField = DND5E.SORTER_NAME[1];
                                 }
-                                query = "SELECT name, rarity, weight, cost_copper FROM " + table + " WHERE name LIKE '%"+userInput+"%' ORDER BY "+filterField+" "+(sortDesc?"DESC":"ASC")+";";
+                                if (comboBoxFilter.getSelectionModel().getSelectedItem().equals(DND5E.FILTER_ANY)) {
+                                    query = "SELECT name, rarity, weight, cost_copper, item_type FROM " + table + " WHERE name LIKE '%" + userInput + "%' ORDER BY " + filterField + " " + (sortDesc ? "DESC" : "ASC") + ";";
+                                } else {
+                                    query = "SELECT name, rarity, weight, cost_copper, item_type FROM " + table + " WHERE name LIKE '%" + userInput + "%' AND item_type = " + filterIndex + " ORDER BY " + filterField + " " + (sortDesc ? "DESC" : "ASC") + ";";
+                                }
                             } else {
                                 query = "SELECT name FROM " + table + " WHERE name LIKE '%"+userInput+"%' ORDER BY name "+(sortDesc?"DESC":"ASC")+";";
                             }
@@ -222,7 +249,8 @@ public final class ControllerSceneDND5EList {
                                                     result.getString("name"),
                                                     result.getDouble("cost_copper"),
                                                     result.getInt("rarity"),
-                                                    result.getDouble("weight")
+                                                    result.getDouble("weight"),
+                                                    result.getInt("item_type")
                                             )
                                     );
                                 }
@@ -231,6 +259,7 @@ public final class ControllerSceneDND5EList {
                                     resultList.add(
                                             new ElementPreview(
                                                     result.getString("name"),
+                                                    0,
                                                     0,
                                                     0,
                                                     0
@@ -274,8 +303,24 @@ public final class ControllerSceneDND5EList {
     private void editElement() {
         if (listViewOptions.getSelectionModel().getSelectedItems().size() == 0) return;
         elementName = listViewOptions.getSelectionModel().getSelectedItem().getName();
+        String category = comboBoxCategory.getSelectionModel().getSelectedItem();
         thisScene = Client.getStage().getScene();
-        Client.getStage().setScene(SceneDND5EItem.getScene());
+        if (category.equals(DND5E.ITEMS[0])) {
+            switch (listViewOptions.getSelectionModel().getSelectedItem().getType()) { // Refers to: ItemTypes
+                case 0:
+                    Client.getStage().setScene(SceneDND5EItem.getScene());
+                    break;
+
+                case 1:
+                    Client.getStage().setScene(SceneDND5EArmor.getScene());
+                    break;
+
+                default:
+                    throw new RuntimeException("What is this item?");
+            }
+        } else {
+            // TODO: handle with else if all the rest
+        }
     }
     @FXML
     private void deleteElement() {

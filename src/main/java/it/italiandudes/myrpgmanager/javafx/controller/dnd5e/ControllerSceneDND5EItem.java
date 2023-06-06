@@ -4,6 +4,7 @@ import it.italiandudes.idl.common.ImageHandler;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
 import it.italiandudes.myrpgmanager.data.Item;
+import it.italiandudes.myrpgmanager.data.ItemTypes;
 import it.italiandudes.myrpgmanager.data.Rarity;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.JFXDefs;
@@ -179,7 +180,23 @@ public final class ControllerSceneDND5EItem {
                                     Integer.parseInt(textFieldMO.getText()),
                                     Integer.parseInt(textFieldMP.getText()),
                                     textAreaDescription.getText(),
-                                    comboBoxRarity.getSelectionModel().getSelectedItem()
+                                    comboBoxRarity.getSelectionModel().getSelectedItem(),
+                                    ItemTypes.TYPE_ITEM.getDatabaseValue()
+                            );
+                        } else {
+                            item = new Item(
+                                    item.getItemID(),
+                                    imageViewItem.getImage(),
+                                    imageExtension,
+                                    textFieldName.getText(),
+                                    Integer.parseInt(textFieldMR.getText()),
+                                    Integer.parseInt(textFieldMA.getText()),
+                                    Integer.parseInt(textFieldME.getText()),
+                                    Integer.parseInt(textFieldMO.getText()),
+                                    Integer.parseInt(textFieldMP.getText()),
+                                    textAreaDescription.getText(),
+                                    comboBoxRarity.getSelectionModel().getSelectedItem(),
+                                    ItemTypes.TYPE_ITEM.getDatabaseValue()
                             );
                         }
 

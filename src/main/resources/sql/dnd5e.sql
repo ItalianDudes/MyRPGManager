@@ -133,7 +133,8 @@ CREATE TABLE IF NOT EXISTS items (
     cost_copper INTEGER NOT NULL DEFAULT 0,
     description TEXT,
     rarity INTEGER NOT NULL DEFAULT 0,
-    weight REAL NOT NULL DEFAULT 0
+    weight REAL NOT NULL DEFAULT 0,
+    item_type INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS equipment_packs (
