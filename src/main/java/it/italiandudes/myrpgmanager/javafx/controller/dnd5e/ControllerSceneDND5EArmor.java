@@ -172,7 +172,6 @@ public final class ControllerSceneDND5EArmor {
                     @Override
                     protected Void call() {
                         try {
-
                             String stealthChoice = comboBoxStealth.getSelectionModel().getSelectedItem();
                             int stealth;
                             if (stealthChoice.equals(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_NEUTRAL[0])) {
@@ -183,6 +182,12 @@ public final class ControllerSceneDND5EArmor {
                                 stealth = Integer.parseInt(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_DISADVANGE[1]);
                             } else {
                                 throw new RuntimeException("How this is even possible?");
+                            }
+                            double weight;
+                            try {
+                                weight = Double.parseDouble(textFieldWeight.getText());
+                            } catch (NumberFormatException e) {
+                                weight = 0;
                             }
                             if (armor == null) {
                                 Item item = new Item(
@@ -197,7 +202,8 @@ public final class ControllerSceneDND5EArmor {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_ARMOR.getDatabaseValue()
+                                        ItemTypes.TYPE_ARMOR.getDatabaseValue(),
+                                        weight
                                 );
                                 armor = new Armor(
                                         item,
@@ -220,7 +226,8 @@ public final class ControllerSceneDND5EArmor {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_ARMOR.getDatabaseValue()
+                                        ItemTypes.TYPE_ARMOR.getDatabaseValue(),
+                                        weight
                                 );
                                 armor = new Armor(
                                         item,

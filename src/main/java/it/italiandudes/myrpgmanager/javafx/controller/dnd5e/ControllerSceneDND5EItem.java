@@ -168,6 +168,12 @@ public final class ControllerSceneDND5EItem {
                     @Override
                     protected Void call() {
 
+                        double weight;
+                        try {
+                            weight = Double.parseDouble(textFieldWeight.getText());
+                        } catch (NumberFormatException e) {
+                            weight = 0;
+                        }
                         if (item == null) {
                             item = new Item(
                                     null,
@@ -181,7 +187,8 @@ public final class ControllerSceneDND5EItem {
                                     Integer.parseInt(textFieldMP.getText()),
                                     textAreaDescription.getText(),
                                     comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                    ItemTypes.TYPE_ITEM.getDatabaseValue()
+                                    ItemTypes.TYPE_ITEM.getDatabaseValue(),
+                                    weight
                             );
                         } else {
                             item = new Item(
@@ -196,7 +203,8 @@ public final class ControllerSceneDND5EItem {
                                     Integer.parseInt(textFieldMP.getText()),
                                     textAreaDescription.getText(),
                                     comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                    ItemTypes.TYPE_ITEM.getDatabaseValue()
+                                    ItemTypes.TYPE_ITEM.getDatabaseValue(),
+                                    weight
                             );
                         }
 

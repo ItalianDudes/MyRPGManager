@@ -67,7 +67,7 @@ public class Item implements ISavable {
         this.itemType = itemType;
     }
     public Item(@Nullable final Integer itemID, @Nullable final Image image, @Nullable final String imageExtension, @NotNull final String name,
-                final int cc, final int cs, final int ce, final int cg, final int cp, @Nullable final String description, @NotNull final String rarity, final int itemType) {
+                final int cc, final int cs, final int ce, final int cg, final int cp, @Nullable final String description, @NotNull final String rarity, final int itemType, final double weight) {
         this.itemID = itemID;
         this.name = name;
         this.costCopper = cc + cs*10 + ce*50 + cg*100 + cp*1000;
@@ -88,6 +88,7 @@ public class Item implements ISavable {
             this.base64image = null;
         }
         this.itemType = itemType;
+        this.weight = weight;
     }
     public Item(@NotNull final String name) throws SQLException {
         String query = "SELECT * FROM items WHERE name = ?;";
