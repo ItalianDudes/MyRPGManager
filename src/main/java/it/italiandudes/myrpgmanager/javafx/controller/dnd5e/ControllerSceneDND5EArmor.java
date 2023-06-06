@@ -11,6 +11,7 @@ import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.JFXDefs;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
+import it.italiandudes.myrpgmanager.MyRPGManager.Defs.SupportedRPGs.DND5E;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -46,14 +47,7 @@ public final class ControllerSceneDND5EArmor {
     private Armor armor = null;
     private String imageExtension = null;
     private boolean isImageSet = false;
-    private static final Image defaultImage;
-    static {
-        try {
-            defaultImage = SwingFXUtils.toFXImage(ImageIO.read(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)), null);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private static final Image defaultImage = Client.getDefaultImage();
 
     // Graphic Elements
     @FXML private TextField textFieldName;
@@ -78,6 +72,8 @@ public final class ControllerSceneDND5EArmor {
         imageViewItem.setImage(defaultImage);
         comboBoxRarity.setItems(FXCollections.observableList(Rarity.colorNames));
         comboBoxRarity.getSelectionModel().selectFirst();
+        comboBoxStealth.setItems(FXCollections.observableList(DND5E.STEALTHS));
+        comboBoxStealth.getSelectionModel().selectFirst();
         comboBoxRarity.buttonCellProperty().bind(Bindings.createObjectBinding(() -> {
 
             Rarity identifiedRarity = null;
@@ -189,6 +185,7 @@ public final class ControllerSceneDND5EArmor {
                             } catch (NumberFormatException e) {
                                 weight = 0;
                             }
+                            String oldName = null;
                             if (armor == null) {
                                 Item item = new Item(
                                         null,
@@ -214,6 +211,7 @@ public final class ControllerSceneDND5EArmor {
                                         stealth
                                 );
                             } else {
+                                oldName = armor.getName();
                                 Item item = new Item(
                                         armor.getItemID(),
                                         imageViewItem.getImage(),
@@ -239,7 +237,7 @@ public final class ControllerSceneDND5EArmor {
                                 );
                             }
 
-                            armor.saveIntoDatabase();
+                            armor.saveIntoDatabase(oldName);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -267,10 +265,10 @@ public final class ControllerSceneDND5EArmor {
                     protected Void call() throws Exception {
                         try {
 
-                            Item itemArmor = new Item(armorName);
+                            armor = new Armor(armorName);
 
-                            imageExtension = itemArmor.getImageExtension();
-                            int CC = itemArmor.getCostCopper();
+                            imageExtension = armor.getImageExtension();
+                            int CC = armor.getCostCopper();
                             int CP = CC / 1000;
                             CC -= CP * 1000;
                             int CG = CC / 100;
@@ -282,11 +280,11 @@ public final class ControllerSceneDND5EArmor {
 
                             BufferedImage bufferedImage = null;
                             try {
-                                if (itemArmor.getBase64image() != null && imageExtension != null) {
-                                    byte[] imageBytes = Base64.getDecoder().decode(itemArmor.getBase64image());
+                                if (armor.getBase64image() != null && imageExtension != null) {
+                                    byte[] imageBytes = Base64.getDecoder().decode(armor.getBase64image());
                                     ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
                                     bufferedImage = ImageIO.read(imageStream);
-                                } else if (itemArmor.getBase64image() != null && imageExtension == null) {
+                                } else if (armor.getBase64image() != null && imageExtension == null) {
                                     throw new IllegalArgumentException("Image without declared extension");
                                 }
                             } catch (IllegalArgumentException e) {
@@ -301,15 +299,15 @@ public final class ControllerSceneDND5EArmor {
                             BufferedImage finalBufferedImage = bufferedImage;
                             Platform.runLater(() -> {
 
-                                textFieldName.setText(itemArmor.getName());
-                                textFieldWeight.setText(String.valueOf(itemArmor.getWeight()));
-                                comboBoxRarity.getSelectionModel().select(itemArmor.getRarity().getTextedRarity());
+                                textFieldName.setText(armor.getName());
+                                textFieldWeight.setText(String.valueOf(armor.getWeight()));
+                                comboBoxRarity.getSelectionModel().select(armor.getRarity().getTextedRarity());
                                 textFieldMR.setText(String.valueOf(finalCC));
                                 textFieldMA.setText(String.valueOf(CS));
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
-                                textAreaDescription.setText(itemArmor.getDescription());
+                                textAreaDescription.setText(armor.getDescription());
                                 if (finalBufferedImage != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                     isImageSet = true;

@@ -1,5 +1,6 @@
 package it.italiandudes.myrpgmanager.data;
 
+import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.interfaces.ISavable;
 import javafx.embed.swing.SwingFXUtils;
@@ -157,11 +158,11 @@ public class Item implements ISavable {
 
     // Methods
     @Override
-    public void saveIntoDatabase() throws SQLException {
+    public void saveIntoDatabase(@Nullable final String oldName) throws SQLException {
         String itemCheckerQuery = "SELECT id FROM items WHERE name=?;";
         PreparedStatement ps = DBManager.preparedStatement(itemCheckerQuery);
         if (ps == null) throw new SQLException("The database connection doesn't exist");
-        ps.setString(1, getName());
+        ps.setString(1, oldName);
         ResultSet result = ps.executeQuery();
         String query;
         int itemID;

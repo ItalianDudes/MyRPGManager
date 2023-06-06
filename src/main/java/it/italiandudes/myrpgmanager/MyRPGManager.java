@@ -94,8 +94,8 @@ public final class MyRPGManager {
                 public static final String FILTER_ANY = "Nessun Filtro";
                 public static final ArrayList<String> STEALTHS = new ArrayList<>(
                     Arrays.asList(
-                            STEALTH_DISADVANGE[0],
                             STEALTH_NEUTRAL[0],
+                            STEALTH_DISADVANGE[0],
                             STEALTH_ADVANTAGE[0]
                     )
                 );

@@ -1,5 +1,6 @@
 package it.italiandudes.myrpgmanager.data;
 
+import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.db.DBManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -88,8 +89,8 @@ public final class Armor extends Item {
 
     // Methods
     @Override
-    public void saveIntoDatabase() throws SQLException {
-        super.saveIntoDatabase();
+    public void saveIntoDatabase(@Nullable final String oldName) throws SQLException {
+        super.saveIntoDatabase(oldName);
         Integer itemID = getItemID();
         assert itemID != null;
         if (armorID == null) { // Insert

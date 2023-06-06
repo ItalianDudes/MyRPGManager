@@ -106,7 +106,7 @@ public final class ControllerSceneDND5EList {
                     @Override
                     protected Void call() throws Exception {
                         try {
-                            String table = getTableNameByFilter(category);
+                            String table = getTableNameByCategory(category);
                             String query;
                             if (category.equals(DND5E.ITEMS[0])) {
                                 int filterIndex = comboBoxFilter.getSelectionModel().getSelectedIndex()-1;
@@ -204,7 +204,7 @@ public final class ControllerSceneDND5EList {
                     @Override
                     protected Void call() throws Exception {
                         try {
-                            String table = getTableNameByFilter(category);
+                            String table = getTableNameByCategory(category);
                             String query;
                             if (category.equals(DND5E.ITEMS[0])) {
                                 int filterIndex = comboBoxFilter.getSelectionModel().getSelectedIndex()-1;
@@ -293,7 +293,27 @@ public final class ControllerSceneDND5EList {
     private void newElement() {
         elementName = null;
         thisScene = Client.getStage().getScene();
-        Client.getStage().setScene(SceneDND5EItem.getScene());
+        String category = comboBoxCategory.getSelectionModel().getSelectedItem();
+        if (category == null) return;
+        if (category.equals(DND5E.ITEMS[0])) {
+
+            String filter = comboBoxFilter.getSelectionModel().getSelectedItem();
+            if (filter.equals(DND5E.FILTER_ANY)) {
+                new ErrorAlert("ERRORE", "Errore di Inserimento", "Per poter creare un nuovo elemento, impostare un filtro");
+                return;
+            }
+
+            if (filter.equals(DND5E.ITEMS[0])) {
+                Client.getStage().setScene(SceneDND5EItem.getScene());
+            } else if (filter.equals(DND5E.ARMORS[0])) {
+                Client.getStage().setScene(SceneDND5EArmor.getScene());
+            // } else if (true) { TODO: add all other item's filters
+            } else { // Shouldn't happen on full implemented app
+                throw new RuntimeException("How is this even possible?");
+            }
+        } else {
+            // TODO: new of anything else
+        }
     }
     @FXML
     private void editOnDoubleClick(@NotNull final MouseEvent event) {
@@ -306,13 +326,25 @@ public final class ControllerSceneDND5EList {
         String category = comboBoxCategory.getSelectionModel().getSelectedItem();
         thisScene = Client.getStage().getScene();
         if (category.equals(DND5E.ITEMS[0])) {
-            switch (listViewOptions.getSelectionModel().getSelectedItem().getType()) { // Refers to: ItemTypes
+            switch (listViewOptions.getSelectionModel().getSelectedItem().getType()) { // Refers to: ItemTypes Declaration Position
                 case 0:
                     Client.getStage().setScene(SceneDND5EItem.getScene());
                     break;
 
                 case 1:
                     Client.getStage().setScene(SceneDND5EArmor.getScene());
+                    break;
+
+                case 2:
+                    // TODO: Weapons
+                    break;
+
+                case 3:
+                    // TODO: Spells
+                    break;
+
+                case 4:
+                    // TODO: EquipmentPacks
                     break;
 
                 default:
@@ -327,7 +359,7 @@ public final class ControllerSceneDND5EList {
         if (listViewOptions.getSelectionModel().getSelectedItems().size() == 0) return;
         String choice = comboBoxCategory.getSelectionModel().getSelectedItem();
         String elementName = listViewOptions.getSelectionModel().getSelectedItem().getName();
-        String table = getTableNameByFilter(choice);
+        String table = getTableNameByCategory(choice);
         Service<Void> deleteElementService = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
@@ -362,18 +394,18 @@ public final class ControllerSceneDND5EList {
     }
 
     // Methods
-    private String getTableNameByFilter(@NotNull final String filter) {
-        if (filter.equals(DND5E.ITEMS[0])) {
+    private String getTableNameByCategory(@NotNull final String category) {
+        if (category.equals(DND5E.ITEMS[0])) {
             return DND5E.ITEMS[1];
-        } else if (filter.equals(DND5E.CLASSES[0])) {
+        } else if (category.equals(DND5E.CLASSES[0])) {
             return DND5E.CLASSES[1];
-        } else if (filter.equals(DND5E.RACES[0])) {
+        } else if (category.equals(DND5E.RACES[0])) {
             return DND5E.RACES[1];
-        } else if (filter.equals(DND5E.BACKGROUNDS[0])) {
+        } else if (category.equals(DND5E.BACKGROUNDS[0])) {
             return DND5E.BACKGROUNDS[1];
-        } else if (filter.equals(DND5E.TALENTS[0])) {
+        } else if (category.equals(DND5E.TALENTS[0])) {
             return DND5E.TALENTS[1];
-        } else if (filter.equals(DND5E.LANGUAGES[0])) {
+        } else if (category.equals(DND5E.LANGUAGES[0])) {
             return DND5E.LANGUAGES[1];
         }else {
             throw new RuntimeException("Choice not supported!");

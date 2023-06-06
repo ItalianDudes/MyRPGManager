@@ -46,14 +46,7 @@ public final class ControllerSceneDND5EItem {
     private Item item = null;
     private String imageExtension = null;
     private boolean isImageSet = false;
-    private static final Image defaultImage;
-    static {
-        try {
-            defaultImage = SwingFXUtils.toFXImage(ImageIO.read(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)), null);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private static final Image defaultImage = Client.getDefaultImage();
 
     // Graphic Elements
     @FXML private TextField textFieldName;
@@ -174,6 +167,8 @@ public final class ControllerSceneDND5EItem {
                         } catch (NumberFormatException e) {
                             weight = 0;
                         }
+
+                        String oldName = null;
                         if (item == null) {
                             item = new Item(
                                     null,
@@ -191,6 +186,7 @@ public final class ControllerSceneDND5EItem {
                                     weight
                             );
                         } else {
+                            oldName = item.getName();
                             item = new Item(
                                     item.getItemID(),
                                     imageViewItem.getImage(),
@@ -209,7 +205,7 @@ public final class ControllerSceneDND5EItem {
                         }
 
                         try {
-                            item.saveIntoDatabase();
+                            item.saveIntoDatabase(oldName);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Salvataggio dei Dati", "Salvataggio dei dati completato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
