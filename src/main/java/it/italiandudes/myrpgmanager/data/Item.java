@@ -1,15 +1,22 @@
 package it.italiandudes.myrpgmanager.data;
 
 import it.italiandudes.myrpgmanager.db.DBManager;
+import it.italiandudes.myrpgmanager.interfaces.ISavable;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
 
 @SuppressWarnings("unused")
-public class Item {
+public class Item implements ISavable {
 
     // Attributes
     @Nullable private Integer itemID;
@@ -54,6 +61,28 @@ public class Item {
         this.rarity = rarity;
         this.weight = weight;
         if (this.weight < 0) this.weight = 0;
+    }
+    public Item(@Nullable final Integer itemID, @Nullable final Image image, @Nullable final String imageExtension, @NotNull final String name,
+                final int cc, final int cs, final int ce, final int cg, final int cp, @Nullable final String description, @NotNull final String rarity) {
+        this.itemID = itemID;
+        this.name = name;
+        this.costCopper = cc + cs*10 + ce*50 + cg*100 + cp*1000;
+        this.description = description;
+        this.rarity = Rarity.values()[Rarity.colorNames.indexOf(rarity)];
+        ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
+        if (imageExtension != null && image != null) {
+            try {
+                this.imageExtension = imageExtension;
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), imageExtension, imageByteStream);
+                this.base64image = Base64.getEncoder().encodeToString(imageByteStream.toByteArray());
+            } catch (IOException e) {
+                this.imageExtension = null;
+                this.base64image = null;
+            }
+        } else {
+            this.imageExtension = null;
+            this.base64image = null;
+        }
     }
     public Item(@NotNull final String name) throws SQLException {
         String query = "SELECT * FROM items WHERE name = ?;";
@@ -118,6 +147,59 @@ public class Item {
     }
 
     // Methods
+    @Override
+    public void saveIntoDatabase() throws SQLException {
+        String itemCheckerQuery = "SELECT id FROM items WHERE name=?;";
+        PreparedStatement ps = DBManager.preparedStatement(itemCheckerQuery);
+        if (ps == null) throw new SQLException("The database connection doesn't exist");
+        ps.setString(1, getName());
+        ResultSet result = ps.executeQuery();
+        String query;
+        int itemID;
+        if (result.next()) { // Update
+            itemID = result.getInt("id");
+            ps.close();
+            query = "UPDATE items SET name=?, base64image=?, image_extension=?, cost_copper=?, description=?, rarity=?, weight=? WHERE id=?;";
+            ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database connection doesn't exist");
+            ps.setString(1, getName());
+            ps.setString(2, getBase64image());
+            ps.setString(3, getImageExtension());
+            ps.setDouble(4, getCostCopper());
+            ps.setString(5, getDescription());
+            ps.setInt(6, Rarity.colorNames.indexOf(getRarity().getTextedRarity()));
+            ps.setDouble(7, getWeight());
+            ps.setInt(8, itemID);
+            ps.executeUpdate();
+            ps.close();
+        } else { // Insert
+            ps.close();
+            query = "INSERT INTO items (name, base64image, image_extension, cost_copper, description, rarity, weight) VALUES (?, ?, ?, ?, ?, ?, ?);";
+            ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database connection doesn't exist");
+            ps.setString(1, getName());
+            ps.setString(2, getBase64image());
+            ps.setString(3, getImageExtension());
+            ps.setDouble(4, getCostCopper());
+            ps.setString(5, getDescription());
+            ps.setInt(6, Rarity.colorNames.indexOf(getRarity().getTextedRarity()));
+            ps.setDouble(7, getWeight());
+            ps.executeUpdate();
+            ps.close();
+            query = "SELECT id FROM items WHERE name=?;";
+            ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database connection doesn't exist");
+            ps.setString(1, getName());
+            result = ps.executeQuery();
+            if (result.next()) {
+                setItemID(result.getInt("id"));
+                ps.close();
+            } else {
+                ps.close();
+                throw new SQLException("Something strange happened on item insert! Item insert but doesn't result on select");
+            }
+        }
+    }
     @Nullable
     public Integer getItemID() {
         return itemID;

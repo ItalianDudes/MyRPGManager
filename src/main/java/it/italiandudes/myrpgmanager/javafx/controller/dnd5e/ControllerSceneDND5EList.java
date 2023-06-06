@@ -78,66 +78,7 @@ public final class ControllerSceneDND5EList {
         String category = comboBoxCategory.getSelectionModel().getSelectedItem();
         if (category == null) return;
         if (!category.equals(DND5E.ITEMS[0])) return;
-        Service<Void> filterSearchService = new Service<Void>() {
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        try {
-                            String filterField;
-                            String filter = comboBoxSorter.getSelectionModel().getSelectedItem();
-                            if (filter == null || filter.equals(DND5E.SORTER_NAME[0])) {
-                                filterField = DND5E.SORTER_NAME[1];
-                            } else if (filter.equals(DND5E.SORTER_RARITY[0])) {
-                                filterField = DND5E.SORTER_RARITY[1];
-                            } else if (filter.equals(DND5E.SORTER_COST[0])) {
-                                filterField = DND5E.SORTER_COST[1];
-                            } else if (filter.equals(DND5E.SORTERS_WEIGHT[0])) {
-                                filterField = DND5E.SORTERS_WEIGHT[1];
-                            } else {
-                                filterField = DND5E.SORTER_NAME[1];
-                            }
-
-                            String query = "SELECT name, rarity, weight, cost_copper FROM items ORDER BY "+filterField+" "+(sortDesc?"DESC":"ASC")+";";
-
-                            PreparedStatement ps = DBManager.preparedStatement(query);
-                            if (ps == null) {
-                                Platform.runLater(() -> {
-                                    new ErrorAlert("ERRORE", "Errore di Connessione al database", "Non e' stato possibile consultare il database");
-                                    Client.getStage().setScene(SceneCreateOrChooseDB.getScene());
-                                });
-                                return null;
-                            }
-
-                            ResultSet result = ps.executeQuery();
-
-                            ArrayList<ElementPreview> resultList = new ArrayList<>();
-
-                            while (result.next()) {
-                                resultList.add(
-                                        new ElementPreview(
-                                                result.getString("name"),
-                                                result.getDouble("cost_copper"),
-                                                result.getInt("rarity"),
-                                                result.getDouble("weight")
-                                        )
-                                );
-                            }
-
-                            ps.close();
-
-                            Platform.runLater(() -> listViewOptions.setItems(FXCollections.observableList(resultList)));
-                        } catch (Exception e) {
-                            Logger.log(e);
-                            throw e;
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
-        filterSearchService.start();
+        search();
     }
     @FXML
     private void displaySelected() {
@@ -257,7 +198,7 @@ public final class ControllerSceneDND5EList {
                                 } else {
                                     filterField = DND5E.SORTER_NAME[1];
                                 }
-                                query = "SELECT name, rarity, weight, cost_copper FROM " + table + " WHERE "+filterField+" LIKE '%"+userInput+"%' ORDER BY name "+(sortDesc?"DESC":"ASC")+";";
+                                query = "SELECT name, rarity, weight, cost_copper FROM " + table + " WHERE name LIKE '%"+userInput+"%' ORDER BY "+filterField+" "+(sortDesc?"DESC":"ASC")+";";
                             } else {
                                 query = "SELECT name FROM " + table + " WHERE name LIKE '%"+userInput+"%' ORDER BY name "+(sortDesc?"DESC":"ASC")+";";
                             }

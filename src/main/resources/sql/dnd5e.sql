@@ -172,9 +172,9 @@ CREATE TABLE IF NOT EXISTS armors (
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     category TEXT,
-    ac INTEGER,
-    strength_required INTEGER,
-    stealth INTEGER
+    ac INTEGER NOT NULL DEFAULT 0,
+    strength_required INTEGER NOT NULL DEFAULT 0,
+    stealth INTEGER NOT NULL CHECK (stealth >= -1 AND stealth <= 1) DEFAULT 0
 );
 
 -- VIEWS DECLARATION

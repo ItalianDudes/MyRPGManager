@@ -84,6 +84,16 @@ public final class MyRPGManager {
                 public static final String[] SORTER_RARITY = {"Rarita'", "rarity"};
                 public static final String[] SORTER_COST = {"Costo", "cost_copper"};
                 public static final String[] SORTERS_WEIGHT = {"Peso", "weight"};
+                public static final String[] STEALTH_DISADVANGE = {"Svantaggio", "-1"};
+                public static final String[] STEALTH_NEUTRAL = {"Nessun Modificatore", "0"};
+                public static final String[] STEALTH_ADVANTAGE = {"Vantaggio", "1"};
+                public static final ArrayList<String> STEALTHS = new ArrayList<>(
+                    Arrays.asList(
+                            STEALTH_DISADVANGE[0],
+                            STEALTH_NEUTRAL[0],
+                            STEALTH_ADVANTAGE[0]
+                    )
+                );
                 public static final ArrayList<String> SORTERS = new ArrayList<>(
                     Arrays.asList(
                             SORTER_NAME[0],

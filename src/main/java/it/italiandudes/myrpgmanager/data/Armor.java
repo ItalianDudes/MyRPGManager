@@ -1,8 +1,10 @@
 package it.italiandudes.myrpgmanager.data;
 
+import it.italiandudes.myrpgmanager.db.DBManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -34,6 +36,27 @@ public final class Armor extends Item {
         if (stealth >= -1 && stealth <= 1) this.stealth = stealth;
         else this.stealth = 0;
     }
+    public Armor(@NotNull final String armorName) throws SQLException {
+        super(armorName);
+        String query = "SELECT * FROM armors WHERE item_id = ?;";
+        PreparedStatement ps = DBManager.preparedStatement(query);
+        if (ps == null) throw new SQLException("The database is not connected");
+        Integer itemID = getItemID();
+        assert itemID != null;
+        ps.setInt(1, itemID);
+        ResultSet result = ps.executeQuery();
+        if (result.next()) {
+            this.category = result.getString("category");
+            this.armorID = result.getInt("id");
+            this.strengthRequired = result.getInt("strength_required");
+            this.AC = result.getInt("ac");
+            this.stealth = result.getInt("stealth");
+            ps.close();
+        } else {
+            ps.close();
+            throw new SQLException("Exist the item, but not the armor");
+        }
+    }
     public Armor(@NotNull final ResultSet resultSet) throws SQLException {
         super(resultSet.getInt("item_id"));
         this.armorID = resultSet.getInt("id");
@@ -63,6 +86,48 @@ public final class Armor extends Item {
     }
 
     // Methods
+    @Override
+    public void saveIntoDatabase() throws SQLException {
+        super.saveIntoDatabase();
+        Integer itemID = getItemID();
+        assert itemID != null;
+        if (armorID == null) { // Insert
+            String query = "INSERT INTO armors (item_id, category, ac, strength_required, stealth) VALUES (?, ?, ?, ?, ?);";
+            PreparedStatement ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database is not connected");
+            ps.setInt(1, itemID);
+            ps.setString(2, getCategory());
+            ps.setInt(3, getAC());
+            ps.setInt(4, getStrengthRequired());
+            ps.setInt(5, getStealth());
+            ps.executeUpdate();
+            ps.close();
+            query = "SELECT id FROM armors WHERE item_id = ?;";
+            ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database is not connected");
+            ps.setInt(1, itemID);
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                setArmorID(resultSet.getInt("id"));
+                ps.close();
+            } else {
+                ps.close();
+                throw new SQLException("Something strange happened on armor insert! Armor insert but doesn't result on select");
+            }
+        } else { // Update
+            String query = "UPDATE armors SET item_id=?, category=?, ac=?, strength_required=?, stealth=? WHERE id=?;";
+            PreparedStatement ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database is not connected");
+            ps.setInt(1, itemID);
+            ps.setString(2, getCategory());
+            ps.setInt(3, getAC());
+            ps.setInt(4, getStrengthRequired());
+            ps.setInt(5, getStealth());
+            ps.setInt(6, getArmorID());
+            ps.executeUpdate();
+            ps.close();
+        }
+    }
     @Nullable
     public Integer getArmorID() {
         return armorID;
