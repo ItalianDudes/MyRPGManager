@@ -133,7 +133,8 @@ CREATE TABLE IF NOT EXISTS items (
     cost_copper INTEGER NOT NULL DEFAULT 0,
     description TEXT,
     rarity INTEGER NOT NULL DEFAULT 0,
-    weight REAL NOT NULL DEFAULT 0
+    weight REAL NOT NULL DEFAULT 0,
+    item_type INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS equipment_packs (
@@ -172,9 +173,9 @@ CREATE TABLE IF NOT EXISTS armors (
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     category TEXT,
-    ac INTEGER,
-    strength_required INTEGER,
-    stealth INTEGER
+    ac INTEGER NOT NULL DEFAULT 0,
+    strength_required INTEGER NOT NULL DEFAULT 0,
+    stealth INTEGER NOT NULL CHECK (stealth >= -1 AND stealth <= 1) DEFAULT 0
 );
 
 -- VIEWS DECLARATION

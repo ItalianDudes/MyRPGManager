@@ -75,6 +75,10 @@ public final class MyRPGManager {
             public static final class DND5E {
                 public static final String RPG_NAME = "dnd5e";
                 public static final String[] ITEMS = {"Oggetti","items"};
+                public static final String[] ARMORS = {"Armature", "armors"};
+                public static final String[] SPELLS = {"Magie", "spells"};
+                public static final String[] WEAPONS = {"Armi", "weapons"};
+                public static final String[] EQUIPMENT_PACKS = {"Pacchetti Avventura", "equipment_packs"};
                 public static final String[] CLASSES = {"Classi","classes"};
                 public static final String[] RACES = {"Razze","races"};
                 public static final String[] TALENTS = {"Talenti","talents"};
@@ -84,6 +88,17 @@ public final class MyRPGManager {
                 public static final String[] SORTER_RARITY = {"Rarita'", "rarity"};
                 public static final String[] SORTER_COST = {"Costo", "cost_copper"};
                 public static final String[] SORTERS_WEIGHT = {"Peso", "weight"};
+                public static final String[] STEALTH_DISADVANGE = {"Svantaggio", "-1"};
+                public static final String[] STEALTH_NEUTRAL = {"Nessun Modificatore", "0"};
+                public static final String[] STEALTH_ADVANTAGE = {"Vantaggio", "1"};
+                public static final String FILTER_ANY = "Nessun Filtro";
+                public static final ArrayList<String> STEALTHS = new ArrayList<>(
+                    Arrays.asList(
+                            STEALTH_NEUTRAL[0],
+                            STEALTH_DISADVANGE[0],
+                            STEALTH_ADVANTAGE[0]
+                    )
+                );
                 public static final ArrayList<String> SORTERS = new ArrayList<>(
                     Arrays.asList(
                             SORTER_NAME[0],
@@ -100,6 +115,16 @@ public final class MyRPGManager {
                             TALENTS[0],
                             BACKGROUNDS[0],
                             LANGUAGES[0]
+                    )
+                );
+                public static final ArrayList<String> ITEM_FILTERS = new ArrayList<>(
+                    Arrays.asList(
+                            FILTER_ANY,
+                            ITEMS[0],
+                            ARMORS[0],
+                            WEAPONS[0],
+                            SPELLS[0],
+                            EQUIPMENT_PACKS[0]
                     )
                 );
             }

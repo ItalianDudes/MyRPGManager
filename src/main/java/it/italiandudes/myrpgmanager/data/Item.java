@@ -1,15 +1,23 @@
 package it.italiandudes.myrpgmanager.data;
 
+import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.db.DBManager;
+import it.italiandudes.myrpgmanager.interfaces.ISavable;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
 
 @SuppressWarnings("unused")
-public class Item {
+public class Item implements ISavable {
 
     // Attributes
     @Nullable private Integer itemID;
@@ -21,6 +29,7 @@ public class Item {
     @NotNull
     private Rarity rarity;
     private double weight;
+    private int itemType;
 
     // Constructors
     public Item() {
@@ -28,6 +37,7 @@ public class Item {
         rarity = Rarity.COMMON;
         costCopper = 0;
         weight = 0;
+        this.itemType = ItemTypes.TYPE_ITEM.getDatabaseValue();
     }
     public Item(@NotNull final Item item) {
         this.itemID = item.itemID;
@@ -40,10 +50,11 @@ public class Item {
         this.rarity = item.rarity;
         this.weight = item.weight;
         if (this.weight < 0) this.weight = 0;
+        this.itemType = item.itemType;
     }
     public Item(@Nullable final Integer itemID, @Nullable final String base64image, @Nullable final String imageExtension, @NotNull final String name,
                 final int costCopper, @Nullable final String description, @NotNull final Rarity rarity,
-                final double weight) {
+                final double weight, final int itemType) {
         this.itemID = itemID;
         this.base64image = base64image;
         this.imageExtension = imageExtension;
@@ -54,6 +65,31 @@ public class Item {
         this.rarity = rarity;
         this.weight = weight;
         if (this.weight < 0) this.weight = 0;
+        this.itemType = itemType;
+    }
+    public Item(@Nullable final Integer itemID, @Nullable final Image image, @Nullable final String imageExtension, @NotNull final String name,
+                final int cc, final int cs, final int ce, final int cg, final int cp, @Nullable final String description, @NotNull final String rarity, final int itemType, final double weight) {
+        this.itemID = itemID;
+        this.name = name;
+        this.costCopper = cc + cs*10 + ce*50 + cg*100 + cp*1000;
+        this.description = description;
+        this.rarity = Rarity.values()[Rarity.colorNames.indexOf(rarity)];
+        ByteArrayOutputStream imageByteStream = new ByteArrayOutputStream();
+        if (imageExtension != null && image != null) {
+            try {
+                this.imageExtension = imageExtension;
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), imageExtension, imageByteStream);
+                this.base64image = Base64.getEncoder().encodeToString(imageByteStream.toByteArray());
+            } catch (IOException e) {
+                this.imageExtension = null;
+                this.base64image = null;
+            }
+        } else {
+            this.imageExtension = null;
+            this.base64image = null;
+        }
+        this.itemType = itemType;
+        this.weight = weight;
     }
     public Item(@NotNull final String name) throws SQLException {
         String query = "SELECT * FROM items WHERE name = ?;";
@@ -72,6 +108,7 @@ public class Item {
         this.rarity = retrievedItem.rarity;
         this.weight = retrievedItem.weight;
         if (this.weight < 0) this.weight = 0;
+        this.itemType = retrievedItem.itemType;
     }
     public Item(int itemID) throws SQLException {
         String query = "SELECT * FROM items WHERE id = ?;";
@@ -90,6 +127,7 @@ public class Item {
         this.rarity = retrievedItem.rarity;
         this.weight = retrievedItem.weight;
         if (this.weight < 0) this.weight = 0;
+        this.itemType = retrievedItem.itemType;
     }
     public Item(@NotNull final ResultSet resultSet) throws SQLException {
         this.itemID = resultSet.getInt("id");
@@ -115,9 +153,65 @@ public class Item {
         this.rarity = Rarity.values()[resultSet.getInt("rarity")];
         this.weight = resultSet.getDouble("weight");
         if (this.weight < 0) this.weight = 0;
+        this.itemType = resultSet.getInt("item_type");
     }
 
     // Methods
+    @Override
+    public void saveIntoDatabase(@Nullable final String oldName) throws SQLException {
+        String itemCheckerQuery = "SELECT id FROM items WHERE name=?;";
+        PreparedStatement ps = DBManager.preparedStatement(itemCheckerQuery);
+        if (ps == null) throw new SQLException("The database connection doesn't exist");
+        ps.setString(1, oldName);
+        ResultSet result = ps.executeQuery();
+        String query;
+        int itemID;
+        if (result.next()) { // Update
+            itemID = result.getInt("id");
+            ps.close();
+            query = "UPDATE items SET name=?, base64image=?, image_extension=?, cost_copper=?, description=?, rarity=?, weight=?, item_type=? WHERE id=?;";
+            ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database connection doesn't exist");
+            ps.setString(1, getName());
+            ps.setString(2, getBase64image());
+            ps.setString(3, getImageExtension());
+            ps.setDouble(4, getCostCopper());
+            ps.setString(5, getDescription());
+            ps.setInt(6, Rarity.colorNames.indexOf(getRarity().getTextedRarity()));
+            ps.setDouble(7, getWeight());
+            ps.setInt(8, getItemType());
+            ps.setInt(9, itemID);
+            ps.executeUpdate();
+            ps.close();
+        } else { // Insert
+            ps.close();
+            query = "INSERT INTO items (name, base64image, image_extension, cost_copper, description, rarity, weight, item_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+            ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database connection doesn't exist");
+            ps.setString(1, getName());
+            ps.setString(2, getBase64image());
+            ps.setString(3, getImageExtension());
+            ps.setDouble(4, getCostCopper());
+            ps.setString(5, getDescription());
+            ps.setInt(6, Rarity.colorNames.indexOf(getRarity().getTextedRarity()));
+            ps.setDouble(7, getWeight());
+            ps.setInt(8, getItemType());
+            ps.executeUpdate();
+            ps.close();
+            query = "SELECT id FROM items WHERE name=?;";
+            ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database connection doesn't exist");
+            ps.setString(1, getName());
+            result = ps.executeQuery();
+            if (result.next()) {
+                setItemID(result.getInt("id"));
+                ps.close();
+            } else {
+                ps.close();
+                throw new SQLException("Something strange happened on item insert! Item insert but doesn't result on select");
+            }
+        }
+    }
     @Nullable
     public Integer getItemID() {
         return itemID;
@@ -172,6 +266,13 @@ public class Item {
     public void setWeight(final double weight) {
         if (weight >= 0) this.weight = weight;
     }
+    public int getItemType() {
+        return itemType;
+    }
+    public void setItemType(int itemType) {
+        if (itemType >= 0)
+            this.itemType = itemType;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -181,6 +282,7 @@ public class Item {
 
         if (getCostCopper() != item.getCostCopper()) return false;
         if (Double.compare(item.getWeight(), getWeight()) != 0) return false;
+        if (getItemType() != item.getItemType()) return false;
         if (getItemID() != null ? !getItemID().equals(item.getItemID()) : item.getItemID() != null) return false;
         if (getBase64image() != null ? !getBase64image().equals(item.getBase64image()) : item.getBase64image() != null)
             return false;
@@ -204,6 +306,7 @@ public class Item {
         result = 31 * result + getRarity().hashCode();
         temp = Double.doubleToLongBits(getWeight());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + getItemType();
         return result;
     }
     @Override
@@ -217,6 +320,7 @@ public class Item {
                 ", description='" + description + '\'' +
                 ", rarity=" + rarity +
                 ", weight=" + weight +
+                ", itemType=" + itemType +
                 '}';
     }
 }

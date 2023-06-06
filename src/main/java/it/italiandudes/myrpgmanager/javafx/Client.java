@@ -3,6 +3,7 @@ package it.italiandudes.myrpgmanager.javafx;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.javafx.scene.SceneCreateOrChooseDB;
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ public final class Client extends Application {
 
     //Attributes
     private static Stage stage;
+    private static Image DEFAULT_IMAGE = null;
 
     @Override
     public void start(Stage stage) {
@@ -27,6 +29,7 @@ public final class Client extends Application {
             Logger.log("JavaFX Window Close Event fired, exiting Java process...");
             System.exit(0);
         });
+        DEFAULT_IMAGE = JFXDefs.AppInfo.LOGO;
     }
 
     //Start Methods
@@ -39,5 +42,8 @@ public final class Client extends Application {
     public static Stage getStage(){
         return stage;
     }
-
+    @NotNull
+    public static Image getDefaultImage() {
+        return DEFAULT_IMAGE;
+    }
 }
