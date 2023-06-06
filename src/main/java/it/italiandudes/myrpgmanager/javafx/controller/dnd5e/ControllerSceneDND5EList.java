@@ -76,6 +76,7 @@ public final class ControllerSceneDND5EList {
     @FXML
     private void applyFilter() {
         String category = comboBoxCategory.getSelectionModel().getSelectedItem();
+        if (category == null) return;
         if (!category.equals(DND5E.ITEMS[0])) return;
         Service<Void> filterSearchService = new Service<Void>() {
             @Override
@@ -140,8 +141,9 @@ public final class ControllerSceneDND5EList {
     }
     @FXML
     private void displaySelected() {
-        String choice = comboBoxCategory.getSelectionModel().getSelectedItem();
-        comboBoxSorter.setVisible(choice.equals(DND5E.ITEMS[0]));
+        String category = comboBoxCategory.getSelectionModel().getSelectedItem();
+        if (category == null) return;
+        comboBoxSorter.setVisible(category.equals(DND5E.ITEMS[0]));
         Service<Void> displaySelectedService = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
@@ -149,9 +151,9 @@ public final class ControllerSceneDND5EList {
                     @Override
                     protected Void call() throws Exception {
                         try {
-                            String table = getTableNameByFilter(choice);
+                            String table = getTableNameByFilter(category);
                             String query;
-                            if (choice.equals(DND5E.ITEMS[0])) {
+                            if (category.equals(DND5E.ITEMS[0])) {
                                 String filterField;
                                 String filter = comboBoxSorter.getSelectionModel().getSelectedItem();
                                 if (filter == null || filter.equals(DND5E.SORTER_NAME[0])) {
@@ -183,7 +185,7 @@ public final class ControllerSceneDND5EList {
 
                             ArrayList<ElementPreview> resultList = new ArrayList<>();
 
-                            if (choice.equals(DND5E.ITEMS[0])) {
+                            if (category.equals(DND5E.ITEMS[0])) {
                                 while (result.next()) {
                                     resultList.add(
                                             new ElementPreview(
@@ -225,7 +227,8 @@ public final class ControllerSceneDND5EList {
     }
     @FXML
     private void search() {
-        String choice = comboBoxCategory.getSelectionModel().getSelectedItem();
+        String category = comboBoxCategory.getSelectionModel().getSelectedItem();
+        if (category == null) return;
         String userInput = textFieldSearchBar.getText();
         if (userInput == null || userInput.equals("")) {
             displaySelected();
@@ -238,9 +241,9 @@ public final class ControllerSceneDND5EList {
                     @Override
                     protected Void call() throws Exception {
                         try {
-                            String table = getTableNameByFilter(choice);
+                            String table = getTableNameByFilter(category);
                             String query;
-                            if (choice.equals(DND5E.ITEMS[0])) {
+                            if (category.equals(DND5E.ITEMS[0])) {
                                 String filterField;
                                 String filter = comboBoxSorter.getSelectionModel().getSelectedItem();
                                 if (filter == null || filter.equals(DND5E.SORTER_NAME[0])) {
@@ -271,7 +274,7 @@ public final class ControllerSceneDND5EList {
 
                             ArrayList<ElementPreview> resultList = new ArrayList<>();
 
-                            if (choice.equals(DND5E.ITEMS[0])) {
+                            if (category.equals(DND5E.ITEMS[0])) {
                                 while (result.next()) {
                                     resultList.add(
                                             new ElementPreview(
