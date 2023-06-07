@@ -164,6 +164,7 @@ CREATE TABLE IF NOT EXISTS weapons (
         ON DELETE CASCADE,
     category TEXT,
     damage TEXT,
+    strength_required INTEGER NOT NULL DEFAULT 0,
     properties TEXT
 );
 
