@@ -1,13 +1,16 @@
 package it.italiandudes.myrpgmanager.data;
 
+import it.italiandudes.myrpgmanager.db.DBManager;
+import it.italiandudes.myrpgmanager.interfaces.ISavable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @SuppressWarnings("unused")
-public final class Spell extends Item {
+public final class Spell extends Item implements ISavable {
 
     // Attributes
     @Nullable private Integer spellID;
@@ -38,6 +41,30 @@ public final class Spell extends Item {
         this.components = components;
         this.duration = duration;
         this.damage = damage;
+    }
+    public Spell(@NotNull final String spellName) throws SQLException {
+        super(spellName);
+        String query = "SELECT * FROM spells WHERE item_id = ?;";
+        PreparedStatement ps = DBManager.preparedStatement(query);
+        if (ps == null) throw new SQLException("The database is not connected");
+        Integer itemID = getItemID();
+        assert itemID != null;
+        ps.setInt(1, itemID);
+        ResultSet result = ps.executeQuery();
+        if (result.next()) {
+            this.spellID = result.getInt("id");
+            this.level = result.getInt("level");
+            this.damage = result.getString("damage");
+            this.castTime = result.getString("cast_time");
+            this.range = result.getString("spell_range");
+            this.duration = result.getString("duration");
+            this.components = result.getString("components");
+            this.type = result.getString("type");
+            ps.close();
+        } else {
+            ps.close();
+            throw new SQLException("Exist the item, but not the spell");
+        }
     }
     public Spell(@NotNull final ResultSet resultSet) throws SQLException {
         super(resultSet.getInt("item_id"));
@@ -81,6 +108,54 @@ public final class Spell extends Item {
     }
 
     // Methods
+    @Override
+    public void saveIntoDatabase(@Nullable final String oldName) throws SQLException {
+        super.saveIntoDatabase(oldName);
+        Integer itemID = getItemID();
+        assert itemID != null;
+        if (spellID == null) { // Insert
+            String query = "INSERT INTO spells (item_id, level, type, cast_time, spell_range, components, duration, damage) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+            PreparedStatement ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database is not connected");
+            ps.setInt(1, itemID);
+            ps.setInt(2, getLevel());
+            ps.setString(3, getType());
+            ps.setString(4, getCastTime());
+            ps.setString(5, getRange());
+            ps.setString(6, getComponents());
+            ps.setString(7, getDuration());
+            ps.setString(8, getDamage());
+            ps.executeUpdate();
+            ps.close();
+            query = "SELECT id FROM spells WHERE item_id = ?;";
+            ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database is not connected");
+            ps.setInt(1, itemID);
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                setSpellID(resultSet.getInt("id"));
+                ps.close();
+            } else {
+                ps.close();
+                throw new SQLException("Something strange happened on armor insert! Spell insert but doesn't result on select");
+            }
+        } else { // Update
+            String query = "UPDATE spells SET item_id=?, level=?, type=?, cast_time=?, spell_range=?, components=?, duration=?, damage=? WHERE id=?;";
+            PreparedStatement ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database is not connected");
+            ps.setInt(1, itemID);
+            ps.setInt(2, getLevel());
+            ps.setString(3, getType());
+            ps.setString(4, getCastTime());
+            ps.setString(5, getRange());
+            ps.setString(6, getComponents());
+            ps.setString(7, getDuration());
+            ps.setString(8, getDamage());
+            ps.setInt(9, getSpellID());
+            ps.executeUpdate();
+            ps.close();
+        }
+    }
     @Nullable
     public Integer getSpellID() {
         return spellID;

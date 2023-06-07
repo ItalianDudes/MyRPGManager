@@ -55,7 +55,7 @@ public final class Weapon extends Item implements ISavable {
             ps.close();
         } else {
             ps.close();
-            throw new SQLException("Exist the item, but not the armor");
+            throw new SQLException("Exist the item, but not the weapon");
         }
     }
     public Weapon(@NotNull final ResultSet resultSet) throws SQLException {
