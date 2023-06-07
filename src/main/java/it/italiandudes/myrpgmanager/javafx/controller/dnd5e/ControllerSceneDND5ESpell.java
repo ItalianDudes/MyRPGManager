@@ -3,10 +3,7 @@ package it.italiandudes.myrpgmanager.javafx.controller.dnd5e;
 import it.italiandudes.idl.common.ImageHandler;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
-import it.italiandudes.myrpgmanager.data.Item;
-import it.italiandudes.myrpgmanager.data.ItemTypes;
-import it.italiandudes.myrpgmanager.data.Rarity;
-import it.italiandudes.myrpgmanager.data.Weapon;
+import it.italiandudes.myrpgmanager.data.*;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.JFXDefs;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
@@ -41,9 +38,9 @@ import java.io.IOException;
 import java.util.Base64;
 
 @SuppressWarnings("unused")
-public final class ControllerSceneDND5EWeapon {
+public final class ControllerSceneDND5ESpell {
     // Attributes
-    private Weapon weapon = null;
+    private Spell spell = null;
     private String imageExtension = null;
     private boolean isImageSet = false;
     private static final Image defaultImage = Client.getDefaultImage();
@@ -57,10 +54,13 @@ public final class ControllerSceneDND5EWeapon {
     @FXML private TextField textFieldME;
     @FXML private TextField textFieldMO;
     @FXML private TextField textFieldMP;
-    @FXML private TextField textFieldCategory;
+    @FXML private TextField textFieldLevel;
+    @FXML private TextField textFieldType;
+    @FXML private TextField textFieldCastTime;
+    @FXML private TextField textFieldSpellRange;
+    @FXML private TextField textFieldComponents;
+    @FXML private TextField textFieldDuration;
     @FXML private TextField textFieldDamage;
-    @FXML private TextField textFieldStrengthRequired;
-    @FXML private TextField textFieldProperties;
     @FXML private TextArea textAreaDescription;
     @FXML private ImageView imageViewItem;
 
@@ -103,9 +103,9 @@ public final class ControllerSceneDND5EWeapon {
                 }
             };
         }, comboBoxRarity.valueProperty()));
-        String weaponName = ControllerSceneDND5EList.getElementName();
-        if (weaponName != null) {
-            initExistingWeapon(weaponName);
+        String spellName = ControllerSceneDND5EList.getElementName();
+        if (spellName != null) {
+            initExistingSpell(spellName);
         }
     }
 
@@ -155,7 +155,7 @@ public final class ControllerSceneDND5EWeapon {
     @FXML
     private void save() {
         if (textFieldName.getText().replace(" ", "").equals("")) {
-            new ErrorAlert("ERRORE", "Errore di Inserimento", "Non e' stato assegnato un nome all'arma.");
+            new ErrorAlert("ERRORE", "Errore di Inserimento", "Non e' stato assegnato un nome alla magia.");
             return;
         }
         Service<Void> saveService = new Service<Void>() {
@@ -172,7 +172,7 @@ public final class ControllerSceneDND5EWeapon {
                                 weight = 0;
                             }
                             String oldName = null;
-                            if (weapon == null) {
+                            if (spell == null) {
                                 Item item = new Item(
                                         null,
                                         imageViewItem.getImage(),
@@ -185,21 +185,24 @@ public final class ControllerSceneDND5EWeapon {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_WEAPON.getDatabaseValue(),
+                                        ItemTypes.TYPE_SPELL.getDatabaseValue(),
                                         weight
                                 );
-                                weapon = new Weapon(
+                                spell = new Spell(
                                         item,
                                         null,
-                                        textFieldCategory.getText(),
-                                        textFieldDamage.getText(),
-                                        textFieldProperties.getText(),
-                                        Integer.parseInt(textFieldStrengthRequired.getText())
+                                        Integer.parseInt(textFieldLevel.getText()),
+                                        textFieldType.getText(),
+                                        textFieldCastTime.getText(),
+                                        textFieldSpellRange.getText(),
+                                        textFieldComponents.getText(),
+                                        textFieldDuration.getText(),
+                                        textFieldDamage.getText()
                                 );
                             } else {
-                                oldName = weapon.getName();
+                                oldName = spell.getName();
                                 Item item = new Item(
-                                        weapon.getItemID(),
+                                        spell.getItemID(),
                                         imageViewItem.getImage(),
                                         imageExtension,
                                         textFieldName.getText(),
@@ -210,20 +213,23 @@ public final class ControllerSceneDND5EWeapon {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_WEAPON.getDatabaseValue(),
+                                        ItemTypes.TYPE_ARMOR.getDatabaseValue(),
                                         weight
                                 );
-                                weapon = new Weapon(
+                                spell = new Spell(
                                         item,
-                                        weapon.getWeaponID(),
-                                        textFieldCategory.getText(),
-                                        textFieldDamage.getText(),
-                                        textFieldProperties.getText(),
-                                        Integer.parseInt(textFieldStrengthRequired.getText())
+                                        spell.getSpellID(),
+                                        Integer.parseInt(textFieldLevel.getText()),
+                                        textFieldType.getText(),
+                                        textFieldCastTime.getText(),
+                                        textFieldSpellRange.getText(),
+                                        textFieldComponents.getText(),
+                                        textFieldDuration.getText(),
+                                        textFieldDamage.getText()
                                 );
                             }
 
-                            weapon.saveIntoDatabase(oldName);
+                            spell.saveIntoDatabase(oldName);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -242,7 +248,7 @@ public final class ControllerSceneDND5EWeapon {
     }
 
     // Methods
-    private void initExistingWeapon(@NotNull final String armorName) {
+    private void initExistingSpell(@NotNull final String spellName) {
         Service<Void> itemInitializerService = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
@@ -251,10 +257,10 @@ public final class ControllerSceneDND5EWeapon {
                     protected Void call() throws Exception {
                         try {
 
-                            weapon = new Weapon(armorName);
+                            spell = new Spell(spellName);
 
-                            imageExtension = weapon.getImageExtension();
-                            int CC = weapon.getCostCopper();
+                            imageExtension = spell.getImageExtension();
+                            int CC = spell.getCostCopper();
                             int CP = CC / 1000;
                             CC -= CP * 1000;
                             int CG = CC / 100;
@@ -266,11 +272,11 @@ public final class ControllerSceneDND5EWeapon {
 
                             BufferedImage bufferedImage = null;
                             try {
-                                if (weapon.getBase64image() != null && imageExtension != null) {
-                                    byte[] imageBytes = Base64.getDecoder().decode(weapon.getBase64image());
+                                if (spell.getBase64image() != null && imageExtension != null) {
+                                    byte[] imageBytes = Base64.getDecoder().decode(spell.getBase64image());
                                     ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
                                     bufferedImage = ImageIO.read(imageStream);
-                                } else if (weapon.getBase64image() != null && imageExtension == null) {
+                                } else if (spell.getBase64image() != null && imageExtension == null) {
                                     throw new IllegalArgumentException("Image without declared extension");
                                 }
                             } catch (IllegalArgumentException e) {
@@ -285,15 +291,15 @@ public final class ControllerSceneDND5EWeapon {
                             BufferedImage finalBufferedImage = bufferedImage;
                             Platform.runLater(() -> {
 
-                                textFieldName.setText(weapon.getName());
-                                textFieldWeight.setText(String.valueOf(weapon.getWeight()));
-                                comboBoxRarity.getSelectionModel().select(weapon.getRarity().getTextedRarity());
+                                textFieldName.setText(spell.getName());
+                                textFieldWeight.setText(String.valueOf(spell.getWeight()));
+                                comboBoxRarity.getSelectionModel().select(spell.getRarity().getTextedRarity());
                                 textFieldMR.setText(String.valueOf(finalCC));
                                 textFieldMA.setText(String.valueOf(CS));
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
-                                textAreaDescription.setText(weapon.getDescription());
+                                textAreaDescription.setText(spell.getDescription());
                                 if (finalBufferedImage != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                     isImageSet = true;
@@ -301,10 +307,13 @@ public final class ControllerSceneDND5EWeapon {
                                     imageViewItem.setImage(new Image(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)));
                                 }
 
-                                textFieldCategory.setText(weapon.getCategory());
-                                textFieldStrengthRequired.setText(String.valueOf(weapon.getStrengthRequired()));
-                                textFieldDamage.setText(weapon.getDamage());
-                                textFieldProperties.setText(weapon.getProperties());
+                                textFieldDamage.setText(spell.getDamage());
+                                textFieldCastTime.setText(spell.getCastTime());
+                                textFieldDuration.setText(spell.getDuration());
+                                textFieldComponents.setText(spell.getComponents());
+                                textFieldLevel.setText(String.valueOf(spell.getLevel()));
+                                textFieldSpellRange.setText(spell.getRange());
+                                textFieldType.setText(spell.getType());
                             });
 
                         } catch (Exception e) {
