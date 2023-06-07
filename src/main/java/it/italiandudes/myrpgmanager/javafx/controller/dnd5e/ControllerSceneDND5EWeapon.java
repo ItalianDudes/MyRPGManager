@@ -3,11 +3,10 @@ package it.italiandudes.myrpgmanager.javafx.controller.dnd5e;
 import it.italiandudes.idl.common.ImageHandler;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
-import it.italiandudes.myrpgmanager.MyRPGManager.Defs.SupportedRPGs.DND5E;
-import it.italiandudes.myrpgmanager.data.Armor;
 import it.italiandudes.myrpgmanager.data.Item;
 import it.italiandudes.myrpgmanager.data.ItemTypes;
 import it.italiandudes.myrpgmanager.data.Rarity;
+import it.italiandudes.myrpgmanager.data.Weapon;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.JFXDefs;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
@@ -42,9 +41,9 @@ import java.io.IOException;
 import java.util.Base64;
 
 @SuppressWarnings("unused")
-public final class ControllerSceneDND5EArmor {
+public final class ControllerSceneDND5EWeapon {
     // Attributes
-    private Armor armor = null;
+    private Weapon weapon = null;
     private String imageExtension = null;
     private boolean isImageSet = false;
     private static final Image defaultImage = Client.getDefaultImage();
@@ -59,9 +58,9 @@ public final class ControllerSceneDND5EArmor {
     @FXML private TextField textFieldMO;
     @FXML private TextField textFieldMP;
     @FXML private TextField textFieldCategory;
-    @FXML private TextField textFieldAC;
+    @FXML private TextField textFieldDamage;
     @FXML private TextField textFieldStrengthRequired;
-    @FXML private ComboBox<String> comboBoxStealth;
+    @FXML private TextField textFieldProperties;
     @FXML private TextArea textAreaDescription;
     @FXML private ImageView imageViewItem;
 
@@ -72,8 +71,6 @@ public final class ControllerSceneDND5EArmor {
         imageViewItem.setImage(defaultImage);
         comboBoxRarity.setItems(FXCollections.observableList(Rarity.colorNames));
         comboBoxRarity.getSelectionModel().selectFirst();
-        comboBoxStealth.setItems(FXCollections.observableList(DND5E.STEALTHS));
-        comboBoxStealth.getSelectionModel().selectFirst();
         comboBoxRarity.buttonCellProperty().bind(Bindings.createObjectBinding(() -> {
 
             Rarity identifiedRarity = null;
@@ -106,9 +103,9 @@ public final class ControllerSceneDND5EArmor {
                 }
             };
         }, comboBoxRarity.valueProperty()));
-        String armorName = ControllerSceneDND5EList.getElementName();
-        if (armorName != null) {
-            initExistingArmor(armorName);
+        String weaponName = ControllerSceneDND5EList.getElementName();
+        if (weaponName != null) {
+            initExistingArmor(weaponName);
         }
     }
 
@@ -158,7 +155,7 @@ public final class ControllerSceneDND5EArmor {
     @FXML
     private void save() {
         if (textFieldName.getText().replace(" ", "").equals("")) {
-            new ErrorAlert("ERRORE", "Errore di Inserimento", "Non e' stato assegnato un nome all'armatura.");
+            new ErrorAlert("ERRORE", "Errore di Inserimento", "Non e' stato assegnato un nome all'arma.");
             return;
         }
         Service<Void> saveService = new Service<Void>() {
@@ -168,17 +165,6 @@ public final class ControllerSceneDND5EArmor {
                     @Override
                     protected Void call() {
                         try {
-                            String stealthChoice = comboBoxStealth.getSelectionModel().getSelectedItem();
-                            int stealth;
-                            if (stealthChoice.equals(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_NEUTRAL[0])) {
-                                stealth = Integer.parseInt(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_NEUTRAL[1]);
-                            } else if (stealthChoice.equals(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_ADVANTAGE[0])) {
-                                stealth = Integer.parseInt(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_ADVANTAGE[1]);
-                            } else if (stealthChoice.equals(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_DISADVANGE[0])) {
-                                stealth = Integer.parseInt(MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_DISADVANGE[1]);
-                            } else {
-                                throw new RuntimeException("How this is even possible?");
-                            }
                             double weight;
                             try {
                                 weight = Double.parseDouble(textFieldWeight.getText());
@@ -186,7 +172,7 @@ public final class ControllerSceneDND5EArmor {
                                 weight = 0;
                             }
                             String oldName = null;
-                            if (armor == null) {
+                            if (weapon == null) {
                                 Item item = new Item(
                                         null,
                                         imageViewItem.getImage(),
@@ -199,21 +185,21 @@ public final class ControllerSceneDND5EArmor {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_ARMOR.getDatabaseValue(),
+                                        ItemTypes.TYPE_WEAPON.getDatabaseValue(),
                                         weight
                                 );
-                                armor = new Armor(
+                                weapon = new Weapon(
                                         item,
                                         null,
                                         textFieldCategory.getText(),
-                                        Integer.parseInt(textFieldAC.getText()),
-                                        Integer.parseInt(textFieldStrengthRequired.getText()),
-                                        stealth
+                                        textFieldDamage.getText(),
+                                        textFieldProperties.getText(),
+                                        Integer.parseInt(textFieldStrengthRequired.getText())
                                 );
                             } else {
-                                oldName = armor.getName();
+                                oldName = weapon.getName();
                                 Item item = new Item(
-                                        armor.getItemID(),
+                                        weapon.getItemID(),
                                         imageViewItem.getImage(),
                                         imageExtension,
                                         textFieldName.getText(),
@@ -224,20 +210,20 @@ public final class ControllerSceneDND5EArmor {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_ARMOR.getDatabaseValue(),
+                                        ItemTypes.TYPE_WEAPON.getDatabaseValue(),
                                         weight
                                 );
-                                armor = new Armor(
+                                weapon = new Weapon(
                                         item,
-                                        armor.getArmorID(),
+                                        weapon.getWeaponID(),
                                         textFieldCategory.getText(),
-                                        Integer.parseInt(textFieldAC.getText()),
-                                        Integer.parseInt(textFieldStrengthRequired.getText()),
-                                        stealth
+                                        textFieldDamage.getText(),
+                                        textFieldProperties.getText(),
+                                        Integer.parseInt(textFieldStrengthRequired.getText())
                                 );
                             }
 
-                            armor.saveIntoDatabase(oldName);
+                            weapon.saveIntoDatabase(oldName);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -265,10 +251,10 @@ public final class ControllerSceneDND5EArmor {
                     protected Void call() throws Exception {
                         try {
 
-                            armor = new Armor(armorName);
+                            weapon = new Weapon(armorName);
 
-                            imageExtension = armor.getImageExtension();
-                            int CC = armor.getCostCopper();
+                            imageExtension = weapon.getImageExtension();
+                            int CC = weapon.getCostCopper();
                             int CP = CC / 1000;
                             CC -= CP * 1000;
                             int CG = CC / 100;
@@ -280,11 +266,11 @@ public final class ControllerSceneDND5EArmor {
 
                             BufferedImage bufferedImage = null;
                             try {
-                                if (armor.getBase64image() != null && imageExtension != null) {
-                                    byte[] imageBytes = Base64.getDecoder().decode(armor.getBase64image());
+                                if (weapon.getBase64image() != null && imageExtension != null) {
+                                    byte[] imageBytes = Base64.getDecoder().decode(weapon.getBase64image());
                                     ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
                                     bufferedImage = ImageIO.read(imageStream);
-                                } else if (armor.getBase64image() != null && imageExtension == null) {
+                                } else if (weapon.getBase64image() != null && imageExtension == null) {
                                     throw new IllegalArgumentException("Image without declared extension");
                                 }
                             } catch (IllegalArgumentException e) {
@@ -299,15 +285,15 @@ public final class ControllerSceneDND5EArmor {
                             BufferedImage finalBufferedImage = bufferedImage;
                             Platform.runLater(() -> {
 
-                                textFieldName.setText(armor.getName());
-                                textFieldWeight.setText(String.valueOf(armor.getWeight()));
-                                comboBoxRarity.getSelectionModel().select(armor.getRarity().getTextedRarity());
+                                textFieldName.setText(weapon.getName());
+                                textFieldWeight.setText(String.valueOf(weapon.getWeight()));
+                                comboBoxRarity.getSelectionModel().select(weapon.getRarity().getTextedRarity());
                                 textFieldMR.setText(String.valueOf(finalCC));
                                 textFieldMA.setText(String.valueOf(CS));
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
-                                textAreaDescription.setText(armor.getDescription());
+                                textAreaDescription.setText(weapon.getDescription());
                                 if (finalBufferedImage != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                     isImageSet = true;
@@ -315,20 +301,10 @@ public final class ControllerSceneDND5EArmor {
                                     imageViewItem.setImage(new Image(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)));
                                 }
 
-                                String stealthStr;
-                                if (armor.getStealth() == -1) {
-                                    stealthStr = MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_DISADVANGE[0];
-                                } else if (armor.getStealth() == 0) {
-                                    stealthStr = MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_NEUTRAL[0];
-                                } else if (armor.getStealth() == 1) {
-                                    stealthStr = MyRPGManager.Defs.SupportedRPGs.DND5E.STEALTH_ADVANTAGE[0];
-                                } else {
-                                    throw new RuntimeException("How this is even possible?");
-                                }
-                                textFieldCategory.setText(armor.getCategory());
-                                comboBoxStealth.getSelectionModel().select(stealthStr);
-                                textFieldAC.setText(String.valueOf(armor.getAC()));
-                                textFieldStrengthRequired.setText(String.valueOf(armor.getStrengthRequired()));
+                                textFieldCategory.setText(weapon.getCategory());
+                                textFieldStrengthRequired.setText(String.valueOf(weapon.getStrengthRequired()));
+                                textFieldDamage.setText(weapon.getDamage());
+                                textFieldProperties.setText(weapon.getProperties());
                             });
 
                         } catch (Exception e) {

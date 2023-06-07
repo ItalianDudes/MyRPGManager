@@ -9,6 +9,7 @@ import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.scene.SceneCreateOrChooseDB;
 import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.SceneDND5EArmor;
 import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.SceneDND5EItem;
+import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.SceneDND5EWeapon;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Service;
@@ -307,6 +308,8 @@ public final class ControllerSceneDND5EList {
                 Client.getStage().setScene(SceneDND5EItem.getScene());
             } else if (filter.equals(DND5E.ARMORS[0])) {
                 Client.getStage().setScene(SceneDND5EArmor.getScene());
+            } else if (filter.equals(DND5E.WEAPONS[0])) {
+                Client.getStage().setScene(SceneDND5EWeapon.getScene());
             // } else if (true) { TODO: add all other item's filters
             } else { // Shouldn't happen on full implemented app
                 throw new RuntimeException("How is this even possible?");
@@ -336,7 +339,7 @@ public final class ControllerSceneDND5EList {
                     break;
 
                 case 2:
-                    // TODO: Weapons
+                    Client.getStage().setScene(SceneDND5EWeapon.getScene());
                     break;
 
                 case 3:

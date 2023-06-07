@@ -1,6 +1,5 @@
 package it.italiandudes.myrpgmanager.data;
 
-import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.db.DBManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
