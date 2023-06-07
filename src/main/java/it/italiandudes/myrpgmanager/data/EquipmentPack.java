@@ -1,13 +1,16 @@
 package it.italiandudes.myrpgmanager.data;
 
+import it.italiandudes.myrpgmanager.db.DBManager;
+import it.italiandudes.myrpgmanager.interfaces.ISavable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @SuppressWarnings("unused")
-public final class EquipmentPack extends Item {
+public final class EquipmentPack extends Item implements ISavable {
 
     // Attributes
     @Nullable private Integer equipmentPackID;
@@ -16,6 +19,7 @@ public final class EquipmentPack extends Item {
     // Constructors
     public EquipmentPack() {
         super();
+        setItemType(ItemTypes.TYPE_EQUIPMENT_PACK.getDatabaseValue());
     }
     public EquipmentPack(@NotNull final Item baseItem, @Nullable final Integer equipmentPackID,
                          @Nullable final String content) {
@@ -32,8 +36,62 @@ public final class EquipmentPack extends Item {
             this.content = null;
         }
     }
+    public EquipmentPack(@NotNull final String equipmentPackName) throws SQLException {
+        super(equipmentPackName);
+        String query = "SELECT * FROM equipment_packs WHERE item_id = ?;";
+        PreparedStatement ps = DBManager.preparedStatement(query);
+        if (ps == null) throw new SQLException("The database is not connected");
+        Integer itemID = getItemID();
+        assert itemID != null;
+        ps.setInt(1, itemID);
+        ResultSet result = ps.executeQuery();
+        if (result.next()) {
+            this.equipmentPackID = result.getInt("id");
+            this.content = result.getString("content");
+            ps.close();
+        } else {
+            ps.close();
+            throw new SQLException("Exist the item, but not the equipment pack");
+        }
+    }
 
     // Methods
+    @Override
+    public void saveIntoDatabase(@Nullable final String oldName) throws SQLException {
+        super.saveIntoDatabase(oldName);
+        Integer itemID = getItemID();
+        assert itemID != null;
+        if (equipmentPackID == null) { // Insert
+            String query = "INSERT INTO armors (item_id, content) VALUES (?, ?);";
+            PreparedStatement ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database is not connected");
+            ps.setInt(1, itemID);
+            ps.setString(2, getContent());
+            ps.executeUpdate();
+            ps.close();
+            query = "SELECT id FROM armors WHERE item_id = ?;";
+            ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database is not connected");
+            ps.setInt(1, itemID);
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                setEquipmentPackID(resultSet.getInt("id"));
+                ps.close();
+            } else {
+                ps.close();
+                throw new SQLException("Something strange happened on armor insert! Equipment pack insert but doesn't result on select");
+            }
+        } else { // Update
+            String query = "UPDATE armors SET item_id=?, content=? WHERE id=?;";
+            PreparedStatement ps = DBManager.preparedStatement(query);
+            if (ps == null) throw new SQLException("The database is not connected");
+            ps.setInt(1, itemID);
+            ps.setString(2, getContent());
+            ps.setInt(3, getEquipmentPackID());
+            ps.executeUpdate();
+            ps.close();
+        }
+    }
     @Nullable
     public Integer getEquipmentPackID() {
         return equipmentPackID;
