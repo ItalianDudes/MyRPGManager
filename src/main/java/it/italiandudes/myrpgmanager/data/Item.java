@@ -1,6 +1,5 @@
 package it.italiandudes.myrpgmanager.data;
 
-import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.interfaces.ISavable;
 import javafx.embed.swing.SwingFXUtils;
