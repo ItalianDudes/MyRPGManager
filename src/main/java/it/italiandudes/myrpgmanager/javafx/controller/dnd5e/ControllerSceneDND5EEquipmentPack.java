@@ -57,7 +57,7 @@ public final class ControllerSceneDND5EEquipmentPack {
     @FXML private TextField textFieldME;
     @FXML private TextField textFieldMO;
     @FXML private TextField textFieldMP;
-    @FXML private TextField textFieldContent;
+    @FXML private TextArea textAreaContent;
     @FXML private TextArea textAreaDescription;
     @FXML private ImageView imageViewItem;
 
@@ -188,7 +188,7 @@ public final class ControllerSceneDND5EEquipmentPack {
                                 equipmentPack = new EquipmentPack(
                                         item,
                                         null,
-                                        textFieldContent.getText()
+                                        textAreaContent.getText()
                                 );
                             } else {
                                 oldName = equipmentPack.getName();
@@ -210,7 +210,7 @@ public final class ControllerSceneDND5EEquipmentPack {
                                 equipmentPack = new EquipmentPack(
                                         item,
                                         equipmentPack.getEquipmentPackID(),
-                                        textFieldContent.getText()
+                                        textAreaContent.getText()
                                 );
                             }
 
@@ -292,7 +292,7 @@ public final class ControllerSceneDND5EEquipmentPack {
                                     imageViewItem.setImage(new Image(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)));
                                 }
 
-                                textFieldContent.setText(equipmentPack.getContent());
+                                textAreaContent.setText(equipmentPack.getContent());
                             });
 
                         } catch (Exception e) {

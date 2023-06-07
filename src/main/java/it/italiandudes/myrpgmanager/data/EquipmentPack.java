@@ -62,14 +62,14 @@ public final class EquipmentPack extends Item implements ISavable {
         Integer itemID = getItemID();
         assert itemID != null;
         if (equipmentPackID == null) { // Insert
-            String query = "INSERT INTO armors (item_id, content) VALUES (?, ?);";
+            String query = "INSERT INTO equipment_packs (item_id, content) VALUES (?, ?);";
             PreparedStatement ps = DBManager.preparedStatement(query);
             if (ps == null) throw new SQLException("The database is not connected");
             ps.setInt(1, itemID);
             ps.setString(2, getContent());
             ps.executeUpdate();
             ps.close();
-            query = "SELECT id FROM armors WHERE item_id = ?;";
+            query = "SELECT id FROM equipment_packs WHERE item_id = ?;";
             ps = DBManager.preparedStatement(query);
             if (ps == null) throw new SQLException("The database is not connected");
             ps.setInt(1, itemID);
@@ -82,7 +82,7 @@ public final class EquipmentPack extends Item implements ISavable {
                 throw new SQLException("Something strange happened on armor insert! Equipment pack insert but doesn't result on select");
             }
         } else { // Update
-            String query = "UPDATE armors SET item_id=?, content=? WHERE id=?;";
+            String query = "UPDATE equipment_packs SET item_id=?, content=? WHERE id=?;";
             PreparedStatement ps = DBManager.preparedStatement(query);
             if (ps == null) throw new SQLException("The database is not connected");
             ps.setInt(1, itemID);
