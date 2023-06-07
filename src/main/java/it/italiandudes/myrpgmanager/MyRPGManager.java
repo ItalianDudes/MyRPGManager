@@ -78,7 +78,7 @@ public final class MyRPGManager {
                 public static final String[] ARMORS = {"Armature", "armors"};
                 public static final String[] SPELLS = {"Magie", "spells"};
                 public static final String[] WEAPONS = {"Armi", "weapons"};
-                public static final String[] EQUIPMENT_PACKS = {"Pacchetti Avventura", "equipment_packs"};
+                public static final String[] EQUIPMENT_PACKS = {"Pacchetti Equipaggiamento", "equipment_packs"};
                 public static final String[] CLASSES = {"Classi","classes"};
                 public static final String[] RACES = {"Razze","races"};
                 public static final String[] TALENTS = {"Talenti","talents"};
