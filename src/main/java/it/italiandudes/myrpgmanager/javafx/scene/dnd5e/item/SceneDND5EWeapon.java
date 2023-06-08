@@ -14,7 +14,7 @@ public final class SceneDND5EWeapon {
     //Scene Generator
     public static Scene getScene() {
         try {
-            return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.DND5E.FXML_WEAPON)));
+            return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.DND5E.Item.FXML_WEAPON)));
         }catch (IOException e){
             Logger.log(e);
             return null;

@@ -14,7 +14,7 @@ public final class SceneDND5ESpell {
     //Scene Generator
     public static Scene getScene() {
         try {
-            return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.DND5E.FXML_SPELL)));
+            return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.DND5E.Item.FXML_SPELL)));
         }catch (IOException e){
             Logger.log(e);
             return null;

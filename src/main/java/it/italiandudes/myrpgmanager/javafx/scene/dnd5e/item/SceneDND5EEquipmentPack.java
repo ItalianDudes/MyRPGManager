@@ -14,7 +14,7 @@ public final class SceneDND5EEquipmentPack {
     //Scene Generator
     public static Scene getScene() {
         try {
-            return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.DND5E.FXML_EQUIPMENT_PACK)));
+            return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.DND5E.Item.FXML_EQUIPMENT_PACK)));
         }catch (IOException e){
             Logger.log(e);
             return null;

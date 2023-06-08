@@ -35,11 +35,14 @@ public final class JFXDefs {
             public static final class DND5E {
                 private static final String DND5E_DIR = FXML_DIR + "dnd5e/";
                 public static final String FXML_ITEM_LIST = DND5E_DIR + "SceneDND5EList.fxml";
-                public static final String FXML_ITEM = DND5E_DIR + "SceneDND5EItem.fxml";
-                public static final String FXML_ARMOR = DND5E_DIR + "SceneDND5EArmor.fxml";
-                public static final String FXML_WEAPON = DND5E_DIR + "SceneDND5EWeapon.fxml";
-                public static final String FXML_SPELL = DND5E_DIR + "SceneDND5ESpell.fxml";
-                public static final String FXML_EQUIPMENT_PACK = DND5E_DIR + "SceneDND5EEquipmentPack.fxml";
+                public static final class Item {
+                    private static final String ITEM_DIR = DND5E_DIR + "item/";
+                    public static final String FXML_ITEM = ITEM_DIR + "SceneDND5EItem.fxml";
+                    public static final String FXML_ARMOR = ITEM_DIR + "SceneDND5EArmor.fxml";
+                    public static final String FXML_WEAPON = ITEM_DIR + "SceneDND5EWeapon.fxml";
+                    public static final String FXML_SPELL = ITEM_DIR + "SceneDND5ESpell.fxml";
+                    public static final String FXML_EQUIPMENT_PACK = ITEM_DIR + "SceneDND5EEquipmentPack.fxml";
+                }
             }
         }
 
