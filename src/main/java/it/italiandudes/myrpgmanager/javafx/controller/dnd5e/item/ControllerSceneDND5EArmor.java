@@ -44,6 +44,7 @@ import java.util.Base64;
 
 @SuppressWarnings("unused")
 public final class ControllerSceneDND5EArmor {
+
     // Attributes
     private Armor armor = null;
     private String imageExtension = null;

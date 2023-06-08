@@ -43,6 +43,7 @@ import java.util.Base64;
 
 @SuppressWarnings("unused")
 public final class ControllerSceneDND5EWeapon {
+
     // Attributes
     private Weapon weapon = null;
     private String imageExtension = null;

@@ -43,6 +43,7 @@ import java.util.Base64;
 
 @SuppressWarnings("unused")
 public final class ControllerSceneDND5EEquipmentPack {
+
     // Attributes
     private EquipmentPack equipmentPack = null;
     private String imageExtension = null;
@@ -205,7 +206,7 @@ public final class ControllerSceneDND5EEquipmentPack {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_ARMOR.getDatabaseValue(),
+                                        ItemTypes.TYPE_EQUIPMENT_PACK.getDatabaseValue(),
                                         weight
                                 );
                                 equipmentPack = new EquipmentPack(

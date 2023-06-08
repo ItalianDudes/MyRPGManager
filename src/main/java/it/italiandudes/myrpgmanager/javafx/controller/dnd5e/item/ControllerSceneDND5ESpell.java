@@ -43,6 +43,7 @@ import java.util.Base64;
 
 @SuppressWarnings("unused")
 public final class ControllerSceneDND5ESpell {
+
     // Attributes
     private Spell spell = null;
     private String imageExtension = null;
@@ -217,7 +218,7 @@ public final class ControllerSceneDND5ESpell {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_ARMOR.getDatabaseValue(),
+                                        ItemTypes.TYPE_SPELL.getDatabaseValue(),
                                         weight
                                 );
                                 spell = new Spell(
