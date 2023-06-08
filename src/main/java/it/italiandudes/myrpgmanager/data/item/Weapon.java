@@ -110,7 +110,7 @@ public final class Weapon extends Item implements ISavable {
                 ps.close();
             } else {
                 ps.close();
-                throw new SQLException("Something strange happened on armor insert! Weapon insert but doesn't result on select");
+                throw new SQLException("Something strange happened on weapon insert! Weapon insert but doesn't result on select");
             }
         } else { // Update
             String query = "UPDATE weapons SET item_id=?, category=?, damage=?, properties=?, strength_required=? WHERE id=?;";

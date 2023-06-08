@@ -137,7 +137,7 @@ public final class Spell extends Item implements ISavable {
                 ps.close();
             } else {
                 ps.close();
-                throw new SQLException("Something strange happened on armor insert! Spell insert but doesn't result on select");
+                throw new SQLException("Something strange happened on spell insert! Spell insert but doesn't result on select");
             }
         } else { // Update
             String query = "UPDATE spells SET item_id=?, level=?, type=?, cast_time=?, spell_range=?, components=?, duration=?, damage=? WHERE id=?;";
