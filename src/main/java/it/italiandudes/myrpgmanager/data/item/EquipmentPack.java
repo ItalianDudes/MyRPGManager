@@ -79,7 +79,7 @@ public final class EquipmentPack extends Item implements ISavable {
                 ps.close();
             } else {
                 ps.close();
-                throw new SQLException("Something strange happened on armor insert! Equipment pack insert but doesn't result on select");
+                throw new SQLException("Something strange happened on equipment pack insert! Equipment pack insert but doesn't result on select");
             }
         } else { // Update
             String query = "UPDATE equipment_packs SET item_id=?, content=? WHERE id=?;";

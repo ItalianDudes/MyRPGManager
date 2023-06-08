@@ -8,6 +8,9 @@ import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.scene.SceneCreateOrChooseDB;
 import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.item.*;
+import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.misc.SceneDND5EBackground;
+import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.misc.SceneDND5ELanguage;
+import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.misc.SceneDND5ETalent;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Service;
@@ -315,8 +318,14 @@ public final class ControllerSceneDND5EList {
             } else { // Shouldn't happen on full implemented app
                 throw new RuntimeException("How is this even possible?");
             }
+        } else if (category.equals(DND5E.TALENTS[0])) {
+            Client.getStage().setScene(SceneDND5ETalent.getScene());
+        } else if (category.equals(DND5E.BACKGROUNDS[0])) {
+            Client.getStage().setScene(SceneDND5EBackground.getScene());
+        } else if (category.equals(DND5E.LANGUAGES[0])) {
+            Client.getStage().setScene(SceneDND5ELanguage.getScene());
         } else {
-            // TODO: new of anything else
+            // IMPLEMENT CLASS AND RACES
         }
     }
     @FXML
@@ -354,8 +363,14 @@ public final class ControllerSceneDND5EList {
                 default:
                     throw new RuntimeException("What is this item?");
             }
+        } else if (category.equals(DND5E.TALENTS[0])) {
+            Client.getStage().setScene(SceneDND5ETalent.getScene());
+        } else if (category.equals(DND5E.BACKGROUNDS[0])) {
+            Client.getStage().setScene(SceneDND5EBackground.getScene());
+        } else if (category.equals(DND5E.LANGUAGES[0])) {
+            Client.getStage().setScene(SceneDND5ELanguage.getScene());
         } else {
-            // TODO: handle with else if all the rest
+            // TODO: handle class and races
         }
     }
     @FXML
