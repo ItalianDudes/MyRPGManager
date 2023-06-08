@@ -26,6 +26,23 @@ public final class Language implements ISavable {
         this.alphabet = alphabet;
         this.lore = lore;
     }
+    public Language(@NotNull final String languageName) throws SQLException {
+        String query = "SELECT * FROM languages WHERE name = ?;";
+        PreparedStatement ps = DBManager.preparedStatement(query);
+        if (ps == null) throw new SQLException("The database is not connected");
+        ps.setString(1, languageName);
+        ResultSet result = ps.executeQuery();
+        if (result.next()) {
+            this.name = languageName;
+            this.languageID = result.getInt("id");
+            this.alphabet = result.getString("alphabet");
+            this.lore = result.getString("lore");
+            ps.close();
+        } else {
+            ps.close();
+            throw new SQLException("This language doesn't exist");
+        }
+    }
 
     // Methods
     @Override

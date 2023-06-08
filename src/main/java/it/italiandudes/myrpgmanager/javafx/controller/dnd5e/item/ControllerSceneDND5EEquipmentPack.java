@@ -43,6 +43,7 @@ import java.util.Base64;
 
 @SuppressWarnings("unused")
 public final class ControllerSceneDND5EEquipmentPack {
+
     // Attributes
     private EquipmentPack equipmentPack = null;
     private String imageExtension = null;

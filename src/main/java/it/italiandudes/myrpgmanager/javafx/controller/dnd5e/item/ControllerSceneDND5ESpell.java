@@ -43,6 +43,7 @@ import java.util.Base64;
 
 @SuppressWarnings("unused")
 public final class ControllerSceneDND5ESpell {
+
     // Attributes
     private Spell spell = null;
     private String imageExtension = null;

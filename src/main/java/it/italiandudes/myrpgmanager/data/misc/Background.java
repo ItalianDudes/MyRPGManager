@@ -23,6 +23,22 @@ public final class Background implements ISavable {
         this.name = name;
         this.description = description;
     }
+    public Background(@NotNull final String backgroundName) throws SQLException {
+        String query = "SELECT * FROM backgrounds WHERE name = ?;";
+        PreparedStatement ps = DBManager.preparedStatement(query);
+        if (ps == null) throw new SQLException("The database is not connected");
+        ps.setString(1, backgroundName);
+        ResultSet result = ps.executeQuery();
+        if (result.next()) {
+            this.name = backgroundName;
+            this.backgroundID = result.getInt("id");
+            this.description = result.getString("description");
+            ps.close();
+        } else {
+            ps.close();
+            throw new SQLException("This background doesn't exist");
+        }
+    }
 
     // Methods
     @Override

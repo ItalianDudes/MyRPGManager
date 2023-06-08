@@ -28,6 +28,24 @@ public final class Talent implements ISavable {
         this.description = description;
         this.privileges = privileges;
     }
+    public Talent(@NotNull final String talentName) throws SQLException {
+        String query = "SELECT * FROM talents WHERE name = ?;";
+        PreparedStatement ps = DBManager.preparedStatement(query);
+        if (ps == null) throw new SQLException("The database is not connected");
+        ps.setString(1, talentName);
+        ResultSet result = ps.executeQuery();
+        if (result.next()) {
+            this.name = talentName;
+            this.talentID = result.getInt("id");
+            this.requirements = result.getString("requirements");
+            this.description = result.getString("description");
+            this.privileges = result.getString("privileges");
+            ps.close();
+        } else {
+            ps.close();
+            throw new SQLException("This talent doesn't exist");
+        }
+    }
 
     // Methods
     @Override
