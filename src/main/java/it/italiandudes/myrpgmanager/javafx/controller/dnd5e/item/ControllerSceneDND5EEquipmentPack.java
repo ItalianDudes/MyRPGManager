@@ -1,15 +1,17 @@
-package it.italiandudes.myrpgmanager.javafx.controller.dnd5e;
+package it.italiandudes.myrpgmanager.javafx.controller.dnd5e.item;
 
 import it.italiandudes.idl.common.ImageHandler;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
-import it.italiandudes.myrpgmanager.data.Item;
-import it.italiandudes.myrpgmanager.data.ItemTypes;
-import it.italiandudes.myrpgmanager.data.Rarity;
+import it.italiandudes.myrpgmanager.data.item.EquipmentPack;
+import it.italiandudes.myrpgmanager.data.item.Item;
+import it.italiandudes.myrpgmanager.data.item.ItemTypes;
+import it.italiandudes.myrpgmanager.data.item.Rarity;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.JFXDefs;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
+import it.italiandudes.myrpgmanager.javafx.controller.dnd5e.ControllerSceneDND5EList;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -40,10 +42,9 @@ import java.io.IOException;
 import java.util.Base64;
 
 @SuppressWarnings("unused")
-public final class ControllerSceneDND5EItem {
-
+public final class ControllerSceneDND5EEquipmentPack {
     // Attributes
-    private Item item = null;
+    private EquipmentPack equipmentPack = null;
     private String imageExtension = null;
     private boolean isImageSet = false;
     private static final Image defaultImage = Client.getDefaultImage();
@@ -57,6 +58,7 @@ public final class ControllerSceneDND5EItem {
     @FXML private TextField textFieldME;
     @FXML private TextField textFieldMO;
     @FXML private TextField textFieldMP;
+    @FXML private TextArea textAreaContent;
     @FXML private TextArea textAreaDescription;
     @FXML private ImageView imageViewItem;
 
@@ -99,9 +101,9 @@ public final class ControllerSceneDND5EItem {
                 }
             };
         }, comboBoxRarity.valueProperty()));
-        String itemName = ControllerSceneDND5EList.getElementName();
-        if (itemName != null) {
-            initExistingItem(itemName);
+        String armorName = ControllerSceneDND5EList.getElementName();
+        if (armorName != null) {
+            initExistingEquipmentPack(armorName);
         }
     }
 
@@ -151,7 +153,7 @@ public final class ControllerSceneDND5EItem {
     @FXML
     private void save() {
         if (textFieldName.getText().replace(" ", "").equals("")) {
-            new ErrorAlert("ERRORE", "Errore di Inserimento", "Non e' stato assegnato un nome all'oggetto.");
+            new ErrorAlert("ERRORE", "Errore di Inserimento", "Non e' stato assegnato un nome al pacchetto equipaggiamento.");
             return;
         }
         Service<Void> saveService = new Service<Void>() {
@@ -160,53 +162,61 @@ public final class ControllerSceneDND5EItem {
                 return new Task<Void>() {
                     @Override
                     protected Void call() {
-
-                        double weight;
                         try {
-                            weight = Double.parseDouble(textFieldWeight.getText());
-                        } catch (NumberFormatException e) {
-                            weight = 0;
-                        }
+                            double weight;
+                            try {
+                                weight = Double.parseDouble(textFieldWeight.getText());
+                            } catch (NumberFormatException e) {
+                                weight = 0;
+                            }
+                            String oldName = null;
+                            if (equipmentPack == null) {
+                                Item item = new Item(
+                                        null,
+                                        imageViewItem.getImage(),
+                                        imageExtension,
+                                        textFieldName.getText(),
+                                        Integer.parseInt(textFieldMR.getText()),
+                                        Integer.parseInt(textFieldMA.getText()),
+                                        Integer.parseInt(textFieldME.getText()),
+                                        Integer.parseInt(textFieldMO.getText()),
+                                        Integer.parseInt(textFieldMP.getText()),
+                                        textAreaDescription.getText(),
+                                        comboBoxRarity.getSelectionModel().getSelectedItem(),
+                                        ItemTypes.TYPE_EQUIPMENT_PACK.getDatabaseValue(),
+                                        weight
+                                );
+                                equipmentPack = new EquipmentPack(
+                                        item,
+                                        null,
+                                        textAreaContent.getText()
+                                );
+                            } else {
+                                oldName = equipmentPack.getName();
+                                Item item = new Item(
+                                        equipmentPack.getItemID(),
+                                        imageViewItem.getImage(),
+                                        imageExtension,
+                                        textFieldName.getText(),
+                                        Integer.parseInt(textFieldMR.getText()),
+                                        Integer.parseInt(textFieldMA.getText()),
+                                        Integer.parseInt(textFieldME.getText()),
+                                        Integer.parseInt(textFieldMO.getText()),
+                                        Integer.parseInt(textFieldMP.getText()),
+                                        textAreaDescription.getText(),
+                                        comboBoxRarity.getSelectionModel().getSelectedItem(),
+                                        ItemTypes.TYPE_ARMOR.getDatabaseValue(),
+                                        weight
+                                );
+                                equipmentPack = new EquipmentPack(
+                                        item,
+                                        equipmentPack.getEquipmentPackID(),
+                                        textAreaContent.getText()
+                                );
+                            }
 
-                        String oldName = null;
-                        if (item == null) {
-                            item = new Item(
-                                    null,
-                                    imageViewItem.getImage(),
-                                    imageExtension,
-                                    textFieldName.getText(),
-                                    Integer.parseInt(textFieldMR.getText()),
-                                    Integer.parseInt(textFieldMA.getText()),
-                                    Integer.parseInt(textFieldME.getText()),
-                                    Integer.parseInt(textFieldMO.getText()),
-                                    Integer.parseInt(textFieldMP.getText()),
-                                    textAreaDescription.getText(),
-                                    comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                    ItemTypes.TYPE_ITEM.getDatabaseValue(),
-                                    weight
-                            );
-                        } else {
-                            oldName = item.getName();
-                            item = new Item(
-                                    item.getItemID(),
-                                    imageViewItem.getImage(),
-                                    imageExtension,
-                                    textFieldName.getText(),
-                                    Integer.parseInt(textFieldMR.getText()),
-                                    Integer.parseInt(textFieldMA.getText()),
-                                    Integer.parseInt(textFieldME.getText()),
-                                    Integer.parseInt(textFieldMO.getText()),
-                                    Integer.parseInt(textFieldMP.getText()),
-                                    textAreaDescription.getText(),
-                                    comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                    ItemTypes.TYPE_ITEM.getDatabaseValue(),
-                                    weight
-                            );
-                        }
-
-                        try {
-                            item.saveIntoDatabase(oldName);
-                            Platform.runLater(() -> new InformationAlert("SUCCESSO", "Salvataggio dei Dati", "Salvataggio dei dati completato con successo!"));
+                            equipmentPack.saveIntoDatabase(oldName);
+                            Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
                             Platform.runLater(() -> {
@@ -224,7 +234,7 @@ public final class ControllerSceneDND5EItem {
     }
 
     // Methods
-    private void initExistingItem(@NotNull final String itemName) {
+    private void initExistingEquipmentPack(@NotNull final String equipmentPackName) {
         Service<Void> itemInitializerService = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
@@ -233,10 +243,10 @@ public final class ControllerSceneDND5EItem {
                     protected Void call() throws Exception {
                         try {
 
-                            item = new Item(itemName);
+                            equipmentPack = new EquipmentPack(equipmentPackName);
 
-                            imageExtension = item.getImageExtension();
-                            int CC = item.getCostCopper();
+                            imageExtension = equipmentPack.getImageExtension();
+                            int CC = equipmentPack.getCostCopper();
                             int CP = CC / 1000;
                             CC -= CP * 1000;
                             int CG = CC / 100;
@@ -248,11 +258,11 @@ public final class ControllerSceneDND5EItem {
 
                             BufferedImage bufferedImage = null;
                             try {
-                                if (item.getBase64image() != null && imageExtension != null) {
-                                    byte[] imageBytes = Base64.getDecoder().decode(item.getBase64image());
+                                if (equipmentPack.getBase64image() != null && imageExtension != null) {
+                                    byte[] imageBytes = Base64.getDecoder().decode(equipmentPack.getBase64image());
                                     ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
                                     bufferedImage = ImageIO.read(imageStream);
-                                } else if (item.getBase64image() != null && imageExtension == null) {
+                                } else if (equipmentPack.getBase64image() != null && imageExtension == null) {
                                     throw new IllegalArgumentException("Image without declared extension");
                                 }
                             } catch (IllegalArgumentException e) {
@@ -267,21 +277,23 @@ public final class ControllerSceneDND5EItem {
                             BufferedImage finalBufferedImage = bufferedImage;
                             Platform.runLater(() -> {
 
-                                textFieldName.setText(item.getName());
-                                textFieldWeight.setText(String.valueOf(item.getWeight()));
-                                comboBoxRarity.getSelectionModel().select(item.getRarity().getTextedRarity());
+                                textFieldName.setText(equipmentPack.getName());
+                                textFieldWeight.setText(String.valueOf(equipmentPack.getWeight()));
+                                comboBoxRarity.getSelectionModel().select(equipmentPack.getRarity().getTextedRarity());
                                 textFieldMR.setText(String.valueOf(finalCC));
                                 textFieldMA.setText(String.valueOf(CS));
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
-                                textAreaDescription.setText(item.getDescription());
+                                textAreaDescription.setText(equipmentPack.getDescription());
                                 if (finalBufferedImage != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                     isImageSet = true;
                                 } else {
                                     imageViewItem.setImage(new Image(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)));
                                 }
+
+                                textAreaContent.setText(equipmentPack.getContent());
                             });
 
                         } catch (Exception e) {

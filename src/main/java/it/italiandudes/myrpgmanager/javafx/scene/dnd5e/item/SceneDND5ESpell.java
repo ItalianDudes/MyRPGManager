@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.javafx.scene.dnd5e;
+package it.italiandudes.myrpgmanager.javafx.scene.dnd5e.item;
 
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
@@ -9,12 +9,12 @@ import javafx.scene.Scene;
 import java.io.IOException;
 
 @SuppressWarnings("unused")
-public final class SceneDND5EItem {
+public final class SceneDND5ESpell {
 
     //Scene Generator
     public static Scene getScene() {
         try {
-            return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.DND5E.FXML_ITEM)));
+            return new Scene(FXMLLoader.load(MyRPGManager.Defs.Resources.get(JFXDefs.Resource.FXML.DND5E.FXML_SPELL)));
         }catch (IOException e){
             Logger.log(e);
             return null;

@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.data;
+package it.italiandudes.myrpgmanager.data.item;
 
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.interfaces.ISavable;

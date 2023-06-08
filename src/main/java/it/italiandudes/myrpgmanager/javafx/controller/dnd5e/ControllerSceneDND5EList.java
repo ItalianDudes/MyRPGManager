@@ -7,7 +7,7 @@ import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.scene.SceneCreateOrChooseDB;
-import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.*;
+import it.italiandudes.myrpgmanager.javafx.scene.dnd5e.item.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Service;

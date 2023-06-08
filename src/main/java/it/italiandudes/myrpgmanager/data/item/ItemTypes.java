@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.data;
+package it.italiandudes.myrpgmanager.data.item;
 
 @SuppressWarnings("unused")
 public enum ItemTypes {

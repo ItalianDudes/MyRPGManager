@@ -1,16 +1,17 @@
-package it.italiandudes.myrpgmanager.javafx.controller.dnd5e;
+package it.italiandudes.myrpgmanager.javafx.controller.dnd5e.item;
 
 import it.italiandudes.idl.common.ImageHandler;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
-import it.italiandudes.myrpgmanager.data.EquipmentPack;
-import it.italiandudes.myrpgmanager.data.Item;
-import it.italiandudes.myrpgmanager.data.ItemTypes;
-import it.italiandudes.myrpgmanager.data.Rarity;
+import it.italiandudes.myrpgmanager.data.item.Item;
+import it.italiandudes.myrpgmanager.data.item.ItemTypes;
+import it.italiandudes.myrpgmanager.data.item.Rarity;
+import it.italiandudes.myrpgmanager.data.item.Weapon;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.JFXDefs;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
+import it.italiandudes.myrpgmanager.javafx.controller.dnd5e.ControllerSceneDND5EList;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -41,9 +42,9 @@ import java.io.IOException;
 import java.util.Base64;
 
 @SuppressWarnings("unused")
-public final class ControllerSceneDND5EEquipmentPack {
+public final class ControllerSceneDND5EWeapon {
     // Attributes
-    private EquipmentPack equipmentPack = null;
+    private Weapon weapon = null;
     private String imageExtension = null;
     private boolean isImageSet = false;
     private static final Image defaultImage = Client.getDefaultImage();
@@ -57,7 +58,10 @@ public final class ControllerSceneDND5EEquipmentPack {
     @FXML private TextField textFieldME;
     @FXML private TextField textFieldMO;
     @FXML private TextField textFieldMP;
-    @FXML private TextArea textAreaContent;
+    @FXML private TextField textFieldCategory;
+    @FXML private TextField textFieldDamage;
+    @FXML private TextField textFieldStrengthRequired;
+    @FXML private TextField textFieldProperties;
     @FXML private TextArea textAreaDescription;
     @FXML private ImageView imageViewItem;
 
@@ -100,9 +104,9 @@ public final class ControllerSceneDND5EEquipmentPack {
                 }
             };
         }, comboBoxRarity.valueProperty()));
-        String armorName = ControllerSceneDND5EList.getElementName();
-        if (armorName != null) {
-            initExistingEquipmentPack(armorName);
+        String weaponName = ControllerSceneDND5EList.getElementName();
+        if (weaponName != null) {
+            initExistingWeapon(weaponName);
         }
     }
 
@@ -152,7 +156,7 @@ public final class ControllerSceneDND5EEquipmentPack {
     @FXML
     private void save() {
         if (textFieldName.getText().replace(" ", "").equals("")) {
-            new ErrorAlert("ERRORE", "Errore di Inserimento", "Non e' stato assegnato un nome al pacchetto equipaggiamento.");
+            new ErrorAlert("ERRORE", "Errore di Inserimento", "Non e' stato assegnato un nome all'arma.");
             return;
         }
         Service<Void> saveService = new Service<Void>() {
@@ -169,7 +173,7 @@ public final class ControllerSceneDND5EEquipmentPack {
                                 weight = 0;
                             }
                             String oldName = null;
-                            if (equipmentPack == null) {
+                            if (weapon == null) {
                                 Item item = new Item(
                                         null,
                                         imageViewItem.getImage(),
@@ -182,18 +186,21 @@ public final class ControllerSceneDND5EEquipmentPack {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_EQUIPMENT_PACK.getDatabaseValue(),
+                                        ItemTypes.TYPE_WEAPON.getDatabaseValue(),
                                         weight
                                 );
-                                equipmentPack = new EquipmentPack(
+                                weapon = new Weapon(
                                         item,
                                         null,
-                                        textAreaContent.getText()
+                                        textFieldCategory.getText(),
+                                        textFieldDamage.getText(),
+                                        textFieldProperties.getText(),
+                                        Integer.parseInt(textFieldStrengthRequired.getText())
                                 );
                             } else {
-                                oldName = equipmentPack.getName();
+                                oldName = weapon.getName();
                                 Item item = new Item(
-                                        equipmentPack.getItemID(),
+                                        weapon.getItemID(),
                                         imageViewItem.getImage(),
                                         imageExtension,
                                         textFieldName.getText(),
@@ -204,17 +211,20 @@ public final class ControllerSceneDND5EEquipmentPack {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_ARMOR.getDatabaseValue(),
+                                        ItemTypes.TYPE_WEAPON.getDatabaseValue(),
                                         weight
                                 );
-                                equipmentPack = new EquipmentPack(
+                                weapon = new Weapon(
                                         item,
-                                        equipmentPack.getEquipmentPackID(),
-                                        textAreaContent.getText()
+                                        weapon.getWeaponID(),
+                                        textFieldCategory.getText(),
+                                        textFieldDamage.getText(),
+                                        textFieldProperties.getText(),
+                                        Integer.parseInt(textFieldStrengthRequired.getText())
                                 );
                             }
 
-                            equipmentPack.saveIntoDatabase(oldName);
+                            weapon.saveIntoDatabase(oldName);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -233,7 +243,7 @@ public final class ControllerSceneDND5EEquipmentPack {
     }
 
     // Methods
-    private void initExistingEquipmentPack(@NotNull final String equipmentPackName) {
+    private void initExistingWeapon(@NotNull final String armorName) {
         Service<Void> itemInitializerService = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
@@ -242,10 +252,10 @@ public final class ControllerSceneDND5EEquipmentPack {
                     protected Void call() throws Exception {
                         try {
 
-                            equipmentPack = new EquipmentPack(equipmentPackName);
+                            weapon = new Weapon(armorName);
 
-                            imageExtension = equipmentPack.getImageExtension();
-                            int CC = equipmentPack.getCostCopper();
+                            imageExtension = weapon.getImageExtension();
+                            int CC = weapon.getCostCopper();
                             int CP = CC / 1000;
                             CC -= CP * 1000;
                             int CG = CC / 100;
@@ -257,11 +267,11 @@ public final class ControllerSceneDND5EEquipmentPack {
 
                             BufferedImage bufferedImage = null;
                             try {
-                                if (equipmentPack.getBase64image() != null && imageExtension != null) {
-                                    byte[] imageBytes = Base64.getDecoder().decode(equipmentPack.getBase64image());
+                                if (weapon.getBase64image() != null && imageExtension != null) {
+                                    byte[] imageBytes = Base64.getDecoder().decode(weapon.getBase64image());
                                     ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
                                     bufferedImage = ImageIO.read(imageStream);
-                                } else if (equipmentPack.getBase64image() != null && imageExtension == null) {
+                                } else if (weapon.getBase64image() != null && imageExtension == null) {
                                     throw new IllegalArgumentException("Image without declared extension");
                                 }
                             } catch (IllegalArgumentException e) {
@@ -276,15 +286,15 @@ public final class ControllerSceneDND5EEquipmentPack {
                             BufferedImage finalBufferedImage = bufferedImage;
                             Platform.runLater(() -> {
 
-                                textFieldName.setText(equipmentPack.getName());
-                                textFieldWeight.setText(String.valueOf(equipmentPack.getWeight()));
-                                comboBoxRarity.getSelectionModel().select(equipmentPack.getRarity().getTextedRarity());
+                                textFieldName.setText(weapon.getName());
+                                textFieldWeight.setText(String.valueOf(weapon.getWeight()));
+                                comboBoxRarity.getSelectionModel().select(weapon.getRarity().getTextedRarity());
                                 textFieldMR.setText(String.valueOf(finalCC));
                                 textFieldMA.setText(String.valueOf(CS));
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
-                                textAreaDescription.setText(equipmentPack.getDescription());
+                                textAreaDescription.setText(weapon.getDescription());
                                 if (finalBufferedImage != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                     isImageSet = true;
@@ -292,7 +302,10 @@ public final class ControllerSceneDND5EEquipmentPack {
                                     imageViewItem.setImage(new Image(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)));
                                 }
 
-                                textAreaContent.setText(equipmentPack.getContent());
+                                textFieldCategory.setText(weapon.getCategory());
+                                textFieldStrengthRequired.setText(String.valueOf(weapon.getStrengthRequired()));
+                                textFieldDamage.setText(weapon.getDamage());
+                                textFieldProperties.setText(weapon.getProperties());
                             });
 
                         } catch (Exception e) {

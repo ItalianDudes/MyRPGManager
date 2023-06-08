@@ -1,5 +1,6 @@
 package it.italiandudes.myrpgmanager.data;
 
+import it.italiandudes.myrpgmanager.data.item.Rarity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

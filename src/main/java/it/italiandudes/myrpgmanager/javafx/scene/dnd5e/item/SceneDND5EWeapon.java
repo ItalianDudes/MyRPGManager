@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.javafx.scene.dnd5e;
+package it.italiandudes.myrpgmanager.javafx.scene.dnd5e.item;
 
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;

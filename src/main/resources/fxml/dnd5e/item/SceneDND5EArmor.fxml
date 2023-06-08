@@ -6,11 +6,11 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.italiandudes.myrpgmanager.javafx.controller.dnd5e.ControllerSceneDND5ESpell">
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.italiandudes.myrpgmanager.javafx.controller.dnd5e.item.ControllerSceneDND5EArmor">
    <children>
       <VBox maxWidth="1.7976931348623157E308" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TextField fx:id="textFieldName" alignment="CENTER" maxWidth="1.7976931348623157E308" promptText="Nome Magia">
+            <TextField fx:id="textFieldName" alignment="CENTER" maxWidth="1.7976931348623157E308" promptText="Nome Armatura">
                <font>
                   <Font name="Calibri Bold" size="32.0" />
                </font>
@@ -23,7 +23,7 @@
                            <graphic>
                               <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../image/delete.png" />
+                                    <Image url="@../../../image/delete.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -43,7 +43,7 @@
                            <children>
                               <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../image/dnd5e/copper-coin.png" />
+                                    <Image url="@../../../image/dnd5e/copper-coin.png" />
                                  </image></ImageView>
                               <TextField fx:id="textFieldMR" maxWidth="1.7976931348623157E308" prefWidth="512.0" promptText="Rame" text="0" />
                            </children>
@@ -52,7 +52,7 @@
                            <children>
                               <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../image/dnd5e/silver-coin.png" />
+                                    <Image url="@../../../image/dnd5e/silver-coin.png" />
                                  </image></ImageView>
                               <TextField fx:id="textFieldMA" maxWidth="1.7976931348623157E308" prefWidth="512.0" promptText="Argento" text="0" />
                            </children>
@@ -61,7 +61,7 @@
                            <children>
                               <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../image/dnd5e/electrum-coin.png" />
+                                    <Image url="@../../../image/dnd5e/electrum-coin.png" />
                                  </image></ImageView>
                               <TextField fx:id="textFieldME" maxWidth="1.7976931348623157E308" prefWidth="512.0" promptText="Electrum" text="0" />
                            </children>
@@ -70,7 +70,7 @@
                            <children>
                               <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../image/dnd5e/gold-coin.png" />
+                                    <Image url="@../../../image/dnd5e/gold-coin.png" />
                                  </image></ImageView>
                               <TextField fx:id="textFieldMO" maxWidth="1.7976931348623157E308" prefWidth="512.0" promptText="Oro" text="0" />
                            </children>
@@ -79,7 +79,7 @@
                            <children>
                               <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../image/dnd5e/platinum-coin.png" />
+                                    <Image url="@../../../image/dnd5e/platinum-coin.png" />
                                  </image></ImageView>
                               <TextField fx:id="textFieldMP" maxWidth="1.7976931348623157E308" prefWidth="512.0" promptText="Platino" text="0" />
                            </children>
@@ -88,13 +88,10 @@
                   </VBox>
                </children>
             </HBox>
-            <TextField fx:id="textFieldLevel" promptText="Livello Magia" text="0" />
-            <TextField fx:id="textFieldType" promptText="Tipo" />
-            <TextField fx:id="textFieldCastTime" promptText="Tempo di Lancio" />
-            <TextField fx:id="textFieldSpellRange" promptText="Gittata" />
-            <TextField fx:id="textFieldComponents" promptText="Componenti" />
-            <TextField fx:id="textFieldDuration" promptText="Durata" />
-            <TextField fx:id="textFieldDamage" promptText="Danno" />
+            <TextField fx:id="textFieldCategory" promptText="Categoria" />
+            <TextField fx:id="textFieldStrengthRequired" promptText="Forza Richiesta" text="0" />
+            <TextField fx:id="textFieldAC" promptText="Classe Armatura" text="0" />
+            <ComboBox fx:id="comboBoxStealth" maxWidth="1.7976931348623157E308" promptText="Furtività" />
             <ScrollPane fitToHeight="true" fitToWidth="true">
                <content>
                   <TextArea fx:id="textAreaDescription" promptText="Descrizione" />
@@ -113,7 +110,7 @@
                      <graphic>
                         <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true" rotate="-180.0">
                            <image>
-                              <Image url="@../../image/arrow-right.png" />
+                              <Image url="@../../../image/arrow-right.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -122,7 +119,7 @@
                      <graphic>
                         <ImageView fitHeight="30.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../image/save.png" />
+                              <Image url="@../../../image/save.png" />
                            </image>
                         </ImageView>
                      </graphic>

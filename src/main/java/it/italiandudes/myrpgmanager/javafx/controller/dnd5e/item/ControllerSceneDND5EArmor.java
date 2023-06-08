@@ -1,17 +1,18 @@
-package it.italiandudes.myrpgmanager.javafx.controller.dnd5e;
+package it.italiandudes.myrpgmanager.javafx.controller.dnd5e.item;
 
 import it.italiandudes.idl.common.ImageHandler;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
 import it.italiandudes.myrpgmanager.MyRPGManager.Defs.SupportedRPGs.DND5E;
-import it.italiandudes.myrpgmanager.data.Armor;
-import it.italiandudes.myrpgmanager.data.Item;
-import it.italiandudes.myrpgmanager.data.ItemTypes;
-import it.italiandudes.myrpgmanager.data.Rarity;
+import it.italiandudes.myrpgmanager.data.item.Armor;
+import it.italiandudes.myrpgmanager.data.item.Item;
+import it.italiandudes.myrpgmanager.data.item.ItemTypes;
+import it.italiandudes.myrpgmanager.data.item.Rarity;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.JFXDefs;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
+import it.italiandudes.myrpgmanager.javafx.controller.dnd5e.ControllerSceneDND5EList;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
