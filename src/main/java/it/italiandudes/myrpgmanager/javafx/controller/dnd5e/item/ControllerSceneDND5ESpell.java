@@ -218,7 +218,7 @@ public final class ControllerSceneDND5ESpell {
                                         Integer.parseInt(textFieldMP.getText()),
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_ARMOR.getDatabaseValue(),
+                                        ItemTypes.TYPE_SPELL.getDatabaseValue(),
                                         weight
                                 );
                                 spell = new Spell(
