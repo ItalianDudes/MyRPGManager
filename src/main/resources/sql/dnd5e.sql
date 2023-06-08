@@ -112,19 +112,6 @@ CREATE TABLE IF NOT EXISTS talents (
     privileges TEXT
 );
 
-CREATE TABLE IF NOT EXISTS spell_components (
-    id INTEGER NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    short_form TEXT NOT NULL UNIQUE,
-    description TEXT
-);
-
-CREATE TABLE IF NOT EXISTS properties (
-    id INTEGER NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    description TEXT
-);
-
 CREATE TABLE IF NOT EXISTS items (
     id INTEGER NOT NULL PRIMARY KEY,
     base64image TEXT,
