@@ -62,8 +62,13 @@ public final class ControllerSceneDBChooser {
         String selectedOption = listViewOptions.getSelectionModel().getSelectedItem();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(selectedOption, "*." + selectedOption));
         fileChooser.setInitialDirectory(new File(MyRPGManager.Defs.JAR_POSITION).getParentFile());
-        // File fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
-        File fileDB = fileChooser.showSaveDialog(Client.getStage().getScene().getWindow());
+        File fileDB;
+        try {
+            fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
+        } catch (IllegalArgumentException e) {
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
+        }
         if(fileDB!=null) {
             if (fileDB.exists() && fileDB.isFile()) {
                 //noinspection ResultOfMethodCallIgnored
@@ -79,8 +84,13 @@ public final class ControllerSceneDBChooser {
         String selectedOption = listViewOptions.getSelectionModel().getSelectedItem();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(selectedOption, "*." + selectedOption));
         fileChooser.setInitialDirectory(new File(MyRPGManager.Defs.JAR_POSITION).getParentFile());
-        // File fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
-        File fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
+        File fileDB;
+        try {
+            fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
+        } catch (IllegalArgumentException e) {
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
+        }
         if(fileDB!=null) {
             textFieldPath.setText(fileDB.getAbsolutePath());
         }

@@ -129,8 +129,15 @@ public final class ControllerSceneDND5EArmor {
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(extension, "*."+extension));
         }
         fileChooser.setInitialDirectory(new File(MyRPGManager.Defs.JAR_POSITION).getParentFile());
-        File imagePath = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
+        File imagePath;
+        try {
+            imagePath = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
+        } catch (IllegalArgumentException e) {
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            imagePath = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
+        }
         if(imagePath!=null) {
+            File finalImagePath = imagePath;
             Service<Void> imageReaderService = new Service<Void>() {
                 @Override
                 protected Task<Void> createTask() {
@@ -138,9 +145,9 @@ public final class ControllerSceneDND5EArmor {
                         @Override
                         protected Void call() {
                             try {
-                                BufferedImage img = ImageIO.read(imagePath);
+                                BufferedImage img = ImageIO.read(finalImagePath);
                                 Platform.runLater(() -> imageViewItem.setImage(SwingFXUtils.toFXImage(img, null)));
-                                imageExtension = ImageHandler.getImageExtension(imagePath.getAbsolutePath());
+                                imageExtension = ImageHandler.getImageExtension(finalImagePath.getAbsolutePath());
                                 isImageSet = true;
                             }catch (IOException e) {
                                 Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Lettura", "Impossibile leggere il contenuto selezionato."));
