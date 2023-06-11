@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+
 <AnchorPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.italiandudes.myrpgmanager.javafx.controller.dnd5e.ControllerSceneDND5EList">
    <children>
       <VBox alignment="TOP_CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -52,11 +53,7 @@
                   </Button>
                </children>
             </HBox>
-            <ScrollPane fitToHeight="true" fitToWidth="true" minViewportHeight="200.0" prefViewportHeight="512.0" vbarPolicy="ALWAYS">
-               <content>
-                  <ListView fx:id="listViewOptions" onMouseClicked="#editOnDoubleClick" />
-               </content>
-            </ScrollPane>
+            <ListView fx:id="listViewOptions" onMouseClicked="#editOnDoubleClick" />
          </children>
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
