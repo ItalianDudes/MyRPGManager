@@ -30,6 +30,9 @@ public final class Client extends Application {
             System.exit(0);
         });
         DEFAULT_IMAGE = JFXDefs.AppInfo.LOGO;
+
+        // Notice into the logs that the application started Successfully
+        Logger.log("Application started successfully!");
     }
 
     //Start Methods

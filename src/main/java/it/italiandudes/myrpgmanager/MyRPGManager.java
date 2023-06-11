@@ -31,9 +31,6 @@ public final class MyRPGManager {
 
         // Start UI
         Client.start(args);
-
-        // Notice into the logs that the application started Successfully
-        Logger.log("Application started successfully!");
     }
 
     // Shutdown Hooks Configurator
