@@ -29,11 +29,11 @@ public final class MyRPGManager {
         // Shutdown Hooks Configurator
         configureShutdownHooks();
 
-        Logger.log("Application started successfully!");
-        Logger.log("Application Path: "+Defs.JAR_POSITION);
-
         // Start UI
         Client.start(args);
+
+        // Notice into the logs that the application started Successfully
+        Logger.log("Application started successfully!");
     }
 
     // Shutdown Hooks Configurator
