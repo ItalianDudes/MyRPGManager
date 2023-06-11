@@ -67,7 +67,7 @@ public final class ControllerSceneDBChooser {
             fileDB = fileChooser.showSaveDialog(Client.getStage().getScene().getWindow());
         } catch (IllegalArgumentException e) {
             fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-            fileDB = fileChooser.showOpenDialog(Client.getStage().getScene().getWindow());
+            fileDB = fileChooser.showSaveDialog(Client.getStage().getScene().getWindow());
         }
         if(fileDB!=null) {
             if (fileDB.exists() && fileDB.isFile()) {
