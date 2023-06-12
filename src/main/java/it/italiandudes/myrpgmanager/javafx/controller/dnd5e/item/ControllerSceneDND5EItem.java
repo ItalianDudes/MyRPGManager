@@ -167,97 +167,100 @@ public final class ControllerSceneDND5EItem {
                 return new Task<Void>() {
                     @Override
                     protected Void call() {
-
-                        double weight;
                         try {
-                            String textWeight = textFieldWeight.getText();
-                            if (textWeight == null || textWeight.replace(" ", "").equals("")) {
-                                weight = 0;
-                            } else {
-                                weight = Double.parseDouble(textFieldWeight.getText());
-                                if (weight < 0) throw new NumberFormatException("The weight is less than 0");
+                            double weight;
+                            try {
+                                String textWeight = textFieldWeight.getText();
+                                if (textWeight == null || textWeight.replace(" ", "").equals("")) {
+                                    weight = 0;
+                                } else {
+                                    weight = Double.parseDouble(textFieldWeight.getText());
+                                    if (weight < 0) throw new NumberFormatException("The weight is less than 0");
+                                }
+                            } catch (NumberFormatException e) {
+                                Logger.log(e);
+                                Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Il peso deve essere un numero a virgola mobile positivo!"));
+                                return null;
                             }
-                        } catch (NumberFormatException e) {
-                            Logger.log(e);
-                            Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Il peso deve essere un numero a virgola mobile positivo!"));
-                            return null;
-                        }
 
-                        String oldName = null;
-                        int mr, ma, me, mo, mp;
-                        try {
-                            String strMR = textFieldMR.getText();
-                            if (strMR == null || strMR.replace(" ", "").equals("")) {
-                                mr = 0;
-                            } else {
-                                mr = Integer.parseInt(strMR);
+                            String oldName = null;
+                            int mr, ma, me, mo, mp;
+                            try {
+                                String strMR = textFieldMR.getText();
+                                if (strMR == null || strMR.replace(" ", "").equals("")) {
+                                    mr = 0;
+                                } else {
+                                    mr = Integer.parseInt(strMR);
+                                }
+                                String strMA = textFieldMA.getText();
+                                if (strMA == null || strMA.replace(" ", "").equals("")) {
+                                    ma = 0;
+                                } else {
+                                    ma = Integer.parseInt(strMA);
+                                }
+                                String strME = textFieldME.getText();
+                                if (strME == null || strME.replace(" ", "").equals("")) {
+                                    me = 0;
+                                } else {
+                                    me = Integer.parseInt(strME);
+                                }
+                                String strMO = textFieldMO.getText();
+                                if (strMO == null || strMO.replace(" ", "").equals("")) {
+                                    mo = 0;
+                                } else {
+                                    mo = Integer.parseInt(strMO);
+                                }
+                                String strMP = textFieldMP.getText();
+                                if (strMP == null || strMP.replace(" ", "").equals("")) {
+                                    mp = 0;
+                                } else {
+                                    mp = Integer.parseInt(strMP);
+                                }
+                                if (mr < 0 || ma < 0 || me < 0 || mo < 0 || mp < 0) throw new NumberFormatException("A number is negative");
+                            } catch (NumberFormatException e) {
+                                Logger.log(e);
+                                Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Le valute devono essere dei numeri interi positivi!"));
+                                return null;
                             }
-                            String strMA = textFieldMA.getText();
-                            if (strMA == null || strMA.replace(" ", "").equals("")) {
-                                ma = 0;
+                            if (item == null) {
+                                if (Item.checkIfExist(textFieldName.getText())) {
+                                    Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Esiste gia' qualcosa con questo nome registrato!"));
+                                    return null;
+                                }
+                                item = new Item(
+                                        null,
+                                        imageViewItem.getImage(),
+                                        imageExtension,
+                                        textFieldName.getText(),
+                                        mr,
+                                        ma,
+                                        me,
+                                        mo,
+                                        mp,
+                                        textAreaDescription.getText(),
+                                        comboBoxRarity.getSelectionModel().getSelectedItem(),
+                                        ItemTypes.TYPE_ITEM.getDatabaseValue(),
+                                        weight
+                                );
                             } else {
-                                ma = Integer.parseInt(strMA);
+                                oldName = item.getName();
+                                item = new Item(
+                                        item.getItemID(),
+                                        imageViewItem.getImage(),
+                                        imageExtension,
+                                        textFieldName.getText(),
+                                        mr,
+                                        ma,
+                                        me,
+                                        mo,
+                                        mp,
+                                        textAreaDescription.getText(),
+                                        comboBoxRarity.getSelectionModel().getSelectedItem(),
+                                        ItemTypes.TYPE_ITEM.getDatabaseValue(),
+                                        weight
+                                );
                             }
-                            String strME = textFieldME.getText();
-                            if (strME == null || strME.replace(" ", "").equals("")) {
-                                me = 0;
-                            } else {
-                                me = Integer.parseInt(strME);
-                            }
-                            String strMO = textFieldMO.getText();
-                            if (strMO == null || strMO.replace(" ", "").equals("")) {
-                                mo = 0;
-                            } else {
-                                mo = Integer.parseInt(strMO);
-                            }
-                            String strMP = textFieldMP.getText();
-                            if (strMP == null || strMP.replace(" ", "").equals("")) {
-                                mp = 0;
-                            } else {
-                                mp = Integer.parseInt(strMP);
-                            }
-                            if (mr < 0 || ma < 0 || me < 0 || mo < 0 || mp < 0) throw new NumberFormatException("A number is negative");
-                        } catch (NumberFormatException e) {
-                            Logger.log(e);
-                            Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Le valute devono essere dei numeri interi positivi!"));
-                            return null;
-                        }
-                        if (item == null) {
-                            item = new Item(
-                                    null,
-                                    imageViewItem.getImage(),
-                                    imageExtension,
-                                    textFieldName.getText(),
-                                    mr,
-                                    ma,
-                                    me,
-                                    mo,
-                                    mp,
-                                    textAreaDescription.getText(),
-                                    comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                    ItemTypes.TYPE_ITEM.getDatabaseValue(),
-                                    weight
-                            );
-                        } else {
-                            oldName = item.getName();
-                            item = new Item(
-                                    item.getItemID(),
-                                    imageViewItem.getImage(),
-                                    imageExtension,
-                                    textFieldName.getText(),
-                                    mr,
-                                    ma,
-                                    me,
-                                    mo,
-                                    mp,
-                                    textAreaDescription.getText(),
-                                    comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                    ItemTypes.TYPE_ITEM.getDatabaseValue(),
-                                    weight
-                            );
-                        }
 
-                        try {
                             item.saveIntoDatabase(oldName);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Salvataggio dei Dati", "Salvataggio dei dati completato con successo!"));
                         } catch (Exception e) {

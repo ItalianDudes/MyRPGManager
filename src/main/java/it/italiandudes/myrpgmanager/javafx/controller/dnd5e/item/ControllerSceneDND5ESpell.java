@@ -244,6 +244,10 @@ public final class ControllerSceneDND5ESpell {
                                 return null;
                             }
                             if (spell == null) {
+                                if (Item.checkIfExist(textFieldName.getText())) {
+                                    Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Esiste gia' qualcosa con questo nome registrato!"));
+                                    return null;
+                                }
                                 Item item = new Item(
                                         null,
                                         imageViewItem.getImage(),

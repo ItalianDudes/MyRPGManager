@@ -156,6 +156,21 @@ public class Item implements ISavable {
     }
 
     // Methods
+    public static boolean checkIfExist(@NotNull final String itemName) throws SQLException {
+        String query = "SELECT id FROM items WHERE name=?;";
+        PreparedStatement ps = DBManager.preparedStatement(query);
+        if (ps == null) throw new SQLException("There's no connection with the database");
+        ps.setString(1, itemName);
+        ResultSet result = ps.executeQuery();
+        if (result.next()) {
+            int id = result.getInt("id");
+            ps.close();
+            return true;
+        } else {
+            ps.close();
+            return false;
+        }
+    }
     @Override
     public void saveIntoDatabase(@Nullable final String oldName) throws SQLException {
         String itemCheckerQuery = "SELECT id FROM items WHERE name=?;";

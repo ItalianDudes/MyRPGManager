@@ -267,6 +267,10 @@ public final class ControllerSceneDND5EArmor {
                                 return null;
                             }
                             if (armor == null) {
+                                if (Item.checkIfExist(textFieldName.getText())) {
+                                    Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Esiste gia' qualcosa con questo nome registrato!"));
+                                    return null;
+                                }
                                 Item item = new Item(
                                         null,
                                         imageViewItem.getImage(),
