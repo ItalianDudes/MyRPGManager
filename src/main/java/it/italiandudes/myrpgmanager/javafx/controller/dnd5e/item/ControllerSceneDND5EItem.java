@@ -7,7 +7,6 @@ import it.italiandudes.myrpgmanager.data.item.Item;
 import it.italiandudes.myrpgmanager.data.item.ItemTypes;
 import it.italiandudes.myrpgmanager.data.item.Rarity;
 import it.italiandudes.myrpgmanager.javafx.Client;
-import it.italiandudes.myrpgmanager.javafx.JFXDefs;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
 import it.italiandudes.myrpgmanager.javafx.controller.dnd5e.ControllerSceneDND5EList;
@@ -171,23 +170,69 @@ public final class ControllerSceneDND5EItem {
 
                         double weight;
                         try {
-                            weight = Double.parseDouble(textFieldWeight.getText());
+                            String textWeight = textFieldWeight.getText();
+                            if (textWeight == null || textWeight.replace(" ", "").equals("")) {
+                                weight = 0;
+                            } else {
+                                weight = Double.parseDouble(textFieldWeight.getText());
+                                if (weight < 0) throw new NumberFormatException("The weight is less than 0");
+                            }
                         } catch (NumberFormatException e) {
-                            weight = 0;
+                            Logger.log(e);
+                            Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Il peso deve essere un numero a virgola mobile positivo!"));
+                            return null;
                         }
 
                         String oldName = null;
+                        int mr, ma, me, mo, mp;
+                        try {
+                            String strMR = textFieldMR.getText();
+                            if (strMR == null || strMR.replace(" ", "").equals("")) {
+                                mr = 0;
+                            } else {
+                                mr = Integer.parseInt(strMR);
+                            }
+                            String strMA = textFieldMA.getText();
+                            if (strMA == null || strMA.replace(" ", "").equals("")) {
+                                ma = 0;
+                            } else {
+                                ma = Integer.parseInt(strMA);
+                            }
+                            String strME = textFieldME.getText();
+                            if (strME == null || strME.replace(" ", "").equals("")) {
+                                me = 0;
+                            } else {
+                                me = Integer.parseInt(strME);
+                            }
+                            String strMO = textFieldMO.getText();
+                            if (strMO == null || strMO.replace(" ", "").equals("")) {
+                                mo = 0;
+                            } else {
+                                mo = Integer.parseInt(strMO);
+                            }
+                            String strMP = textFieldMP.getText();
+                            if (strMP == null || strMP.replace(" ", "").equals("")) {
+                                mp = 0;
+                            } else {
+                                mp = Integer.parseInt(strMP);
+                            }
+                            if (mr < 0 || ma < 0 || me < 0 || mo < 0 || mp < 0) throw new NumberFormatException("A number is negative");
+                        } catch (NumberFormatException e) {
+                            Logger.log(e);
+                            Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Le valute devono essere dei numeri interi positivi!"));
+                            return null;
+                        }
                         if (item == null) {
                             item = new Item(
                                     null,
                                     imageViewItem.getImage(),
                                     imageExtension,
                                     textFieldName.getText(),
-                                    Integer.parseInt(textFieldMR.getText()),
-                                    Integer.parseInt(textFieldMA.getText()),
-                                    Integer.parseInt(textFieldME.getText()),
-                                    Integer.parseInt(textFieldMO.getText()),
-                                    Integer.parseInt(textFieldMP.getText()),
+                                    mr,
+                                    ma,
+                                    me,
+                                    mo,
+                                    mp,
                                     textAreaDescription.getText(),
                                     comboBoxRarity.getSelectionModel().getSelectedItem(),
                                     ItemTypes.TYPE_ITEM.getDatabaseValue(),
@@ -200,11 +245,11 @@ public final class ControllerSceneDND5EItem {
                                     imageViewItem.getImage(),
                                     imageExtension,
                                     textFieldName.getText(),
-                                    Integer.parseInt(textFieldMR.getText()),
-                                    Integer.parseInt(textFieldMA.getText()),
-                                    Integer.parseInt(textFieldME.getText()),
-                                    Integer.parseInt(textFieldMO.getText()),
-                                    Integer.parseInt(textFieldMP.getText()),
+                                    mr,
+                                    ma,
+                                    me,
+                                    mo,
+                                    mp,
                                     textAreaDescription.getText(),
                                     comboBoxRarity.getSelectionModel().getSelectedItem(),
                                     ItemTypes.TYPE_ITEM.getDatabaseValue(),
@@ -264,10 +309,10 @@ public final class ControllerSceneDND5EItem {
                                     throw new IllegalArgumentException("Image without declared extension");
                                 }
                             } catch (IllegalArgumentException e) {
-                                Platform.runLater(() -> {
-                                    new ErrorAlert("ERRORE", "Errore di lettura", "L'immagine ricevuta dal database non è leggibile");
-                                    Client.getStage().setScene(ControllerSceneDND5EList.getListScene());
-                                });
+                                Logger.log(e);
+                                item.setBase64image(null);
+                                item.setImageExtension(null);
+                                Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di lettura", "L'immagine ricevuta dal database non è leggibile"));
                                 return null;
                             }
 
@@ -284,11 +329,11 @@ public final class ControllerSceneDND5EItem {
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
                                 textAreaDescription.setText(item.getDescription());
-                                if (finalBufferedImage != null) {
+                                if (finalBufferedImage != null && imageExtension != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                     isImageSet = true;
                                 } else {
-                                    imageViewItem.setImage(new Image(MyRPGManager.Defs.Resources.getAsStream(JFXDefs.Resource.Image.IMAGE_LOGO)));
+                                    imageViewItem.setImage(defaultImage);
                                 }
                             });
 
