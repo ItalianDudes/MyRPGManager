@@ -2,7 +2,7 @@ package it.italiandudes.myrpgmanager.javafx.controller.dnd5e;
 
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager.Defs.SupportedRPGs.DND5E;
-import it.italiandudes.myrpgmanager.data.ElementPreview;
+import it.italiandudes.myrpgmanager.data.dnd5e.DND5EElementPreview;
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
@@ -42,7 +42,7 @@ public final class ControllerSceneDND5EList {
     @FXML private ComboBox<String> comboBoxFilter;
     @FXML private TextField textFieldSearchBar;
     @FXML private CheckBox checkBoxSortDesc;
-    @FXML private ListView<ElementPreview> listViewOptions;
+    @FXML private ListView<DND5EElementPreview> listViewOptions;
 
     //Initialize
     @FXML
@@ -55,20 +55,20 @@ public final class ControllerSceneDND5EList {
         comboBoxFilter.setItems(FXCollections.observableList(DND5E.ITEM_FILTERS));
         comboBoxFilter.getSelectionModel().selectFirst();
         comboBoxFilter.setVisible(false);
-        listViewOptions.setCellFactory(lv -> new ListCell<ElementPreview>() {
+        listViewOptions.setCellFactory(lv -> new ListCell<DND5EElementPreview>() {
             @Override
-            protected void updateItem(ElementPreview elementPreview, boolean empty) {
-                super.updateItem(elementPreview, empty);
+            protected void updateItem(DND5EElementPreview DND5EElementPreview, boolean empty) {
+                super.updateItem(DND5EElementPreview, empty);
                 if (empty) {
                     setText(null);
                     setStyle("-fx-font-weight: bold;");
                 } else {
                     if (comboBoxCategory.getSelectionModel().getSelectedItem().equals(DND5E.ITEMS[0])) {
-                        setText(elementPreview.getName());
-                        assert elementPreview.getRarity() != null;
-                        setStyle("-fx-background-color: "+ elementPreview.getRarityColor()+";-fx-font-weight: bold;");
+                        setText(DND5EElementPreview.getName());
+                        assert DND5EElementPreview.getRarity() != null;
+                        setStyle("-fx-background-color: "+ DND5EElementPreview.getRarityColor()+";-fx-font-weight: bold;");
                     } else {
-                        setText(elementPreview.getName());
+                        setText(DND5EElementPreview.getName());
                     }
                 }
             }
@@ -146,12 +146,12 @@ public final class ControllerSceneDND5EList {
 
                             ResultSet result = ps.executeQuery();
 
-                            ArrayList<ElementPreview> resultList = new ArrayList<>();
+                            ArrayList<DND5EElementPreview> resultList = new ArrayList<>();
 
                             if (category.equals(DND5E.ITEMS[0])) {
                                 while (result.next()) {
                                     resultList.add(
-                                            new ElementPreview(
+                                            new DND5EElementPreview(
                                                     result.getString("name"),
                                                     result.getDouble("cost_copper"),
                                                     result.getInt("rarity"),
@@ -163,7 +163,7 @@ public final class ControllerSceneDND5EList {
                             } else {
                                 while (result.next()) {
                                     resultList.add(
-                                        new ElementPreview(
+                                        new DND5EElementPreview(
                                                 result.getString("name"),
                                                 0,
                                                 0,
@@ -242,12 +242,12 @@ public final class ControllerSceneDND5EList {
 
                             ResultSet result = ps.executeQuery();
 
-                            ArrayList<ElementPreview> resultList = new ArrayList<>();
+                            ArrayList<DND5EElementPreview> resultList = new ArrayList<>();
 
                             if (category.equals(DND5E.ITEMS[0])) {
                                 while (result.next()) {
                                     resultList.add(
-                                            new ElementPreview(
+                                            new DND5EElementPreview(
                                                     result.getString("name"),
                                                     result.getDouble("cost_copper"),
                                                     result.getInt("rarity"),
@@ -259,7 +259,7 @@ public final class ControllerSceneDND5EList {
                             } else {
                                 while (result.next()) {
                                     resultList.add(
-                                            new ElementPreview(
+                                            new DND5EElementPreview(
                                                     result.getString("name"),
                                                     0,
                                                     0,

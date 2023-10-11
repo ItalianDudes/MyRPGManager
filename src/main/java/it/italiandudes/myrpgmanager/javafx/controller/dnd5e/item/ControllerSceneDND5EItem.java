@@ -3,9 +3,9 @@ package it.italiandudes.myrpgmanager.javafx.controller.dnd5e.item;
 import it.italiandudes.idl.common.ImageHandler;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
-import it.italiandudes.myrpgmanager.data.item.Item;
-import it.italiandudes.myrpgmanager.data.item.ItemTypes;
-import it.italiandudes.myrpgmanager.data.item.Rarity;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5EItem;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5EItemTypes;
+import it.italiandudes.myrpgmanager.data.common.Rarity;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
@@ -43,7 +43,7 @@ import java.util.Base64;
 public final class ControllerSceneDND5EItem {
 
     // Attributes
-    private Item item = null;
+    private DND5EItem DND5EItem = null;
     private String imageExtension = null;
     private boolean isImageSet = false;
     private static final Image defaultImage = Client.getDefaultImage();
@@ -222,12 +222,12 @@ public final class ControllerSceneDND5EItem {
                                 Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Le valute devono essere dei numeri interi positivi!"));
                                 return null;
                             }
-                            if (item == null) {
-                                if (Item.checkIfExist(textFieldName.getText())) {
+                            if (DND5EItem == null) {
+                                if (DND5EItem.checkIfExist(textFieldName.getText())) {
                                     Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Esiste gia' qualcosa con questo nome registrato!"));
                                     return null;
                                 }
-                                item = new Item(
+                                DND5EItem = new DND5EItem(
                                         null,
                                         imageViewItem.getImage(),
                                         imageExtension,
@@ -239,13 +239,13 @@ public final class ControllerSceneDND5EItem {
                                         mp,
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_ITEM.getDatabaseValue(),
+                                        DND5EItemTypes.TYPE_ITEM.getDatabaseValue(),
                                         weight
                                 );
                             } else {
-                                oldName = item.getName();
-                                item = new Item(
-                                        item.getItemID(),
+                                oldName = DND5EItem.getName();
+                                DND5EItem = new DND5EItem(
+                                        DND5EItem.getItemID(),
                                         imageViewItem.getImage(),
                                         imageExtension,
                                         textFieldName.getText(),
@@ -256,12 +256,12 @@ public final class ControllerSceneDND5EItem {
                                         mp,
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_ITEM.getDatabaseValue(),
+                                        DND5EItemTypes.TYPE_ITEM.getDatabaseValue(),
                                         weight
                                 );
                             }
 
-                            item.saveIntoDatabase(oldName);
+                            DND5EItem.saveIntoDatabase(oldName);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Salvataggio dei Dati", "Salvataggio dei dati completato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -289,10 +289,10 @@ public final class ControllerSceneDND5EItem {
                     protected Void call() throws Exception {
                         try {
 
-                            item = new Item(itemName);
+                            DND5EItem = new DND5EItem(itemName);
 
-                            imageExtension = item.getImageExtension();
-                            int CC = item.getCostCopper();
+                            imageExtension = DND5EItem.getImageExtension();
+                            int CC = DND5EItem.getCostCopper();
                             int CP = CC / 1000;
                             CC -= CP * 1000;
                             int CG = CC / 100;
@@ -304,17 +304,17 @@ public final class ControllerSceneDND5EItem {
 
                             BufferedImage bufferedImage = null;
                             try {
-                                if (item.getBase64image() != null && imageExtension != null) {
-                                    byte[] imageBytes = Base64.getDecoder().decode(item.getBase64image());
+                                if (DND5EItem.getBase64image() != null && imageExtension != null) {
+                                    byte[] imageBytes = Base64.getDecoder().decode(DND5EItem.getBase64image());
                                     ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
                                     bufferedImage = ImageIO.read(imageStream);
-                                } else if (item.getBase64image() != null && imageExtension == null) {
+                                } else if (DND5EItem.getBase64image() != null && imageExtension == null) {
                                     throw new IllegalArgumentException("Image without declared extension");
                                 }
                             } catch (IllegalArgumentException e) {
                                 Logger.log(e);
-                                item.setBase64image(null);
-                                item.setImageExtension(null);
+                                DND5EItem.setBase64image(null);
+                                DND5EItem.setImageExtension(null);
                                 Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di lettura", "L'immagine ricevuta dal database non è leggibile"));
                                 return null;
                             }
@@ -323,15 +323,15 @@ public final class ControllerSceneDND5EItem {
                             BufferedImage finalBufferedImage = bufferedImage;
                             Platform.runLater(() -> {
 
-                                textFieldName.setText(item.getName());
-                                textFieldWeight.setText(String.valueOf(item.getWeight()));
-                                comboBoxRarity.getSelectionModel().select(item.getRarity().getTextedRarity());
+                                textFieldName.setText(DND5EItem.getName());
+                                textFieldWeight.setText(String.valueOf(DND5EItem.getWeight()));
+                                comboBoxRarity.getSelectionModel().select(DND5EItem.getRarity().getTextedRarity());
                                 textFieldMR.setText(String.valueOf(finalCC));
                                 textFieldMA.setText(String.valueOf(CS));
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
-                                textAreaDescription.setText(item.getDescription());
+                                textAreaDescription.setText(DND5EItem.getDescription());
                                 if (finalBufferedImage != null && imageExtension != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                     isImageSet = true;

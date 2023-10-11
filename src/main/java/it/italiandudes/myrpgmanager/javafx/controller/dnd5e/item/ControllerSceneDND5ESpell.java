@@ -3,10 +3,10 @@ package it.italiandudes.myrpgmanager.javafx.controller.dnd5e.item;
 import it.italiandudes.idl.common.ImageHandler;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
-import it.italiandudes.myrpgmanager.data.item.Item;
-import it.italiandudes.myrpgmanager.data.item.ItemTypes;
-import it.italiandudes.myrpgmanager.data.item.Rarity;
-import it.italiandudes.myrpgmanager.data.item.Spell;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5EItem;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5EItemTypes;
+import it.italiandudes.myrpgmanager.data.common.Rarity;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5ESpell;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
@@ -44,7 +44,7 @@ import java.util.Base64;
 public final class ControllerSceneDND5ESpell {
 
     // Attributes
-    private Spell spell = null;
+    private DND5ESpell DND5ESpell = null;
     private String imageExtension = null;
     private boolean isImageSet = false;
     private static final Image defaultImage = Client.getDefaultImage();
@@ -243,12 +243,12 @@ public final class ControllerSceneDND5ESpell {
                                 Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Il livello deve essere un numero intero positivo compreso tra 0 e 9!"));
                                 return null;
                             }
-                            if (spell == null) {
-                                if (Item.checkIfExist(textFieldName.getText())) {
+                            if (DND5ESpell == null) {
+                                if (DND5EItem.checkIfExist(textFieldName.getText())) {
                                     Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Esiste gia' qualcosa con questo nome registrato!"));
                                     return null;
                                 }
-                                Item item = new Item(
+                                DND5EItem DND5EItem = new DND5EItem(
                                         null,
                                         imageViewItem.getImage(),
                                         imageExtension,
@@ -260,11 +260,11 @@ public final class ControllerSceneDND5ESpell {
                                         mp,
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_SPELL.getDatabaseValue(),
+                                        DND5EItemTypes.TYPE_SPELL.getDatabaseValue(),
                                         weight
                                 );
-                                spell = new Spell(
-                                        item,
+                                DND5ESpell = new DND5ESpell(
+                                        DND5EItem,
                                         null,
                                         level,
                                         textFieldType.getText(),
@@ -275,9 +275,9 @@ public final class ControllerSceneDND5ESpell {
                                         textFieldDamage.getText()
                                 );
                             } else {
-                                oldName = spell.getName();
-                                Item item = new Item(
-                                        spell.getItemID(),
+                                oldName = DND5ESpell.getName();
+                                DND5EItem DND5EItem = new DND5EItem(
+                                        DND5ESpell.getItemID(),
                                         imageViewItem.getImage(),
                                         imageExtension,
                                         textFieldName.getText(),
@@ -288,12 +288,12 @@ public final class ControllerSceneDND5ESpell {
                                         mp,
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_SPELL.getDatabaseValue(),
+                                        DND5EItemTypes.TYPE_SPELL.getDatabaseValue(),
                                         weight
                                 );
-                                spell = new Spell(
-                                        item,
-                                        spell.getSpellID(),
+                                DND5ESpell = new DND5ESpell(
+                                        DND5EItem,
+                                        DND5ESpell.getSpellID(),
                                         level,
                                         textFieldType.getText(),
                                         textFieldCastTime.getText(),
@@ -304,7 +304,7 @@ public final class ControllerSceneDND5ESpell {
                                 );
                             }
 
-                            spell.saveIntoDatabase(oldName);
+                            DND5ESpell.saveIntoDatabase(oldName);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -332,10 +332,10 @@ public final class ControllerSceneDND5ESpell {
                     protected Void call() throws Exception {
                         try {
 
-                            spell = new Spell(spellName);
+                            DND5ESpell = new DND5ESpell(spellName);
 
-                            imageExtension = spell.getImageExtension();
-                            int CC = spell.getCostCopper();
+                            imageExtension = DND5ESpell.getImageExtension();
+                            int CC = DND5ESpell.getCostCopper();
                             int CP = CC / 1000;
                             CC -= CP * 1000;
                             int CG = CC / 100;
@@ -347,17 +347,17 @@ public final class ControllerSceneDND5ESpell {
 
                             BufferedImage bufferedImage = null;
                             try {
-                                if (spell.getBase64image() != null && imageExtension != null) {
-                                    byte[] imageBytes = Base64.getDecoder().decode(spell.getBase64image());
+                                if (DND5ESpell.getBase64image() != null && imageExtension != null) {
+                                    byte[] imageBytes = Base64.getDecoder().decode(DND5ESpell.getBase64image());
                                     ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
                                     bufferedImage = ImageIO.read(imageStream);
-                                } else if (spell.getBase64image() != null && imageExtension == null) {
+                                } else if (DND5ESpell.getBase64image() != null && imageExtension == null) {
                                     throw new IllegalArgumentException("Image without declared extension");
                                 }
                             } catch (IllegalArgumentException e) {
                                 Logger.log(e);
-                                spell.setBase64image(null);
-                                spell.setImageExtension(null);
+                                DND5ESpell.setBase64image(null);
+                                DND5ESpell.setImageExtension(null);
                                 Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di lettura", "L'immagine ricevuta dal database non è leggibile"));
                                 return null;
                             }
@@ -366,15 +366,15 @@ public final class ControllerSceneDND5ESpell {
                             BufferedImage finalBufferedImage = bufferedImage;
                             Platform.runLater(() -> {
 
-                                textFieldName.setText(spell.getName());
-                                textFieldWeight.setText(String.valueOf(spell.getWeight()));
-                                comboBoxRarity.getSelectionModel().select(spell.getRarity().getTextedRarity());
+                                textFieldName.setText(DND5ESpell.getName());
+                                textFieldWeight.setText(String.valueOf(DND5ESpell.getWeight()));
+                                comboBoxRarity.getSelectionModel().select(DND5ESpell.getRarity().getTextedRarity());
                                 textFieldMR.setText(String.valueOf(finalCC));
                                 textFieldMA.setText(String.valueOf(CS));
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
-                                textAreaDescription.setText(spell.getDescription());
+                                textAreaDescription.setText(DND5ESpell.getDescription());
                                 if (finalBufferedImage != null && imageExtension != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                     isImageSet = true;
@@ -382,13 +382,13 @@ public final class ControllerSceneDND5ESpell {
                                     imageViewItem.setImage(defaultImage);
                                 }
 
-                                textFieldDamage.setText(spell.getDamage());
-                                textFieldCastTime.setText(spell.getCastTime());
-                                textFieldDuration.setText(spell.getDuration());
-                                textFieldComponents.setText(spell.getComponents());
-                                textFieldLevel.setText(String.valueOf(spell.getLevel()));
-                                textFieldSpellRange.setText(spell.getRange());
-                                textFieldType.setText(spell.getType());
+                                textFieldDamage.setText(DND5ESpell.getDamage());
+                                textFieldCastTime.setText(DND5ESpell.getCastTime());
+                                textFieldDuration.setText(DND5ESpell.getDuration());
+                                textFieldComponents.setText(DND5ESpell.getComponents());
+                                textFieldLevel.setText(String.valueOf(DND5ESpell.getLevel()));
+                                textFieldSpellRange.setText(DND5ESpell.getRange());
+                                textFieldType.setText(DND5ESpell.getType());
                             });
 
                         } catch (Exception e) {

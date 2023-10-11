@@ -1,5 +1,6 @@
-package it.italiandudes.myrpgmanager.data.item;
+package it.italiandudes.myrpgmanager.data.dnd5e.item;
 
+import it.italiandudes.myrpgmanager.data.common.Rarity;
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.interfaces.ISavable;
 import javafx.embed.swing.SwingFXUtils;
@@ -16,7 +17,7 @@ import java.sql.SQLException;
 import java.util.Base64;
 
 @SuppressWarnings("unused")
-public class Item implements ISavable {
+public class DND5EItem implements ISavable {
 
     // Attributes
     @Nullable private Integer itemID;
@@ -31,29 +32,29 @@ public class Item implements ISavable {
     private int itemType;
 
     // Constructors
-    public Item() {
+    public DND5EItem() {
         name = "";
         rarity = Rarity.COMMON;
         costCopper = 0;
         weight = 0;
-        this.itemType = ItemTypes.TYPE_ITEM.getDatabaseValue();
+        this.itemType = DND5EItemTypes.TYPE_ITEM.getDatabaseValue();
     }
-    public Item(@NotNull final Item item) {
-        this.itemID = item.itemID;
-        this.base64image = item.base64image;
-        this.imageExtension = item.imageExtension;
-        this.name = item.name;
-        this.costCopper = item.costCopper;
+    public DND5EItem(@NotNull final DND5EItem DND5EItem) {
+        this.itemID = DND5EItem.itemID;
+        this.base64image = DND5EItem.base64image;
+        this.imageExtension = DND5EItem.imageExtension;
+        this.name = DND5EItem.name;
+        this.costCopper = DND5EItem.costCopper;
         if (this.costCopper < 0) this.costCopper = 0;
-        this.description = item.description;
-        this.rarity = item.rarity;
-        this.weight = item.weight;
+        this.description = DND5EItem.description;
+        this.rarity = DND5EItem.rarity;
+        this.weight = DND5EItem.weight;
         if (this.weight < 0) this.weight = 0;
-        this.itemType = item.itemType;
+        this.itemType = DND5EItem.itemType;
     }
-    public Item(@Nullable final Integer itemID, @Nullable final String base64image, @Nullable final String imageExtension, @NotNull final String name,
-                final int costCopper, @Nullable final String description, @NotNull final Rarity rarity,
-                final double weight, final int itemType) {
+    public DND5EItem(@Nullable final Integer itemID, @Nullable final String base64image, @Nullable final String imageExtension, @NotNull final String name,
+                     final int costCopper, @Nullable final String description, @NotNull final Rarity rarity,
+                     final double weight, final int itemType) {
         this.itemID = itemID;
         this.base64image = base64image;
         this.imageExtension = imageExtension;
@@ -66,8 +67,8 @@ public class Item implements ISavable {
         if (this.weight < 0) this.weight = 0;
         this.itemType = itemType;
     }
-    public Item(@Nullable final Integer itemID, @Nullable final Image image, @Nullable final String imageExtension, @NotNull final String name,
-                final int cc, final int cs, final int ce, final int cg, final int cp, @Nullable final String description, @NotNull final String rarity, final int itemType, final double weight) {
+    public DND5EItem(@Nullable final Integer itemID, @Nullable final Image image, @Nullable final String imageExtension, @NotNull final String name,
+                     final int cc, final int cs, final int ce, final int cg, final int cp, @Nullable final String description, @NotNull final String rarity, final int itemType, final double weight) {
         this.itemID = itemID;
         this.name = name;
         this.costCopper = cc + cs*10 + ce*50 + cg*100 + cp*1000;
@@ -90,45 +91,45 @@ public class Item implements ISavable {
         this.itemType = itemType;
         this.weight = weight;
     }
-    public Item(@NotNull final String name) throws SQLException {
+    public DND5EItem(@NotNull final String name) throws SQLException {
         String query = "SELECT * FROM items WHERE name = ?;";
         PreparedStatement ps = DBManager.preparedStatement(query);
         if (ps == null) throw new SQLException("The database connection is not initialized");
         ps.setString(1, name);
-        Item retrievedItem = new Item(ps.executeQuery());
+        DND5EItem retrievedDND5EItem = new DND5EItem(ps.executeQuery());
         ps.close();
-        this.itemID = retrievedItem.itemID;
-        this.base64image = retrievedItem.base64image;
-        this.imageExtension = retrievedItem.imageExtension;
-        this.name = retrievedItem.name;
-        this.costCopper = retrievedItem.costCopper;
+        this.itemID = retrievedDND5EItem.itemID;
+        this.base64image = retrievedDND5EItem.base64image;
+        this.imageExtension = retrievedDND5EItem.imageExtension;
+        this.name = retrievedDND5EItem.name;
+        this.costCopper = retrievedDND5EItem.costCopper;
         if (this.costCopper < 0) this.costCopper = 0;
-        this.description = retrievedItem.description;
-        this.rarity = retrievedItem.rarity;
-        this.weight = retrievedItem.weight;
+        this.description = retrievedDND5EItem.description;
+        this.rarity = retrievedDND5EItem.rarity;
+        this.weight = retrievedDND5EItem.weight;
         if (this.weight < 0) this.weight = 0;
-        this.itemType = retrievedItem.itemType;
+        this.itemType = retrievedDND5EItem.itemType;
     }
-    public Item(int itemID) throws SQLException {
+    public DND5EItem(int itemID) throws SQLException {
         String query = "SELECT * FROM items WHERE id = ?;";
         PreparedStatement ps = DBManager.preparedStatement(query);
         if (ps == null) throw new SQLException("The database connection is not initialized");
         ps.setInt(1, itemID);
-        Item retrievedItem = new Item(ps.executeQuery());
+        DND5EItem retrievedDND5EItem = new DND5EItem(ps.executeQuery());
         ps.close();
-        this.itemID = retrievedItem.itemID;
-        this.base64image = retrievedItem.base64image;
-        this.imageExtension = retrievedItem.imageExtension;
-        this.name = retrievedItem.name;
-        this.costCopper = retrievedItem.costCopper;
+        this.itemID = retrievedDND5EItem.itemID;
+        this.base64image = retrievedDND5EItem.base64image;
+        this.imageExtension = retrievedDND5EItem.imageExtension;
+        this.name = retrievedDND5EItem.name;
+        this.costCopper = retrievedDND5EItem.costCopper;
         if (this.costCopper < 0) this.costCopper = 0;
-        this.description = retrievedItem.description;
-        this.rarity = retrievedItem.rarity;
-        this.weight = retrievedItem.weight;
+        this.description = retrievedDND5EItem.description;
+        this.rarity = retrievedDND5EItem.rarity;
+        this.weight = retrievedDND5EItem.weight;
         if (this.weight < 0) this.weight = 0;
-        this.itemType = retrievedItem.itemType;
+        this.itemType = retrievedDND5EItem.itemType;
     }
-    public Item(@NotNull final ResultSet resultSet) throws SQLException {
+    public DND5EItem(@NotNull final ResultSet resultSet) throws SQLException {
         this.itemID = resultSet.getInt("id");
         try {
             this.base64image = resultSet.getString("base64image");
@@ -290,22 +291,22 @@ public class Item implements ISavable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Item)) return false;
+        if (!(o instanceof DND5EItem)) return false;
 
-        Item item = (Item) o;
+        DND5EItem DND5EItem = (DND5EItem) o;
 
-        if (getCostCopper() != item.getCostCopper()) return false;
-        if (Double.compare(item.getWeight(), getWeight()) != 0) return false;
-        if (getItemType() != item.getItemType()) return false;
-        if (getItemID() != null ? !getItemID().equals(item.getItemID()) : item.getItemID() != null) return false;
-        if (getBase64image() != null ? !getBase64image().equals(item.getBase64image()) : item.getBase64image() != null)
+        if (getCostCopper() != DND5EItem.getCostCopper()) return false;
+        if (Double.compare(DND5EItem.getWeight(), getWeight()) != 0) return false;
+        if (getItemType() != DND5EItem.getItemType()) return false;
+        if (getItemID() != null ? !getItemID().equals(DND5EItem.getItemID()) : DND5EItem.getItemID() != null) return false;
+        if (getBase64image() != null ? !getBase64image().equals(DND5EItem.getBase64image()) : DND5EItem.getBase64image() != null)
             return false;
-        if (getImageExtension() != null ? !getImageExtension().equals(item.getImageExtension()) : item.getImageExtension() != null)
+        if (getImageExtension() != null ? !getImageExtension().equals(DND5EItem.getImageExtension()) : DND5EItem.getImageExtension() != null)
             return false;
-        if (!getName().equals(item.getName())) return false;
-        if (getDescription() != null ? !getDescription().equals(item.getDescription()) : item.getDescription() != null)
+        if (!getName().equals(DND5EItem.getName())) return false;
+        if (getDescription() != null ? !getDescription().equals(DND5EItem.getDescription()) : DND5EItem.getDescription() != null)
             return false;
-        return getRarity() == item.getRarity();
+        return getRarity() == DND5EItem.getRarity();
     }
     @Override
     public int hashCode() {

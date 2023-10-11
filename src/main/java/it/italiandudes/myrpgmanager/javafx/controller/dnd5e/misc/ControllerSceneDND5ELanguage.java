@@ -1,7 +1,7 @@
 package it.italiandudes.myrpgmanager.javafx.controller.dnd5e.misc;
 
 import it.italiandudes.idl.common.Logger;
-import it.italiandudes.myrpgmanager.data.misc.Language;
+import it.italiandudes.myrpgmanager.data.dnd5e.misc.DND5ELanguage;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public final class ControllerSceneDND5ELanguage {
 
     // Attributes
-    private Language language = null;
+    private DND5ELanguage DND5ELanguage = null;
 
     // Graphic Elements
     @FXML private TextField textFieldName;
@@ -53,23 +53,23 @@ public final class ControllerSceneDND5ELanguage {
                     @Override
                     protected Void call() {
                         try {
-                            if (language == null) {
-                                language = new Language(
+                            if (DND5ELanguage == null) {
+                                DND5ELanguage = new DND5ELanguage(
                                         null,
                                         textFieldName.getText(),
                                         textFieldAlphabet.getText(),
                                         textAreaLore.getText()
                                 );
                             } else {
-                                language = new Language(
-                                        language.getLanguageID(),
+                                DND5ELanguage = new DND5ELanguage(
+                                        DND5ELanguage.getLanguageID(),
                                         textFieldName.getText(),
                                         textFieldAlphabet.getText(),
                                         textAreaLore.getText()
                                 );
                             }
 
-                            language.saveIntoDatabase(null);
+                            DND5ELanguage.saveIntoDatabase(null);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -97,11 +97,11 @@ public final class ControllerSceneDND5ELanguage {
                     protected Void call() throws Exception {
                         try {
 
-                            language = new Language(languageName);
+                            DND5ELanguage = new DND5ELanguage(languageName);
                             Platform.runLater(() -> {
-                                textFieldName.setText(language.getName());
-                                textFieldAlphabet.setText(language.getAlphabet());
-                                textAreaLore.setText(language.getLore());
+                                textFieldName.setText(DND5ELanguage.getName());
+                                textFieldAlphabet.setText(DND5ELanguage.getAlphabet());
+                                textAreaLore.setText(DND5ELanguage.getLore());
                             });
 
                         } catch (Exception e) {

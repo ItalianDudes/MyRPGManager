@@ -3,10 +3,10 @@ package it.italiandudes.myrpgmanager.javafx.controller.dnd5e.item;
 import it.italiandudes.idl.common.ImageHandler;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
-import it.italiandudes.myrpgmanager.data.item.Item;
-import it.italiandudes.myrpgmanager.data.item.ItemTypes;
-import it.italiandudes.myrpgmanager.data.item.Rarity;
-import it.italiandudes.myrpgmanager.data.item.Weapon;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5EItem;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5EItemTypes;
+import it.italiandudes.myrpgmanager.data.common.Rarity;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5EWeapon;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
@@ -44,7 +44,7 @@ import java.util.Base64;
 public final class ControllerSceneDND5EWeapon {
 
     // Attributes
-    private Weapon weapon = null;
+    private DND5EWeapon DND5EWeapon = null;
     private String imageExtension = null;
     private boolean isImageSet = false;
     private static final Image defaultImage = Client.getDefaultImage();
@@ -239,12 +239,12 @@ public final class ControllerSceneDND5EWeapon {
                                 Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "La forza richiesta deve essere un numero intero positivo!"));
                                 return null;
                             }
-                            if (weapon == null) {
-                                if (Item.checkIfExist(textFieldName.getText())) {
+                            if (DND5EWeapon == null) {
+                                if (DND5EItem.checkIfExist(textFieldName.getText())) {
                                     Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Esiste gia' qualcosa con questo nome registrato!"));
                                     return null;
                                 }
-                                Item item = new Item(
+                                DND5EItem DND5EItem = new DND5EItem(
                                         null,
                                         imageViewItem.getImage(),
                                         imageExtension,
@@ -256,11 +256,11 @@ public final class ControllerSceneDND5EWeapon {
                                         mp,
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_WEAPON.getDatabaseValue(),
+                                        DND5EItemTypes.TYPE_WEAPON.getDatabaseValue(),
                                         weight
                                 );
-                                weapon = new Weapon(
-                                        item,
+                                DND5EWeapon = new DND5EWeapon(
+                                        DND5EItem,
                                         null,
                                         textFieldCategory.getText(),
                                         textFieldDamage.getText(),
@@ -268,9 +268,9 @@ public final class ControllerSceneDND5EWeapon {
                                         strengthRequired
                                 );
                             } else {
-                                oldName = weapon.getName();
-                                Item item = new Item(
-                                        weapon.getItemID(),
+                                oldName = DND5EWeapon.getName();
+                                DND5EItem DND5EItem = new DND5EItem(
+                                        DND5EWeapon.getItemID(),
                                         imageViewItem.getImage(),
                                         imageExtension,
                                         textFieldName.getText(),
@@ -281,12 +281,12 @@ public final class ControllerSceneDND5EWeapon {
                                         mp,
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_WEAPON.getDatabaseValue(),
+                                        DND5EItemTypes.TYPE_WEAPON.getDatabaseValue(),
                                         weight
                                 );
-                                weapon = new Weapon(
-                                        item,
-                                        weapon.getWeaponID(),
+                                DND5EWeapon = new DND5EWeapon(
+                                        DND5EItem,
+                                        DND5EWeapon.getWeaponID(),
                                         textFieldCategory.getText(),
                                         textFieldDamage.getText(),
                                         textFieldProperties.getText(),
@@ -294,7 +294,7 @@ public final class ControllerSceneDND5EWeapon {
                                 );
                             }
 
-                            weapon.saveIntoDatabase(oldName);
+                            DND5EWeapon.saveIntoDatabase(oldName);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -322,10 +322,10 @@ public final class ControllerSceneDND5EWeapon {
                     protected Void call() throws Exception {
                         try {
 
-                            weapon = new Weapon(armorName);
+                            DND5EWeapon = new DND5EWeapon(armorName);
 
-                            imageExtension = weapon.getImageExtension();
-                            int CC = weapon.getCostCopper();
+                            imageExtension = DND5EWeapon.getImageExtension();
+                            int CC = DND5EWeapon.getCostCopper();
                             int CP = CC / 1000;
                             CC -= CP * 1000;
                             int CG = CC / 100;
@@ -337,17 +337,17 @@ public final class ControllerSceneDND5EWeapon {
 
                             BufferedImage bufferedImage = null;
                             try {
-                                if (weapon.getBase64image() != null && imageExtension != null) {
-                                    byte[] imageBytes = Base64.getDecoder().decode(weapon.getBase64image());
+                                if (DND5EWeapon.getBase64image() != null && imageExtension != null) {
+                                    byte[] imageBytes = Base64.getDecoder().decode(DND5EWeapon.getBase64image());
                                     ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
                                     bufferedImage = ImageIO.read(imageStream);
-                                } else if (weapon.getBase64image() != null && imageExtension == null) {
+                                } else if (DND5EWeapon.getBase64image() != null && imageExtension == null) {
                                     throw new IllegalArgumentException("Image without declared extension");
                                 }
                             } catch (IllegalArgumentException e) {
                                 Logger.log(e);
-                                weapon.setBase64image(null);
-                                weapon.setImageExtension(null);
+                                DND5EWeapon.setBase64image(null);
+                                DND5EWeapon.setImageExtension(null);
                                 Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di lettura", "L'immagine ricevuta dal database non è leggibile"));
                                 return null;
                             }
@@ -356,15 +356,15 @@ public final class ControllerSceneDND5EWeapon {
                             BufferedImage finalBufferedImage = bufferedImage;
                             Platform.runLater(() -> {
 
-                                textFieldName.setText(weapon.getName());
-                                textFieldWeight.setText(String.valueOf(weapon.getWeight()));
-                                comboBoxRarity.getSelectionModel().select(weapon.getRarity().getTextedRarity());
+                                textFieldName.setText(DND5EWeapon.getName());
+                                textFieldWeight.setText(String.valueOf(DND5EWeapon.getWeight()));
+                                comboBoxRarity.getSelectionModel().select(DND5EWeapon.getRarity().getTextedRarity());
                                 textFieldMR.setText(String.valueOf(finalCC));
                                 textFieldMA.setText(String.valueOf(CS));
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
-                                textAreaDescription.setText(weapon.getDescription());
+                                textAreaDescription.setText(DND5EWeapon.getDescription());
                                 if (finalBufferedImage != null && imageExtension != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                     isImageSet = true;
@@ -372,10 +372,10 @@ public final class ControllerSceneDND5EWeapon {
                                     imageViewItem.setImage(defaultImage);
                                 }
 
-                                textFieldCategory.setText(weapon.getCategory());
-                                textFieldStrengthRequired.setText(String.valueOf(weapon.getStrengthRequired()));
-                                textFieldDamage.setText(weapon.getDamage());
-                                textFieldProperties.setText(weapon.getProperties());
+                                textFieldCategory.setText(DND5EWeapon.getCategory());
+                                textFieldStrengthRequired.setText(String.valueOf(DND5EWeapon.getStrengthRequired()));
+                                textFieldDamage.setText(DND5EWeapon.getDamage());
+                                textFieldProperties.setText(DND5EWeapon.getProperties());
                             });
 
                         } catch (Exception e) {

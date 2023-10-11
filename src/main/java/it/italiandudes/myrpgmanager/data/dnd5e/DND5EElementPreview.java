@@ -1,11 +1,11 @@
-package it.italiandudes.myrpgmanager.data;
+package it.italiandudes.myrpgmanager.data.dnd5e;
 
-import it.italiandudes.myrpgmanager.data.item.Rarity;
+import it.italiandudes.myrpgmanager.data.common.Rarity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public final class ElementPreview {
+public final class DND5EElementPreview {
 
     // Attributes
     @NotNull private final String name;
@@ -16,7 +16,7 @@ public final class ElementPreview {
     private final int type;
 
     // Constructors
-    public ElementPreview(@NotNull final String name, final double costCopper, final int rarity, final double weight, final int type) {
+    public DND5EElementPreview(@NotNull final String name, final double costCopper, final int rarity, final double weight, final int type) {
         @Nullable Rarity finalRarity;
         this.name = name;
         this.costCopper = costCopper;
@@ -63,9 +63,9 @@ public final class ElementPreview {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ElementPreview)) return false;
+        if (!(o instanceof DND5EElementPreview)) return false;
 
-        ElementPreview that = (ElementPreview) o;
+        DND5EElementPreview that = (DND5EElementPreview) o;
 
         if (Double.compare(that.getCostCopper(), getCostCopper()) != 0) return false;
         if (Double.compare(that.getWeight(), getWeight()) != 0) return false;

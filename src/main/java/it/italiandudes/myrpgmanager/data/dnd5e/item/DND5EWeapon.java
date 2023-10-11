@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.data.item;
+package it.italiandudes.myrpgmanager.data.dnd5e.item;
 
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.interfaces.ISavable;
@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @SuppressWarnings("unused")
-public final class Weapon extends Item implements ISavable {
+public final class DND5EWeapon extends DND5EItem implements ISavable {
 
     // Attributes
     @Nullable private Integer weaponID;
@@ -20,13 +20,13 @@ public final class Weapon extends Item implements ISavable {
     private int strengthRequired;
 
     // Constructors
-    public Weapon() {
+    public DND5EWeapon() {
         super();
-        setItemType(ItemTypes.TYPE_WEAPON.getDatabaseValue());
+        setItemType(DND5EItemTypes.TYPE_WEAPON.getDatabaseValue());
     }
-    public Weapon(@NotNull final Item baseItem, @Nullable final Integer weaponID, @Nullable final String category,
-                  @Nullable final String damage, @Nullable final String properties, @Nullable final Integer strengthRequired) {
-        super(baseItem);
+    public DND5EWeapon(@NotNull final DND5EItem baseDND5EItem, @Nullable final Integer weaponID, @Nullable final String category,
+                       @Nullable final String damage, @Nullable final String properties, @Nullable final Integer strengthRequired) {
+        super(baseDND5EItem);
         this.weaponID = weaponID;
         this.category = category;
         this.damage = damage;
@@ -37,7 +37,7 @@ public final class Weapon extends Item implements ISavable {
             this.strengthRequired = strengthRequired;
         }
     }
-    public Weapon(@NotNull final String weaponName) throws SQLException {
+    public DND5EWeapon(@NotNull final String weaponName) throws SQLException {
         super(weaponName);
         String query = "SELECT * FROM weapons WHERE item_id = ?;";
         PreparedStatement ps = DBManager.preparedStatement(query);
@@ -58,7 +58,7 @@ public final class Weapon extends Item implements ISavable {
             throw new SQLException("Exist the item, but not the weapon");
         }
     }
-    public Weapon(@NotNull final ResultSet resultSet) throws SQLException {
+    public DND5EWeapon(@NotNull final ResultSet resultSet) throws SQLException {
         super(resultSet.getInt("item_id"));
         this.weaponID = resultSet.getInt("id");
         try {
@@ -167,18 +167,18 @@ public final class Weapon extends Item implements ISavable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Weapon)) return false;
+        if (!(o instanceof DND5EWeapon)) return false;
         if (!super.equals(o)) return false;
 
-        Weapon weapon = (Weapon) o;
+        DND5EWeapon DND5EWeapon = (DND5EWeapon) o;
 
-        if (getStrengthRequired() != weapon.getStrengthRequired()) return false;
-        if (getWeaponID() != null ? !getWeaponID().equals(weapon.getWeaponID()) : weapon.getWeaponID() != null)
+        if (getStrengthRequired() != DND5EWeapon.getStrengthRequired()) return false;
+        if (getWeaponID() != null ? !getWeaponID().equals(DND5EWeapon.getWeaponID()) : DND5EWeapon.getWeaponID() != null)
             return false;
-        if (getCategory() != null ? !getCategory().equals(weapon.getCategory()) : weapon.getCategory() != null)
+        if (getCategory() != null ? !getCategory().equals(DND5EWeapon.getCategory()) : DND5EWeapon.getCategory() != null)
             return false;
-        if (getDamage() != null ? !getDamage().equals(weapon.getDamage()) : weapon.getDamage() != null) return false;
-        return getProperties() != null ? getProperties().equals(weapon.getProperties()) : weapon.getProperties() == null;
+        if (getDamage() != null ? !getDamage().equals(DND5EWeapon.getDamage()) : DND5EWeapon.getDamage() != null) return false;
+        return getProperties() != null ? getProperties().equals(DND5EWeapon.getProperties()) : DND5EWeapon.getProperties() == null;
     }
     @Override
     public int hashCode() {

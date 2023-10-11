@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.data.item;
+package it.italiandudes.myrpgmanager.data.dnd5e.item;
 
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.interfaces.ISavable;
@@ -10,24 +10,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @SuppressWarnings("unused")
-public final class EquipmentPack extends Item implements ISavable {
+public final class DND5EEquipmentPack extends DND5EItem implements ISavable {
 
     // Attributes
     @Nullable private Integer equipmentPackID;
     @Nullable private String content;
 
     // Constructors
-    public EquipmentPack() {
+    public DND5EEquipmentPack() {
         super();
-        setItemType(ItemTypes.TYPE_EQUIPMENT_PACK.getDatabaseValue());
+        setItemType(DND5EItemTypes.TYPE_EQUIPMENT_PACK.getDatabaseValue());
     }
-    public EquipmentPack(@NotNull final Item baseItem, @Nullable final Integer equipmentPackID,
-                         @Nullable final String content) {
-        super(baseItem);
+    public DND5EEquipmentPack(@NotNull final DND5EItem baseDND5EItem, @Nullable final Integer equipmentPackID,
+                              @Nullable final String content) {
+        super(baseDND5EItem);
         this.equipmentPackID = equipmentPackID;
         this.content = content;
     }
-    public EquipmentPack(@NotNull final ResultSet resultSet) throws SQLException {
+    public DND5EEquipmentPack(@NotNull final ResultSet resultSet) throws SQLException {
         super(resultSet.getInt("item_id"));
         this.equipmentPackID = resultSet.getInt("id");
         try {
@@ -36,7 +36,7 @@ public final class EquipmentPack extends Item implements ISavable {
             this.content = null;
         }
     }
-    public EquipmentPack(@NotNull final String equipmentPackName) throws SQLException {
+    public DND5EEquipmentPack(@NotNull final String equipmentPackName) throws SQLException {
         super(equipmentPackName);
         String query = "SELECT * FROM equipment_packs WHERE item_id = ?;";
         PreparedStatement ps = DBManager.preparedStatement(query);
@@ -109,10 +109,10 @@ public final class EquipmentPack extends Item implements ISavable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof EquipmentPack)) return false;
+        if (!(o instanceof DND5EEquipmentPack)) return false;
         if (!super.equals(o)) return false;
 
-        EquipmentPack that = (EquipmentPack) o;
+        DND5EEquipmentPack that = (DND5EEquipmentPack) o;
 
         if (getEquipmentPackID() != null ? !getEquipmentPackID().equals(that.getEquipmentPackID()) : that.getEquipmentPackID() != null)
             return false;

@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.data.misc;
+package it.italiandudes.myrpgmanager.data.dnd5e.misc;
 
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.interfaces.ISavable;
@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @SuppressWarnings("unused")
-public final class Talent implements ISavable {
+public final class DND5ETalent implements ISavable {
 
     // Attributes
     @Nullable private Integer talentID;
@@ -20,15 +20,15 @@ public final class Talent implements ISavable {
     @Nullable private String privileges;
 
     // Constructors
-    public Talent(@Nullable final Integer talentID, @NotNull final String name, @Nullable final String requirements,
-                  @Nullable final String description, @Nullable final String privileges) {
+    public DND5ETalent(@Nullable final Integer talentID, @NotNull final String name, @Nullable final String requirements,
+                       @Nullable final String description, @Nullable final String privileges) {
         this.talentID = talentID;
         this.name = name;
         this.requirements = requirements;
         this.description = description;
         this.privileges = privileges;
     }
-    public Talent(@NotNull final String talentName) throws SQLException {
+    public DND5ETalent(@NotNull final String talentName) throws SQLException {
         String query = "SELECT * FROM talents WHERE name = ?;";
         PreparedStatement ps = DBManager.preparedStatement(query);
         if (ps == null) throw new SQLException("The database is not connected");
@@ -124,18 +124,18 @@ public final class Talent implements ISavable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Talent)) return false;
+        if (!(o instanceof DND5ETalent)) return false;
 
-        Talent talent = (Talent) o;
+        DND5ETalent DND5ETalent = (DND5ETalent) o;
 
-        if (getTalentID() != null ? !getTalentID().equals(talent.getTalentID()) : talent.getTalentID() != null)
+        if (getTalentID() != null ? !getTalentID().equals(DND5ETalent.getTalentID()) : DND5ETalent.getTalentID() != null)
             return false;
-        if (!getName().equals(talent.getName())) return false;
-        if (getRequirements() != null ? !getRequirements().equals(talent.getRequirements()) : talent.getRequirements() != null)
+        if (!getName().equals(DND5ETalent.getName())) return false;
+        if (getRequirements() != null ? !getRequirements().equals(DND5ETalent.getRequirements()) : DND5ETalent.getRequirements() != null)
             return false;
-        if (getDescription() != null ? !getDescription().equals(talent.getDescription()) : talent.getDescription() != null)
+        if (getDescription() != null ? !getDescription().equals(DND5ETalent.getDescription()) : DND5ETalent.getDescription() != null)
             return false;
-        return getPrivileges() != null ? getPrivileges().equals(talent.getPrivileges()) : talent.getPrivileges() == null;
+        return getPrivileges() != null ? getPrivileges().equals(DND5ETalent.getPrivileges()) : DND5ETalent.getPrivileges() == null;
     }
     @Override
     public int hashCode() {

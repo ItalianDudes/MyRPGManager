@@ -3,10 +3,10 @@ package it.italiandudes.myrpgmanager.javafx.controller.dnd5e.item;
 import it.italiandudes.idl.common.ImageHandler;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.MyRPGManager;
-import it.italiandudes.myrpgmanager.data.item.EquipmentPack;
-import it.italiandudes.myrpgmanager.data.item.Item;
-import it.italiandudes.myrpgmanager.data.item.ItemTypes;
-import it.italiandudes.myrpgmanager.data.item.Rarity;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5EEquipmentPack;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5EItem;
+import it.italiandudes.myrpgmanager.data.dnd5e.item.DND5EItemTypes;
+import it.italiandudes.myrpgmanager.data.common.Rarity;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
@@ -44,7 +44,7 @@ import java.util.Base64;
 public final class ControllerSceneDND5EEquipmentPack {
 
     // Attributes
-    private EquipmentPack equipmentPack = null;
+    private DND5EEquipmentPack DND5EEquipmentPack = null;
     private String imageExtension = null;
     private boolean isImageSet = false;
     private static final Image defaultImage = Client.getDefaultImage();
@@ -223,12 +223,12 @@ public final class ControllerSceneDND5EEquipmentPack {
                                 Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Le valute devono essere dei numeri interi positivi!"));
                                 return null;
                             }
-                            if (equipmentPack == null) {
-                                if (Item.checkIfExist(textFieldName.getText())) {
+                            if (DND5EEquipmentPack == null) {
+                                if (DND5EItem.checkIfExist(textFieldName.getText())) {
                                     Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di Inserimento", "Esiste gia' qualcosa con questo nome registrato!"));
                                     return null;
                                 }
-                                Item item = new Item(
+                                DND5EItem DND5EItem = new DND5EItem(
                                         null,
                                         imageViewItem.getImage(),
                                         imageExtension,
@@ -240,18 +240,18 @@ public final class ControllerSceneDND5EEquipmentPack {
                                         mp,
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_EQUIPMENT_PACK.getDatabaseValue(),
+                                        DND5EItemTypes.TYPE_EQUIPMENT_PACK.getDatabaseValue(),
                                         weight
                                 );
-                                equipmentPack = new EquipmentPack(
-                                        item,
+                                DND5EEquipmentPack = new DND5EEquipmentPack(
+                                        DND5EItem,
                                         null,
                                         textAreaContent.getText()
                                 );
                             } else {
-                                oldName = equipmentPack.getName();
-                                Item item = new Item(
-                                        equipmentPack.getItemID(),
+                                oldName = DND5EEquipmentPack.getName();
+                                DND5EItem DND5EItem = new DND5EItem(
+                                        DND5EEquipmentPack.getItemID(),
                                         imageViewItem.getImage(),
                                         imageExtension,
                                         textFieldName.getText(),
@@ -262,17 +262,17 @@ public final class ControllerSceneDND5EEquipmentPack {
                                         mp,
                                         textAreaDescription.getText(),
                                         comboBoxRarity.getSelectionModel().getSelectedItem(),
-                                        ItemTypes.TYPE_EQUIPMENT_PACK.getDatabaseValue(),
+                                        DND5EItemTypes.TYPE_EQUIPMENT_PACK.getDatabaseValue(),
                                         weight
                                 );
-                                equipmentPack = new EquipmentPack(
-                                        item,
-                                        equipmentPack.getEquipmentPackID(),
+                                DND5EEquipmentPack = new DND5EEquipmentPack(
+                                        DND5EItem,
+                                        DND5EEquipmentPack.getEquipmentPackID(),
                                         textAreaContent.getText()
                                 );
                             }
 
-                            equipmentPack.saveIntoDatabase(oldName);
+                            DND5EEquipmentPack.saveIntoDatabase(oldName);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -300,10 +300,10 @@ public final class ControllerSceneDND5EEquipmentPack {
                     protected Void call() throws Exception {
                         try {
 
-                            equipmentPack = new EquipmentPack(equipmentPackName);
+                            DND5EEquipmentPack = new DND5EEquipmentPack(equipmentPackName);
 
-                            imageExtension = equipmentPack.getImageExtension();
-                            int CC = equipmentPack.getCostCopper();
+                            imageExtension = DND5EEquipmentPack.getImageExtension();
+                            int CC = DND5EEquipmentPack.getCostCopper();
                             int CP = CC / 1000;
                             CC -= CP * 1000;
                             int CG = CC / 100;
@@ -315,17 +315,17 @@ public final class ControllerSceneDND5EEquipmentPack {
 
                             BufferedImage bufferedImage = null;
                             try {
-                                if (equipmentPack.getBase64image() != null && imageExtension != null) {
-                                    byte[] imageBytes = Base64.getDecoder().decode(equipmentPack.getBase64image());
+                                if (DND5EEquipmentPack.getBase64image() != null && imageExtension != null) {
+                                    byte[] imageBytes = Base64.getDecoder().decode(DND5EEquipmentPack.getBase64image());
                                     ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
                                     bufferedImage = ImageIO.read(imageStream);
-                                } else if (equipmentPack.getBase64image() != null && imageExtension == null) {
+                                } else if (DND5EEquipmentPack.getBase64image() != null && imageExtension == null) {
                                     throw new IllegalArgumentException("Image without declared extension");
                                 }
                             } catch (IllegalArgumentException e) {
                                 Logger.log(e);
-                                equipmentPack.setBase64image(null);
-                                equipmentPack.setImageExtension(null);
+                                DND5EEquipmentPack.setBase64image(null);
+                                DND5EEquipmentPack.setImageExtension(null);
                                 Platform.runLater(() -> new ErrorAlert("ERRORE", "Errore di lettura", "L'immagine ricevuta dal database non è leggibile"));
                                 return null;
                             }
@@ -334,15 +334,15 @@ public final class ControllerSceneDND5EEquipmentPack {
                             BufferedImage finalBufferedImage = bufferedImage;
                             Platform.runLater(() -> {
 
-                                textFieldName.setText(equipmentPack.getName());
-                                textFieldWeight.setText(String.valueOf(equipmentPack.getWeight()));
-                                comboBoxRarity.getSelectionModel().select(equipmentPack.getRarity().getTextedRarity());
+                                textFieldName.setText(DND5EEquipmentPack.getName());
+                                textFieldWeight.setText(String.valueOf(DND5EEquipmentPack.getWeight()));
+                                comboBoxRarity.getSelectionModel().select(DND5EEquipmentPack.getRarity().getTextedRarity());
                                 textFieldMR.setText(String.valueOf(finalCC));
                                 textFieldMA.setText(String.valueOf(CS));
                                 textFieldME.setText(String.valueOf(CE));
                                 textFieldMO.setText(String.valueOf(CG));
                                 textFieldMP.setText(String.valueOf(CP));
-                                textAreaDescription.setText(equipmentPack.getDescription());
+                                textAreaDescription.setText(DND5EEquipmentPack.getDescription());
                                 if (finalBufferedImage != null && imageExtension != null) {
                                     imageViewItem.setImage(SwingFXUtils.toFXImage(finalBufferedImage, null));
                                     isImageSet = true;
@@ -350,7 +350,7 @@ public final class ControllerSceneDND5EEquipmentPack {
                                     imageViewItem.setImage(defaultImage);
                                 }
 
-                                textAreaContent.setText(equipmentPack.getContent());
+                                textAreaContent.setText(DND5EEquipmentPack.getContent());
                             });
 
                         } catch (Exception e) {

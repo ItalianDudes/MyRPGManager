@@ -1,7 +1,7 @@
-package it.italiandudes.myrpgmanager.data.item;
+package it.italiandudes.myrpgmanager.data.dnd5e.item;
 
 @SuppressWarnings("unused")
-public enum ItemTypes {
+public enum DND5EItemTypes {
     TYPE_ITEM(0),
     TYPE_ARMOR(1),
     TYPE_WEAPON(2),
@@ -12,7 +12,7 @@ public enum ItemTypes {
     private final int databaseValue;
 
     // Constructors
-    ItemTypes(final int databaseValue) {
+    DND5EItemTypes(final int databaseValue) {
         this.databaseValue = databaseValue;
     }
 

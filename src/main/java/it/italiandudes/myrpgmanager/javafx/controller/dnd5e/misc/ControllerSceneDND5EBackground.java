@@ -1,7 +1,7 @@
 package it.italiandudes.myrpgmanager.javafx.controller.dnd5e.misc;
 
 import it.italiandudes.idl.common.Logger;
-import it.italiandudes.myrpgmanager.data.misc.Background;
+import it.italiandudes.myrpgmanager.data.dnd5e.misc.DND5EBackground;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public final class ControllerSceneDND5EBackground {
 
     // Attributes
-    private Background background = null;
+    private DND5EBackground DND5EBackground = null;
 
     // Graphic Elements
     @FXML private TextField textFieldName;
@@ -52,21 +52,21 @@ public final class ControllerSceneDND5EBackground {
                     @Override
                     protected Void call() {
                         try {
-                            if (background == null) {
-                                background = new Background(
+                            if (DND5EBackground == null) {
+                                DND5EBackground = new DND5EBackground(
                                         null,
                                         textFieldName.getText(),
                                         textAreaDescription.getText()
                                 );
                             } else {
-                                background = new Background(
-                                        background.getBackgroundID(),
+                                DND5EBackground = new DND5EBackground(
+                                        DND5EBackground.getBackgroundID(),
                                         textFieldName.getText(),
                                         textAreaDescription.getText()
                                 );
                             }
 
-                            background.saveIntoDatabase(null);
+                            DND5EBackground.saveIntoDatabase(null);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -94,10 +94,10 @@ public final class ControllerSceneDND5EBackground {
                     protected Void call() throws Exception {
                         try {
 
-                            background = new Background(backgroundName);
+                            DND5EBackground = new DND5EBackground(backgroundName);
                             Platform.runLater(() -> {
-                                textFieldName.setText(background.getName());
-                                textAreaDescription.setText(background.getDescription());
+                                textFieldName.setText(DND5EBackground.getName());
+                                textAreaDescription.setText(DND5EBackground.getDescription());
                             });
 
                         } catch (Exception e) {

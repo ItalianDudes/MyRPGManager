@@ -1,7 +1,7 @@
 package it.italiandudes.myrpgmanager.javafx.controller.dnd5e.misc;
 
 import it.italiandudes.idl.common.Logger;
-import it.italiandudes.myrpgmanager.data.misc.Talent;
+import it.italiandudes.myrpgmanager.data.dnd5e.misc.DND5ETalent;
 import it.italiandudes.myrpgmanager.javafx.Client;
 import it.italiandudes.myrpgmanager.javafx.alert.ErrorAlert;
 import it.italiandudes.myrpgmanager.javafx.alert.InformationAlert;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public final class ControllerSceneDND5ETalent {
 
     // Attributes
-    private Talent talent = null;
+    private DND5ETalent DND5ETalent = null;
 
     // Graphic Elements
     @FXML private TextField textFieldName;
@@ -54,8 +54,8 @@ public final class ControllerSceneDND5ETalent {
                     @Override
                     protected Void call() {
                         try {
-                            if (talent == null) {
-                                talent = new Talent(
+                            if (DND5ETalent == null) {
+                                DND5ETalent = new DND5ETalent(
                                         null,
                                         textFieldName.getText(),
                                         textAreaRequirements.getText(),
@@ -63,8 +63,8 @@ public final class ControllerSceneDND5ETalent {
                                         textAreaPrivileges.getText()
                                 );
                             } else {
-                                talent = new Talent(
-                                        talent.getTalentID(),
+                                DND5ETalent = new DND5ETalent(
+                                        DND5ETalent.getTalentID(),
                                         textFieldName.getText(),
                                         textAreaRequirements.getText(),
                                         textAreaDescription.getText(),
@@ -72,7 +72,7 @@ public final class ControllerSceneDND5ETalent {
                                 );
                             }
 
-                            talent.saveIntoDatabase(null);
+                            DND5ETalent.saveIntoDatabase(null);
                             Platform.runLater(() -> new InformationAlert("SUCCESSO", "Aggiornamento Dati", "Aggiornamento dei dati effettuato con successo!"));
                         } catch (Exception e) {
                             Logger.log(e);
@@ -100,13 +100,13 @@ public final class ControllerSceneDND5ETalent {
                     protected Void call() throws Exception {
                         try {
 
-                            talent = new Talent(talentName);
+                            DND5ETalent = new DND5ETalent(talentName);
                             Platform.runLater(() -> {
 
-                                textFieldName.setText(talent.getName());
-                                textAreaPrivileges.setText(talent.getPrivileges());
-                                textAreaRequirements.setText(talent.getRequirements());
-                                textAreaDescription.setText(talent.getDescription());
+                                textFieldName.setText(DND5ETalent.getName());
+                                textAreaPrivileges.setText(DND5ETalent.getPrivileges());
+                                textAreaRequirements.setText(DND5ETalent.getRequirements());
+                                textAreaDescription.setText(DND5ETalent.getDescription());
                             });
 
                         } catch (Exception e) {

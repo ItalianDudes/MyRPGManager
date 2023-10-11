@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.data.item;
+package it.italiandudes.myrpgmanager.data.dnd5e.item;
 
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.interfaces.ISavable;
@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @SuppressWarnings("unused")
-public final class Spell extends Item implements ISavable {
+public final class DND5ESpell extends DND5EItem implements ISavable {
 
     // Attributes
     @Nullable private Integer spellID;
@@ -23,15 +23,15 @@ public final class Spell extends Item implements ISavable {
     @Nullable private String damage;
 
     // Constructors
-    public Spell() {
+    public DND5ESpell() {
         super();
         level = 0;
     }
-    public Spell(@NotNull final Item baseItem, @Nullable final Integer spellID,
-                 final int level, @Nullable final String type, @Nullable final String castTime,
-                 @Nullable final String range, @Nullable final String components,
-                 @Nullable final String duration, @Nullable final String damage) {
-        super(baseItem);
+    public DND5ESpell(@NotNull final DND5EItem baseDND5EItem, @Nullable final Integer spellID,
+                      final int level, @Nullable final String type, @Nullable final String castTime,
+                      @Nullable final String range, @Nullable final String components,
+                      @Nullable final String duration, @Nullable final String damage) {
+        super(baseDND5EItem);
         this.spellID = spellID;
         if (level >= 0 && level <= 9) this.level = level;
         else this.level = 0;
@@ -42,7 +42,7 @@ public final class Spell extends Item implements ISavable {
         this.duration = duration;
         this.damage = damage;
     }
-    public Spell(@NotNull final String spellName) throws SQLException {
+    public DND5ESpell(@NotNull final String spellName) throws SQLException {
         super(spellName);
         String query = "SELECT * FROM spells WHERE item_id = ?;";
         PreparedStatement ps = DBManager.preparedStatement(query);
@@ -66,7 +66,7 @@ public final class Spell extends Item implements ISavable {
             throw new SQLException("Exist the item, but not the spell");
         }
     }
-    public Spell(@NotNull final ResultSet resultSet) throws SQLException {
+    public DND5ESpell(@NotNull final ResultSet resultSet) throws SQLException {
         super(resultSet.getInt("item_id"));
         this.spellID = resultSet.getInt("id");
         try {
@@ -214,22 +214,22 @@ public final class Spell extends Item implements ISavable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Spell)) return false;
+        if (!(o instanceof DND5ESpell)) return false;
         if (!super.equals(o)) return false;
 
-        Spell spell = (Spell) o;
+        DND5ESpell DND5ESpell = (DND5ESpell) o;
 
-        if (getLevel() != spell.getLevel()) return false;
-        if (getSpellID() != null ? !getSpellID().equals(spell.getSpellID()) : spell.getSpellID() != null) return false;
-        if (getType() != null ? !getType().equals(spell.getType()) : spell.getType() != null) return false;
-        if (getCastTime() != null ? !getCastTime().equals(spell.getCastTime()) : spell.getCastTime() != null)
+        if (getLevel() != DND5ESpell.getLevel()) return false;
+        if (getSpellID() != null ? !getSpellID().equals(DND5ESpell.getSpellID()) : DND5ESpell.getSpellID() != null) return false;
+        if (getType() != null ? !getType().equals(DND5ESpell.getType()) : DND5ESpell.getType() != null) return false;
+        if (getCastTime() != null ? !getCastTime().equals(DND5ESpell.getCastTime()) : DND5ESpell.getCastTime() != null)
             return false;
-        if (getRange() != null ? !getRange().equals(spell.getRange()) : spell.getRange() != null) return false;
-        if (getComponents() != null ? !getComponents().equals(spell.getComponents()) : spell.getComponents() != null)
+        if (getRange() != null ? !getRange().equals(DND5ESpell.getRange()) : DND5ESpell.getRange() != null) return false;
+        if (getComponents() != null ? !getComponents().equals(DND5ESpell.getComponents()) : DND5ESpell.getComponents() != null)
             return false;
-        if (getDuration() != null ? !getDuration().equals(spell.getDuration()) : spell.getDuration() != null)
+        if (getDuration() != null ? !getDuration().equals(DND5ESpell.getDuration()) : DND5ESpell.getDuration() != null)
             return false;
-        return getDamage() != null ? getDamage().equals(spell.getDamage()) : spell.getDamage() == null;
+        return getDamage() != null ? getDamage().equals(DND5ESpell.getDamage()) : DND5ESpell.getDamage() == null;
     }
     @Override
     public int hashCode() {

@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.data.misc;
+package it.italiandudes.myrpgmanager.data.dnd5e.misc;
 
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.interfaces.ISavable;
@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @SuppressWarnings("unused")
-public final class Language implements ISavable {
+public final class DND5ELanguage implements ISavable {
 
     // Attributes
     @Nullable private Integer languageID;
@@ -19,14 +19,14 @@ public final class Language implements ISavable {
     @Nullable private String lore;
 
     // Constructors
-    public Language(@Nullable final Integer languageID, @NotNull final String name, @Nullable final String alphabet,
-                    @Nullable final String lore) {
+    public DND5ELanguage(@Nullable final Integer languageID, @NotNull final String name, @Nullable final String alphabet,
+                         @Nullable final String lore) {
         this.languageID = languageID;
         this.name = name;
         this.alphabet = alphabet;
         this.lore = lore;
     }
-    public Language(@NotNull final String languageName) throws SQLException {
+    public DND5ELanguage(@NotNull final String languageName) throws SQLException {
         String query = "SELECT * FROM languages WHERE name = ?;";
         PreparedStatement ps = DBManager.preparedStatement(query);
         if (ps == null) throw new SQLException("The database is not connected");
@@ -112,16 +112,16 @@ public final class Language implements ISavable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Language)) return false;
+        if (!(o instanceof DND5ELanguage)) return false;
 
-        Language language = (Language) o;
+        DND5ELanguage DND5ELanguage = (DND5ELanguage) o;
 
-        if (getLanguageID() != null ? !getLanguageID().equals(language.getLanguageID()) : language.getLanguageID() != null)
+        if (getLanguageID() != null ? !getLanguageID().equals(DND5ELanguage.getLanguageID()) : DND5ELanguage.getLanguageID() != null)
             return false;
-        if (!getName().equals(language.getName())) return false;
-        if (getAlphabet() != null ? !getAlphabet().equals(language.getAlphabet()) : language.getAlphabet() != null)
+        if (!getName().equals(DND5ELanguage.getName())) return false;
+        if (getAlphabet() != null ? !getAlphabet().equals(DND5ELanguage.getAlphabet()) : DND5ELanguage.getAlphabet() != null)
             return false;
-        return getLore() != null ? getLore().equals(language.getLore()) : language.getLore() == null;
+        return getLore() != null ? getLore().equals(DND5ELanguage.getLore()) : DND5ELanguage.getLore() == null;
     }
     @Override
     public int hashCode() {

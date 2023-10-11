@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.data.item;
+package it.italiandudes.myrpgmanager.data.dnd5e.item;
 
 import it.italiandudes.myrpgmanager.db.DBManager;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @SuppressWarnings("unused")
-public final class Armor extends Item {
+public final class DND5EArmor extends DND5EItem {
 
     // Attributes
     @Nullable private Integer armorID;
@@ -19,17 +19,17 @@ public final class Armor extends Item {
     private int stealth;
 
     // Constructors
-    public Armor() {
+    public DND5EArmor() {
         super();
-        setItemType(ItemTypes.TYPE_ARMOR.getDatabaseValue());
+        setItemType(DND5EItemTypes.TYPE_ARMOR.getDatabaseValue());
         AC = 0;
         strengthRequired = 0;
         stealth = 0;
     }
-    public Armor(@NotNull final Item baseItem, @Nullable final Integer armorID,
-                 @Nullable final String category, final int AC,
-                 final int strengthRequired, final int stealth) {
-        super(baseItem);
+    public DND5EArmor(@NotNull final DND5EItem baseDND5EItem, @Nullable final Integer armorID,
+                      @Nullable final String category, final int AC,
+                      final int strengthRequired, final int stealth) {
+        super(baseDND5EItem);
         this.armorID = armorID;
         this.category = category;
         this.AC = Math.max(AC, 0);
@@ -37,7 +37,7 @@ public final class Armor extends Item {
         if (stealth >= -1 && stealth <= 1) this.stealth = stealth;
         else this.stealth = 0;
     }
-    public Armor(@NotNull final String armorName) throws SQLException {
+    public DND5EArmor(@NotNull final String armorName) throws SQLException {
         super(armorName);
         String query = "SELECT * FROM armors WHERE item_id = ?;";
         PreparedStatement ps = DBManager.preparedStatement(query);
@@ -58,7 +58,7 @@ public final class Armor extends Item {
             throw new SQLException("Exist the item, but not the armor");
         }
     }
-    public Armor(@NotNull final ResultSet resultSet) throws SQLException {
+    public DND5EArmor(@NotNull final ResultSet resultSet) throws SQLException {
         super(resultSet.getInt("item_id"));
         this.armorID = resultSet.getInt("id");
         try {
@@ -164,16 +164,16 @@ public final class Armor extends Item {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Armor)) return false;
+        if (!(o instanceof DND5EArmor)) return false;
         if (!super.equals(o)) return false;
 
-        Armor armor = (Armor) o;
+        DND5EArmor DND5EArmor = (DND5EArmor) o;
 
-        if (getAC() != armor.getAC()) return false;
-        if (getStrengthRequired() != armor.getStrengthRequired()) return false;
-        if (getStealth() != armor.getStealth()) return false;
-        if (getArmorID() != null ? !getArmorID().equals(armor.getArmorID()) : armor.getArmorID() != null) return false;
-        return getCategory() != null ? getCategory().equals(armor.getCategory()) : armor.getCategory() == null;
+        if (getAC() != DND5EArmor.getAC()) return false;
+        if (getStrengthRequired() != DND5EArmor.getStrengthRequired()) return false;
+        if (getStealth() != DND5EArmor.getStealth()) return false;
+        if (getArmorID() != null ? !getArmorID().equals(DND5EArmor.getArmorID()) : DND5EArmor.getArmorID() != null) return false;
+        return getCategory() != null ? getCategory().equals(DND5EArmor.getCategory()) : DND5EArmor.getCategory() == null;
     }
     @Override
     public int hashCode() {

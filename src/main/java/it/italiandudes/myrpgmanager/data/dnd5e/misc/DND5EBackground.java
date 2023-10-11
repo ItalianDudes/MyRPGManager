@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.data.misc;
+package it.italiandudes.myrpgmanager.data.dnd5e.misc;
 
 import it.italiandudes.myrpgmanager.db.DBManager;
 import it.italiandudes.myrpgmanager.interfaces.ISavable;
@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @SuppressWarnings("unused")
-public final class Background implements ISavable {
+public final class DND5EBackground implements ISavable {
 
     // Attributes
     @Nullable private Integer backgroundID;
@@ -18,12 +18,12 @@ public final class Background implements ISavable {
     @Nullable private String description;
 
     // Constructors
-    public Background(@Nullable final Integer backgroundID, @NotNull final String name, @Nullable final String description) {
+    public DND5EBackground(@Nullable final Integer backgroundID, @NotNull final String name, @Nullable final String description) {
         this.backgroundID = backgroundID;
         this.name = name;
         this.description = description;
     }
-    public Background(@NotNull final String backgroundName) throws SQLException {
+    public DND5EBackground(@NotNull final String backgroundName) throws SQLException {
         String query = "SELECT * FROM backgrounds WHERE name = ?;";
         PreparedStatement ps = DBManager.preparedStatement(query);
         if (ps == null) throw new SQLException("The database is not connected");
@@ -99,9 +99,9 @@ public final class Background implements ISavable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Background)) return false;
+        if (!(o instanceof DND5EBackground)) return false;
 
-        Background that = (Background) o;
+        DND5EBackground that = (DND5EBackground) o;
 
         if (getBackgroundID() != null ? !getBackgroundID().equals(that.getBackgroundID()) : that.getBackgroundID() != null)
             return false;

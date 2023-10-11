@@ -3,7 +3,10 @@ package it.italiandudes.myrpgmanager.javafx;
 import it.italiandudes.idl.common.Logger;
 import it.italiandudes.myrpgmanager.javafx.scene.SceneCreateOrChooseDB;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.Clipboard;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.jetbrains.annotations.NotNull;
@@ -12,11 +15,13 @@ import org.jetbrains.annotations.NotNull;
 public final class Client extends Application {
 
     //Attributes
+    private static Clipboard SYSTEM_CLIPBOARD = null;
     private static Stage stage;
     private static Image DEFAULT_IMAGE = null;
 
     @Override
     public void start(Stage stage) {
+        SYSTEM_CLIPBOARD = Clipboard.getSystemClipboard();
         Client.stage = stage;
         stage.setTitle(JFXDefs.AppInfo.NAME);
         stage.getIcons().add(JFXDefs.AppInfo.LOGO);
@@ -42,8 +47,22 @@ public final class Client extends Application {
 
     //Methods
     @NotNull
+    public static Clipboard getSystemClipboard() {
+        return SYSTEM_CLIPBOARD;
+    }
+    @NotNull
     public static Stage getStage(){
         return stage;
+    }
+    @NotNull
+    public static Stage initPopupStage(Scene scene) {
+        Stage popupStage = new Stage();
+        popupStage.getIcons().add(JFXDefs.AppInfo.LOGO);
+        popupStage.setTitle(JFXDefs.AppInfo.NAME);
+        popupStage.initOwner(getStage());
+        popupStage.initModality(Modality.WINDOW_MODAL);
+        popupStage.setScene(scene);
+        return popupStage;
     }
     @NotNull
     public static Image getDefaultImage() {

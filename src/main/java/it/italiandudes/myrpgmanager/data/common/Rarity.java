@@ -1,4 +1,4 @@
-package it.italiandudes.myrpgmanager.data.item;
+package it.italiandudes.myrpgmanager.data.common;
 
 import javafx.scene.paint.Color;
 import org.jetbrains.annotations.NotNull;
