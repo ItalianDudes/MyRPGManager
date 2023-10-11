@@ -50,6 +50,10 @@ public final class JFXDefs {
                     public static final String FXML_EQUIPMENT_PACK = ITEM_DIR + "SceneDND5EEquipmentPack.fxml";
                 }
             }
+            public static final class DNS {
+                private static final String DNS_DIR = FXML_DIR + "dns/";
+                public static final String FXML_ITEM_LIST = DNS_DIR + "SceneDNSList.fxml";
+            }
         }
 
         //GIF Location

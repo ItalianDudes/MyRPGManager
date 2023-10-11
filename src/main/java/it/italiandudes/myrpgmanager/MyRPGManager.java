@@ -59,6 +59,7 @@ public final class MyRPGManager {
             public static final class SQL {
                 private static final String SQL_DIR = "/sql/";
                 public static final String SQL_DND5E = SQL_DIR + "dnd5e.sql";
+                public static final String SQL_DNS = SQL_DIR + "dns.sql";
                 public static final String[] SUPPORTED_IMAGE_EXTENSIONS = {
                         "png",
                         "jpg",
@@ -128,12 +129,15 @@ public final class MyRPGManager {
                     )
                 );
             }
+            public static final class DNS {
+                public static final String RPG_NAME = "dns";
+            }
 
             // Supported RPGs List
-            @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
             public static final ArrayList<String> SUPPORTED_RPGS = new ArrayList<>(
                     Arrays.asList(
-                            DND5E.RPG_NAME
+                            DND5E.RPG_NAME,
+                            DNS.RPG_NAME
                     )
             );
         }

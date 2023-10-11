@@ -5,13 +5,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Scanner;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "SqlSourceToSinkFlow", "SqlDialectInspection", "SqlNoDataSourceInspection"})
 public final class DBManager {
 
     // Attributes
@@ -27,6 +24,9 @@ public final class DBManager {
     private static void setConnectionProperties() throws SQLException {
         if (dbConnection == null || dbConnection.isClosed()) return;
         dbConnection.setAutoCommit(true);
+        Statement st = dbConnection.createStatement();
+        st.execute("PRAGMA foreign_keys = ON;");
+        st.close();
     }
 
     // Methods
@@ -49,10 +49,13 @@ public final class DBManager {
 
         String DB_ABS_PATH = DB_PATH.getAbsolutePath();
 
-        //noinspection SwitchStatementWithTooFewBranches
         switch (RPG_TYPE) {
             case MyRPGManager.Defs.SupportedRPGs.DND5E.RPG_NAME:
                 createDatabase(DB_ABS_PATH, MyRPGManager.Defs.Resources.SQL.SQL_DND5E);
+                break;
+
+            case MyRPGManager.Defs.SupportedRPGs.DNS.RPG_NAME:
+                createDatabase(DB_ABS_PATH, MyRPGManager.Defs.Resources.SQL.SQL_DNS);
                 break;
 
             default:
