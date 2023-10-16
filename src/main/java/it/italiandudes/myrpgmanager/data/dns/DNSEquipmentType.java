@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public enum DNSEquipmentType {
-    ARMOR(0, "Armatura"),
-    WEAPON(1, "Arma"),
-    ADDON(2, "Addon")
-    ;
+    WEAPON(0, "Arma"),
+    SHIELD(1, "Scudo"),
+    ARMOR(2, "Armatura"),
+    COSMETICS(3, "Cosmetico");
 
     // Attributes
     @NotNull
-    public static final ArrayList<DNSEquipmentType> types = new ArrayList<>();
+    public static final ArrayList<DNSEquipmentType> equipment_types = new ArrayList<>();
     static {
-        types.addAll(Arrays.asList(DNSEquipmentType.values()));
+        equipment_types.addAll(Arrays.asList(DNSEquipmentType.values()));
     }
     private final int databaseValue;
     private final String name;

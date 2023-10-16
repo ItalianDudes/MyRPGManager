@@ -63,7 +63,7 @@ public final class ControllerSceneDNSList {
         tableColumnWeight.setCellValueFactory(new PropertyValueFactory<>("weight"));
         tableColumnCostCopper.setCellValueFactory(new PropertyValueFactory<>("costCopper"));
         comboBoxCategory.setItems(FXCollections.observableList(DNSCategory.categories));
-        comboBoxEquipmentType.setItems(FXCollections.observableList(DNSEquipmentType.types));
+        comboBoxEquipmentType.setItems(FXCollections.observableList(DNSEquipmentType.equipment_types));
         search();
     }
 

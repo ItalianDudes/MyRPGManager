@@ -5,22 +5,23 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public enum DNSCategory {
-    ITEM(0, "Oggetto"),
-    EQUIPMENT(1, "Equipaggiamento"),
-    SPELL(2,"Incantesimo"),
-    ;
+public enum DNSSpellType {
+    MIRACLE(0, "Miracolo"),
+    SORCERY(1, "Stregoneria"),
+    PIROMANCY(2,"Piromanzia"),
+    HEX(3, "Malocchio");
 
     // Attributes
-    @NotNull public static final ArrayList<DNSCategory> categories = new ArrayList<>();
+    @NotNull
+    public static final ArrayList<DNSSpellType> spell_types = new ArrayList<>();
     static {
-        categories.addAll(Arrays.asList(DNSCategory.values()));
+        spell_types.addAll(Arrays.asList(DNSSpellType.values()));
     }
     private final int databaseValue;
     @NotNull private final String name;
 
     // Constructors
-    DNSCategory(final int databaseValue, @NotNull final String name) {
+    DNSSpellType(final int databaseValue, @NotNull final String name) {
         this.databaseValue = databaseValue;
         this.name = name;
     }

@@ -15,10 +15,12 @@ repositories {
 
 dependencies {
     compileOnly 'org.jetbrains:annotations:23.0.0'
-    implementation 'commons-codec:commons-codec:1.15'
     implementation 'commons-io:commons-io:2.11.0'
-    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+    implementation 'commons-codec:commons-codec:1.15'
     implementation 'it.italiandudes:idl:1.0.5'
+    implementation 'org.json:json:20230618'
+    implementation 'club.minnced:java-discord-rpc:2.0.1'
+    implementation 'org.xerial:sqlite-jdbc:3.43.0.0'
 }
 
 shadowJar {
