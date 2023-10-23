@@ -5,23 +5,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public enum DNSEquipmentType {
-    WEAPON(0, "Arma"),
-    SHIELD(1, "Scudo"),
-    ARMOR(2, "Armatura"),
-    ADDON(3, "Addon");
+public enum DNSAddonSlot {
+    NECKLACE(0, "Collana"),
+    MANTLE(1, "Mantello"),
+    BRACELET(3, "Bracciale"),
+    EARRING(5, "Orecchino"),
+    RING(6, "Anello")
+    ;
 
     // Attributes
     @NotNull
-    public static final ArrayList<DNSEquipmentType> equipment_types = new ArrayList<>();
+    public static final ArrayList<DNSAddonSlot> addon_slots = new ArrayList<>();
     static {
-        equipment_types.addAll(Arrays.asList(DNSEquipmentType.values()));
+        addon_slots.addAll(Arrays.asList(DNSAddonSlot.values()));
     }
     private final int databaseValue;
     private final String name;
 
     // Constructors
-    DNSEquipmentType(final int databaseValue, final String name) {
+    DNSAddonSlot(final int databaseValue, final String name) {
         this.databaseValue = databaseValue;
         this.name = name;
     }
