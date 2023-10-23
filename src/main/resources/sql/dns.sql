@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS ammunitions (
     atk_magic INTEGER NOT NULL DEFAULT 0,
     atk_fire INTEGER NOT NULL DEFAULT 0,
     atk_lightning INTEGER NOT NULL DEFAULT 0,
-    atk_dark INTEGER NOT NULL DEFAULT 0,
+    atk_dark INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS equipments (
